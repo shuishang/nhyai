@@ -5,6 +5,7 @@ Vue.use(VueRouter);
 
 //实现懒加载
 const forceIndex=resolve=>require(['../views/force_index'],resolve);
+const imageRecognition=resolve=>require(['../views/image_recognition'],resolve);
 
 Vue.config.productionTip = false
 
@@ -15,8 +16,9 @@ const router = new VueRouter({
     linkActiveClass:'active',
 
     routes: [
-        {path:'/',meta:{title:'暴力识别',keepAlive:true},component:forceIndex},
-        // {path:'/',redirect:'/forceIndex'}
+        {path:'/forceIndex',meta:{title:'暴力识别',keepAlive:true},component:forceIndex},
+        {path:'/imageRecognition',meta:{title:'暴力识别',keepAlive:true},component:imageRecognition},
+        {path:'/',redirect:'/forceIndex'}
     ],
 
 });

@@ -1,5 +1,6 @@
 <template>
 	<div id="forceIndex">
+		<Navigation></Navigation>
 		<div class="top_contain">
 			<el-row>
 				<el-col :xs={span:24} :sm={span:11,offset:1} :md={span:10,offset:2} :lg={span:7,offset:4,pull:1} :xl={span:6,offset:5,pull:1}>
@@ -147,6 +148,7 @@
 </template>
 
 <script>
+	import Navigation from "../components/navigation.vue"
     export default {
         data() {
             return {
@@ -162,6 +164,9 @@
 
             };
         },
+		components:{
+            Navigation
+		},
 		watch:{
 
 		},
@@ -299,7 +304,7 @@
 </script>
 
 <style scoped>
-	.top_contain{background-color: #237EE6 ;min-height: 300px;}
+	.top_contain{background-color: #237EE6 ;min-height: 300px;margin-top: 110px;}
 	.top_contain :after{content: '';width: 100%;height: 50px;background-image: url("../assets/image/top_back.png");background-position: 0 0;}
 	.top_image{width: 100%;display: block;}
 	.show_title_outer{padding: 40px 20px 40px;color: white;}
