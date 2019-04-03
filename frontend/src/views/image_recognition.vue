@@ -10,6 +10,7 @@
 							恐”的字段，对血腥、暴力等图片进行自动打击，用AI捍卫互联网安全，助力建立安全、健康的互联网环境。</p>
 					</div>
 				</el-col>
+
 				<el-col :xs={span:20,offset:2} :sm={span:11,offset:1} :md="10" :lg="8" :xl="6">
 					<div >
 						<img class="top_image" src="../assets/image/1.gif" alt="">
