@@ -12,7 +12,7 @@ Vue.config.productionTip = false
 //路由配置
 const router = new VueRouter({
     mode: 'history',
-    base: process.env.NODE_ENV === 'production'? '/force-project': '',
+    base: process.env.NODE_ENV === 'production'? '': '',
     linkActiveClass:'active',
 
     routes: [
