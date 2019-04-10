@@ -38,17 +38,14 @@
 									<i class="show_word normal_result_back">正常</i>
 									<p class="probability_number">{{showPercent}}</p>
 								</div>
-
 							</div>
-
 						</div>
-						<form action="http://10.10.43.114:8000/api/uploads/"
+						<form action="http://172.31.4.33:8000/api/uploads/"
 							  method="post"
 							  enctype="multipart/form-data">
 							<input id="datafile" name="datafile" type="file" class="inputfile" @change="changeImage($event)">
 							<div class="clearfix">
 								<label for="datafile" class='choose_style fl'>上传图片</label>
-
 								<input type="submit" class='choose_style fr' v-model="buttonWord" v-if="imageRight">
 								<input type="button" class='choose_style_no fr' v-model="buttonWord" v-else>
 							</div>
@@ -160,7 +157,8 @@
                 showPercent:"概率：1.75%",
 				isForce:false,
                 imageRight:false,
-                imageIsBig:false
+                imageIsBig:false,
+                options:{background:"rgba(0, 0, 0, 0.3)"}
 
             };
         },
@@ -172,17 +170,13 @@
 		},
 		mounted:function () {
             var self = this;
-//            $('#show_json').html(this.syntaxHighlight(this.jsonDemo));
             var jdata = JSON.stringify(JSON.parse(this.jsonDemo), null, 4);
-//            console.log(jdata);//这是在输出框的json数据确实被格式话了
             $("#show_json").html("<pre>"+jdata+"</pre>");//这时数据展示正确
-
             $('form').submit(function(e) {
+                self.loading = self.$loading(self.options);
                 self.imageRight = false;
                 var formData = new FormData($(this));
                 formData.append('datafile', $('#datafile')[0].files[0]);
-
-
                 $.ajax({
                     url: $(this).attr('action'),
                     type: $(this).attr('method'),
@@ -192,7 +186,7 @@
                     contentType: false,
                     processData: false,
 					success:(response)=>{
-
+                        self.$loading().close();
 //                        this.uploadInfo(response);
                         console.log(this)
                         var result = response.result;
@@ -222,25 +216,10 @@
                 forcePercent = forcePercent.substring(0,forcePercent.indexOf(".")+5)*100;
                 console.log(forcePercent);
                 this.showPercent =`概率：${forcePercent}%`;
-
                 if(forcePercent>80){
                     this.isForce = true;
                 }
 			},
-            update(e){
-                let file = e.target.files[0];
-                let param = new FormData($(this)); //创建form对象
-                param.append('file',file);//通过append向form对象添加数据
-                console.log(param.get('file')); //FormData私有类对象，访问不到，可以通过get判断值是否传进去
-                let config = {
-                    headers:{'Content-Type':'multipart/form-data'}
-                }; //添加请求头
-                this.$http.post('http://127.0.0.1:8081/upload',param,config)
-                    .then(response=>{
-                        console.log(response.data);
-
-                    })
-            },
             changeImage(e){
                 this.imageIsBig = false;
                 this.imageRight = false;
@@ -260,44 +239,6 @@
                     this.imageRight = true;
 				}
 			},
-
-            /*selectFileManually.addEventListener('change', function(event){
-            event.stopPropagation();
-            event.preventDefault();
-            axios.put('http://127.0.0.1:8000/api/v1/fileupload/', {
-                    file: this.files[0]
-                },{headers:{
-                    'Content-Disposition': 'attachment; filename=this.files[0].name'
-                }
-                },
-            ).then(resp => console.log(resp.data)).catch(err => console.log(err.response.data))
-        }
-    }
-    })*/
-
-			uploadImage(event){
-                let reader =new FileReader();
-                let img1=event.target.files[0];
-                let type=img1.type;//文件的类型，判断是否是图片
-                let size=img1.size;//文件的大小，判断图片的大小
-                /*if(this.imgData.accept.indexOf(type) == -1){
-                    alert('请选择我们支持的图片格式！');
-                    return false;
-                }*/
-                if(size>3145728){
-                    alert('请选择3M以内的图片！');
-                    return false;
-                }
-                var uri = ''
-                let form = new FormData();
-                form.append('file',img1);
-                form.append("result","123")
-                this.$post('http://10.10.43.114:8000/api/uploads/',form,{
-                    headers:{'Content-Type':'multipart/form-data'}
-                	}).then((response) => {
-                        console.log(response)
-                    })
-			},
         }
     }
 
@@ -311,7 +252,7 @@
 	.show_title_outer h1{}
 	.top_describe{font-size: 16px;margin-top: 20px;line-height: 30px;}
 
-	.functional_experience{}
+	.functional_experience{margin: 50px 0;}
 	.functional_experience .title{text-align: center;color: #333333;margin: 40px 0;}
 
 	.show_add_image_outer{min-height: 400px;}
