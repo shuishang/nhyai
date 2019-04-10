@@ -7,20 +7,22 @@
 						<img :src="isNavHover?require('../assets/image/rsc_logo_white.png'):require('../assets/image/rsc_logo.png')">
 					</a>
 					<ul class="header_nav fl">
-						<li><router-link to="/forceIndex"><span>暴恐识别</span></router-link></li>
-						<li><router-link to="/imageRecognition"><span>OCR识别</span></router-link></li>
-						<li><router-link to="/imageRecognition"><span>色情识别</span></router-link></li>
-						<li><router-link to="/imageRecognition"><span>视频识别</span></router-link></li>
-
-						<!--<li @mouseenter="headerNavHover($event)" @mouseleave="headerNavLeave">
-							&lt;!&ndash; <a href="javascript:;"><span class="header_point">{{$t('title.city')}}</span></a> &ndash;&gt;
-							<router-link to=""><span>新的开始</span></router-link>
-							&lt;!&ndash;<ul class="header_nav_two">
-								<li v-for="(item,index) in zhxcList">
-									<router-link >{{item.title}}</router-link>
+						<keep-alive>
+							<li><router-link to="/forceIndex"><span>暴恐识别</span></router-link></li>
+						</keep-alive>
+						<li @mouseenter="headerNavHover($event)" @mouseleave="headerNavLeave">
+							<!-- <a href="javascript:;"><span class="header_point">{{$t('title.city')}}</span></a> -->
+							<router-link to="/imageRecognition"><span>OCR识别</span></router-link>
+							<ul class="header_nav_two">
+								<li v-for="(item,index) in OCRList">
+									<router-link :to="item.link">{{item.title}}</router-link>
 								</li>
-							</ul>&ndash;&gt;
-						</li>-->
+							</ul>
+						</li>
+						<li><router-link to=""><span>色情识别</span></router-link></li>
+						<li><router-link to=""><span>视频识别</span></router-link></li>
+
+
 					</ul>
 
 				</div>
@@ -37,7 +39,11 @@
 		data(){
 	        return{
                 activeIndex: '1',
-				isNavHover:false
+				isNavHover:false,
+                OCRList:[{title:"身份证OCR",link:"/imageRecognition/idCard"},{title:"驾驶证OCR",link:"/imageRecognition/drivingLicence"},
+					{title:"行驶证OCR",link:"/imageRecognition/runningLicence"},{title:"通用OCR",link:"/imageRecognition/commonUse"},
+                    {title:"营业执照OCR",link:"/imageRecognition/businessLicence"},{title:"银行卡OCR",link:"/imageRecognition/bankCard"},
+					{title:"手写体OCR",link:"/imageRecognition/handwriten"},{title:"车牌OCR",link:"/imageRecognition/carNumber"},{title:"名片OCR",link:"/imageRecognition/visitingCard"}]
 			}
 		},
 		methods:{
@@ -70,7 +76,7 @@
 	#navigation :hover .header_logo img{/*display: inline-block;width: 133px;height: 58px;*/}
 
 	/*头部样式*/
-	/*.header_con{ width:1280px; height:110px;position:absolute;top:0;left:50%;margin-left:-640px;z-index:99;}*/
+	.header_con{ min-width:800px; /*height:110px;position:absolute;top:0;left:50%;margin-left:-640px;z-index:99;*/}
 	.header_logo{ margin-top:26px;}
 	.header_nav{ margin-left:88px;margin-right:30px;}
 	.header_nav li{height:110px;line-height:110px;display:inline-block; /* display:table-cell;vertical-align:middle; */padding: 0 20px;position:relative;}
@@ -82,7 +88,7 @@
 	/* .header_nav li:hover .header_nav_two{display:block;} */
 	.header_nav_two{background-color:rgba(255, 255, 255, 0.9)!important;box-shadow:0px 6px 8px rgba(0,0,0,0.2); position:absolute;left:0;top:107px;border-top: 3px solid #7fcd61;display:none;}
 	.header_nav_two li{height:46px;line-height: 46px;display:block;padding:0;}
-	.header_nav_two li a{/* min-width:110px; */height:46px;line-height: 46px;display:block;font-size:14px;color:#555 !important;padding:0 30px;white-space:nowrap;text-align:center;}
+	.header_nav_two li a{ min-width:110px; height:46px;line-height: 46px;display:block;font-size:14px;color:#555 !important;padding:0 30px;white-space:nowrap;text-align:center;}
 	.header_nav_two li a:hover{height:46px;border-bottom:none;color: #fff !important;background-color:#7fcd61!important;}
 	.header_nav_two li a.active{height:46px;border-bottom:none;}
 	.header_link{height:110px;line-height:110px;padding-right:60px;position:relative;}
