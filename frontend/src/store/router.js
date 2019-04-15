@@ -15,6 +15,7 @@ const bankCard=resolve=>require(['../views/OCRRecognition/bank_card'],resolve);
 const handwriten=resolve=>require(['../views/OCRRecognition/handwriten'],resolve);
 const carNumber=resolve=>require(['../views/OCRRecognition/car_number'],resolve);
 const visitingCard=resolve=>require(['../views/OCRRecognition/visiting_card'],resolve);
+const yellow=resolve=>require(['../views/yellow'],resolve);
 
 Vue.config.productionTip = false
 
@@ -39,6 +40,7 @@ const router = new VueRouter({
                 {path:'visitingCard',meta:{title:'OCR识别'},component:visitingCard},  //名片
                 {path:'/',redirect:'idCard'},
         ]},
+        {path:'/yellow',meta:{title:'色情识别'},component:yellow},  //名片
 
         {path:'/',redirect:'/forceIndex'}
     ],

@@ -19,7 +19,7 @@
 								</li>
 							</ul>
 						</li>
-						<li><router-link to=""><span>色情识别</span></router-link></li>
+						<li><router-link to="/yellow"><span>色情识别</span></router-link></li>
 						<li><router-link to=""><span>视频识别</span></router-link></li>
 
 
