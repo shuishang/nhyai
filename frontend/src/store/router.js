@@ -32,7 +32,7 @@ const router = new VueRouter({
     linkActiveClass:'active',
 
     routes: [
-        {path:'/sindex',meta:{title:'暴力识别',keepAlive:true},component:sindex},
+        {path:'/sindex',meta:{title:'AI智能审核',keepAlive:true},component:sindex},
         {path:'/imageRecognition',meta:{title:'ORC识别'},component:imageRecognition,
             children:[
                 {path:'idCard',meta:{title:'OCR识别'},component:idCard},
