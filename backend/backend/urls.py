@@ -22,7 +22,7 @@ from django.conf import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', TemplateView.as_view(template_name="index.html")),
-    path('forceIndex/', TemplateView.as_view(template_name="index.html")),
+    path('sindex/', TemplateView.as_view(template_name="index.html")),
     path('imageRecognition/', TemplateView.as_view(template_name="index.html")),
     path('api/', include('api.urls'))
 ]

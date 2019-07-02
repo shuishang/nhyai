@@ -13,4 +13,7 @@ export default {
 
 <style>
   @import './assets/css/common.css';
+  @import './assets/css/override-element-ui.css';
+  @import './assets/css/video-js.min.css';
+  @import './assets/css/videojs.markers.css';
 </style>

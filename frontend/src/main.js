@@ -9,6 +9,9 @@ import router from './store/router'
 import common from './store/common'
 import axios from 'axios'
 import {post,fetch,patch,put} from './store/https'
+import AudioRecorder from 'vue-audio-recorder'
+
+
 //定义全局变量
 Vue.prototype.$post=post;
 Vue.prototype.$fetch=fetch;
@@ -18,6 +21,7 @@ Vue.prototype.$axios=axios;
 
 Vue.use(ElementUI);
 Vue.use(common);
+Vue.use(AudioRecorder)
 
 Vue.config.productionTip = false
 

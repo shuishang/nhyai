@@ -2,27 +2,29 @@
 	<div class="bankCard">
 		<el-row class="loading_con">
 			<el-col :xs={span:24} :sm={span:11,offset:1} :md={span:10,offset:2} :lg={span:9,offset:3} :xl={span:8,offset:4}>
-				<div class="show_add_image_outer">
+				<div class="image_outer">
 					<div class="outer_add">
+						<span class="original_style">原始图片</span>
 						<img class="show_add_image" :src="dialogImageUrl">
-					</div>
-					<form action="http://10.10.43.114:8000/api/uploads/"
-						  method="post"
-						  enctype="multipart/form-data">
-						<input id="datafile" name="datafile" type="file" class="inputfile" @change="changeImage($event)">
-						<div class="clearfix">
-							<label for="datafile" class='choose_style fl'>上传图片</label>
 
-							<input type="submit" class='choose_style fr' v-model="buttonWord" v-if="imageRight">
-							<input type="button" class='choose_style_no fr' v-model="buttonWord" v-else>
+					</div>
+					<div class="upload_outer">
+						<div class="local_upload">
+							<!--<p>本地上传</p>-->
+							<input id="datafile" name="datafile" type="file" class="inputfile" @change="changeImage($event)">
+							<label for="datafile">本地上传</label>
 						</div>
-						<p type="text" class="show_url" v-show="imageName"><i class="show_left_aerrow">√</i>{{imageName}}</p>
-					</form>
-					<p class="suggest">提示：图片大小不超过1M，请保证需要识别部分为图片主体部分 <span v-show="imageIsBig" style="color: red;margin-left: 10px;display: inline-block;">！该图片大小超过1M</span></p>
+						<div class="show_input_outer">
+							<input type="text" class="init_url_style">
+							<p class="check_style">检测</p>
+						</div>
+					</div>
+					<p class="top_suggest">提示：图片大小不超过1M，请保证需要识别部分为图片主体部分</p>
 				</div>
 			</el-col>
 			<el-col :xs={span:24} :sm={span:11} :md="10" :lg="9" :xl="8">
 				<div class="show_json_outer">
+					<span class="original_style">识别结果</span>
 					<div id="show_json" v-show="showJson.name">
 						<p>姓名：{{showJson.name}}</p>
 						<p>性别：{{showJson.sex}}</p>
@@ -98,37 +100,56 @@
             });
         },
         methods: {
-            uploadInfo(response){
-                var result = response.result;
-                console.log( result.data.tag_list[1].probability,"hhhhhhhhhhhh") ;
-                var jdata = JSON.stringify(result, null, 4);
-                $("#show_json").html("<pre>"+jdata+"</pre>");//这时数据展示正确
-                var forcePercent = result.data.tag_list[1].probability.toString();
-                forcePercent = forcePercent.substring(0,forcePercent.indexOf(".")+5)*100;
-                console.log(forcePercent);
-                this.showPercent =`概率：${forcePercent}%`;
+            uploadImage(e){
+                this.loading = this.$loading(this.options);
+                this.imageRight = false;
+                var formData = new FormData($(this));
+                formData.append('datafile', $('#datafile')[0].files[0]);
+                $.ajax({
+                    url: "http://172.31.11.171:8000/api/uploads/",
+                    type: "post",
+                    data: formData,
+//                    headers: {'Authorization': 'Token mytoken'},
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success:(response)=>{
+                        this.$loading().close();
+//                        this.uploadInfo(response);
+                        console.log(this)
+                        var result = response.result;
+                        console.log( result.data.tag_list[1].probability,"hhhhhhhhhhhh") ;
+                        var jdata = JSON.stringify(result, null, 4);
+                        $("#show_json").html("<pre>"+jdata+"</pre>");//这时数据展示正确
+                        var forcePercent = result.data.tag_list[1].probability.toString();
+                        forcePercent = forcePercent.substring(0,forcePercent.indexOf(".")+5)*100;
+                        console.log(forcePercent);
+                        this.showPercent =`概率：${forcePercent}%`;
 
-                if(forcePercent>80){
-                    this.isForce = true;
-                }
+                        if(forcePercent>80){
+                            this.isForce = true;
+                        }
+                    },
+                });
+                e.preventDefault();
             },
             changeImage(e){
                 this.imageIsBig = false;
                 this.imageRight = false;
-                var file = e.target.files[0]
-                var reader = new FileReader()
-                var that = this
+                const file = e.target.files[0];
+                const reader = new FileReader();
+                const that = this;
                 reader.readAsDataURL(file);
-                this.imageName = file.name;
-                reader.onload = function(e) {
-                    that.dialogImageUrl = this.result
-                }
+                reader.onload = function() {
+                    that.dialogImageUrl = this.result;
+                };
                 let size=file.size;//文件的大小，判断图片的大小
-                debugger;
                 if(size>1048576){
-                    this.imageIsBig = true;
+                    console.log("图片太大了")
                 }else {
                     this.imageRight = true;
+                    console.log('开始上传')
+//                    this.uploadImage(e);
                 }
             },
         }
@@ -136,14 +157,24 @@
 </script>
 
 <style scoped>
-	.nav_header{height: 40px;line-height: 40px;font-size: 16px;display: inline-block;padding: 0 10px;color: #999999;border: 1px solid #dddddd;}
-	.show_json_outer{height: 400px;overflow-y:scroll;border: 1px solid #dddddd;}
+	.show_json_outer{height: 350px;overflow-y:scroll;border: 1px solid #e2ecfc;}
 	.show_add_image{height: 100%;margin: 0 auto;display: block;}
-	.show_url{height: 33px; line-height: 33px;min-width: 100px;padding: 0 8px;}
-	.show_left_aerrow{height: 15px;  width: 14px;  line-height: 15px;  color: rgb(255, 255, 255);  background-color: rgb(103, 194, 58);  border-radius: 50%;  display: inline-block;  padding: 3px;  margin-right: 5px;}
-	.outer_add{width: 98%;height:350px;position: relative;overflow: hidden;border: 1px solid #dddddd;}
-	.choose_style{display:block;height: 35px; line-height: 35px;width: 40%;font-size: 15px;color: white;background-color: #237EE6;text-align: center;margin-right: 2.5%;cursor: pointer;border-radius: 5px;}
-	.choose_style_no{display:block;height: 35px; line-height: 35px;width: 40%;font-size: 15px;color: #999999;background-color: #dddddd;text-align: center;margin-right: 2.5%;border-radius: 5px;}
+	.original_style{position: absolute;font-size: 14px;color: #316dff;height: 30px;line-height: 30px;background-color: #e3ecfb;display: inline-block;padding: 0 35px 0 25px;-webkit-clip-path: polygon(0% 0%, 100% 0%, 90% 100%, 0% 100%);}
+	.image_outer{margin-right: 10px;}
+	.outer_add{height:350px;position: relative;overflow: hidden;border: 1px solid #e2ecfc;}
+	.upload_outer{display: flex;margin-top: 20px;}
+	.top_suggest{color: #999999;font-size: 14px;line-height: 40px;height: 30px;}
+	.init_url_style{flex: 1;height: 43px;line-height: 43px;border: 1px solid #E2ECFC;font-size: 15px;padding-left: 10px;background-color: #fafcfe;}
+	.init_url_style:hover{border: 1px solid #C0C4CC;border-right: none;}
+	.init_url_style:focus{border: 1px solid #409EFF;border-right: none;}
+	.check_style{display:inline-block;height: 41px;line-height: 41px;font-size: 16px;color: #316dff;border: 2px solid #316dff;width: 100px;text-align: center;cursor:pointer;background-color: #fafcfe;}
+	.check_style:hover{background-color: #316DFF;color: white;}
+	.local_upload{height: 45px;line-height: 45px;font-size: 16px;}
+	.local_upload:after{content: "或";margin: 0 15px;}
+	.local_upload label{display:inline-block;height: 43px;line-height: 43px;font-size: 16px;background-color: #316DFF;color:white;border: 1px solid #316DFF;padding: 0 15px;text-align: center;cursor: pointer;}
+	.local_upload label:hover{background-color: white;color: #316DFF}
+	.show_input_outer{display: flex;flex: 1;}
+
 	#show_json{margin: 50px auto;padding: 10px 30px;}
 	#show_json p{height: 30px;line-height: 30px;}
 	.inputfile{z-index: -11111;width: 0px;height:1px;opacity: 0;}

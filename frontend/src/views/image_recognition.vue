@@ -78,8 +78,7 @@
 							<div style="padding: 14px;">
 								<span>服务可靠</span>
 								<div class="describe_outer">
-									<time class="good_describe">
-										已成功应用于多项核心业务，历经市场验证，技术成熟稳定，可用性高达99.9%</time>
+									<time class="good_describe">已成功应用于多项核心业务，历经市场验证，技术成熟稳定，可用性高达99.9%</time>
 								</div>
 							</div>
 						</el-col>
@@ -88,8 +87,7 @@
 							<div style="padding: 14px;">
 								<span>企业级平台</span>
 								<div class="describe_outer">
-									<time class="good_describe">
-										企业级图片处理大平台，保证7x24不间断云服务，让您的产品always online</time>
+									<time class="good_describe">企业级图片处理大平台，保证7x24不间断云服务，让您的产品always online</time>
 								</div>
 							</div>
 						</el-col>
@@ -151,8 +149,7 @@
 								<div class="fl right_word_con">
 									<span>身份认证</span>
 									<div class="scenario_describe_outer">
-										<span class="good_describe">
-											无需手动输入证件信息，可快速进行银行身份认证、主播身份认证等</span>
+										<span class="good_describe">无需手动输入证件信息，可快速进行银行身份认证、主播身份认证等</span>
 									</div>
 								</div>
 							</div>
@@ -165,8 +162,7 @@
 								<div class="fl right_word_con">
 									<span>交通监管</span>
 									<div class="scenario_describe_outer">
-										<span class="good_describe">
-											实时对车牌OCR，快速锁定违章车辆信息</span>
+										<span class="good_describe">实时对车牌OCR，快速锁定违章车辆信息</span>
 									</div>
 								</div>
 							</div>
@@ -175,7 +171,6 @@
 				</el-col>
 			</el-row>
 		</div>
-
 	</div>
 
 </template>
@@ -195,8 +190,7 @@
 </script>
 
 <style scoped>
-	.top_contain{background-color: #237EE6 ;min-height: 300px;margin-top: 110px;}
-	.top_contain :after{content: '';width: 100%;height: 50px;background-image: url("../assets/image/top_back.png");background-position: 0 0;}
+	.top_contain{background-color: #237EE6 ;min-height: 300px;margin-top: 80px;}
 	.top_image{width: 100%;display: block;margin-top: 75px;}
 	.show_title_outer{padding: 40px 20px 40px;color: white;}
 	.show_title_outer h1{}

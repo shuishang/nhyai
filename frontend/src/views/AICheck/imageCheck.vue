@@ -1,0 +1,97 @@
+<template>
+	<div class="imageCheck">
+		<!--图片评审-->
+		<el-row style="min-width: 800px;margin-top: 30px">
+			<el-col :md={span:14,offset:2} :lg={span:13,offset:2} :xl={span:11,offset:4}>
+				<div class="show_add_image_outer">
+					<div class="outer_add">
+						<img class="show_add_image" :src="dialogImageUrl">
+						<div class="show_result_outer">
+							<div class="show_result" v-if="isForce">
+								<i class="show_word danger_result_back"></i>
+							</div>
+							<div class="show_result" v-else>
+								<!--<i class="show_word normal_result_back"></i>-->
+								<i class="show_word danger_result_back"></i>
+							</div>
+						</div>
+					</div>
+					<p class="suggest"><span style="color: red">*</span> 提示: 敏感系数<50%为合规，50%～90%为疑似违规，>90%为违规<span v-show="imageIsBig" style="color: red;margin-left: 10px;display: inline-block;">！该图片大小超过1M</span></p>
+				</div>
+			</el-col>
+			<el-col :md="6" :lg="7" :xl="5">
+				<div class="show_json_outer">
+					<p class="result_title">审查结果</p>
+					<div class="result_outer">
+						<p>暴恐识别</p>
+						<p class="green_style_name">合规</p>
+						<p class="green_style_number">12.35%</p>
+					</div>
+					<div class="result_outer">
+						<p>色情识别</p>
+						<p class="green_style_name">合规</p>
+						<p class="green_style_number">12.56%</p>
+					</div>
+					<div class="result_outer">
+						<p class="ell">政治敏感识别</p>
+						<p class="orange_style_name">疑似违规</p>
+						<p class="orange_style_number">60.35%</p>
+					</div>
+					<div class="result_outer">
+						<p>公众人物识别</p>
+						<p class="red_style_name">违规</p>
+						<p class="red_style_number">90.35%</p>
+					</div>
+					<div class="result_outer">
+						<p>广告检测</p>
+						<p class="red_style_name">违规</p>
+						<p class="red_style_number">90.16%</p>
+					</div>
+				</div>
+			</el-col>
+		</el-row>
+	</div>
+</template>
+
+<script>
+
+	export default {
+	    data(){
+	        return{
+                dialogImageUrl: require("../../assets/image/sample_image.png"),
+                isForce:false,
+                imageRight:false,
+                imageIsBig:false,
+			}
+		}
+	}
+</script>
+<style scoped>
+	/*image样式begin*/
+	.show_add_image_outer{min-height: 400px}
+	.show_input_outer{display: flex;}
+	.show_word{width: 180px;height: 200px;  display: inline-block;  text-align: center;  font-size: 22px;  font-style: normal;  color: #fff;  box-sizing: border-box;  padding-top: 58px;}
+	.normal_result_back{background-image: url("../../assets/image/2.png");background-repeat: no-repeat;position: absolute;top: 50%;left: 50%;margin-left: -90px;margin-top: -100px;}
+	.danger_result_back{background-image: url("../../assets/image/2.png");}
+	.show_json_outer{height: 430px;z-index: 99;background-color: white;position: relative;left: -20px;top: 35px;box-shadow:5px 0 20px #c5cff1}
+	.show_json_outer .result_title{font-size: 24px;color: #000000;text-align: center;height: 100px;padding-top: 30px;}
+	.show_json_outer .result_title:before{content: "";background: url("../../assets/image/result_top_image.png") no-repeat center center;height: 23px;display: block;margin-bottom: 10px;}
+	.suggest{color: #b2b2b2;font-size: 14px;min-height: 30px;margin:8px 0;}
+	.show_result_outer{width: 100%;height: 100%;position: absolute;top: 0;z-index: 1;text-align: center; background-color: rgba(0,0,0,.2);}
+	.show_result_outer:before{content: '';position: absolute;left: 0;top: 0;width: 100%;height: 100%;}
+	.show_result{ z-index: 3;display: inline-block;vertical-align: middle;margin-top: 15%}
+	.result_outer{margin: 20px 30px;display: flex;color: #000000;height: 28px;line-height: 28px;}
+	.result_outer p:nth-of-type(1){font-size: 16px;flex: 5;margin-left: 10px;}
+	.result_outer p:nth-of-type(2){font-size: 16px;flex: 3;text-align: center}
+	.result_outer p:nth-of-type(3){font-size: 16px;flex: 4;text-align: center}
+	.result_outer .green_style_name{background-color: #54cd62;border: 1px solid #54cd62;color: #fff}
+	.result_outer .green_style_number{border: 1px solid #54cd62;color: #54cd62}
+	.result_outer .orange_style_name{background-color: #ffac09;border: 1px solid #ffac09;color: #fff}
+	.result_outer .orange_style_number{border: 1px solid #ffac09;color: #ffac09}
+	.result_outer .red_style_name{background-color: #ff524a;border: 1px solid #ff524a;color: #fff}
+	.result_outer .red_style_number{border: 1px solid #ff524a;color: #ff524a}
+	.show_add_image{height: 100%;margin: 0 auto;display: block;}
+	.outer_add{height:500px;position: relative;overflow: hidden;}
+	/*image样式end*/
+
+</style>

@@ -40,7 +40,7 @@
 								</div>
 							</div>
 						</div>
-						<form action="http://172.31.4.33:8000/api/uploads/"
+						<form action="http://127.0.0.1:8000/api/uploads/"
 							  method="post"
 							  enctype="multipart/form-data">
 							<input id="datafile" name="datafile" type="file" class="inputfile" @change="changeImage($event)">
