@@ -22,8 +22,23 @@ from django.conf import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', TemplateView.as_view(template_name="index.html")),
-    path('sindex/', TemplateView.as_view(template_name="index.html")),
-    path('imageRecognition/', TemplateView.as_view(template_name="index.html")),
+    path('sindex', TemplateView.as_view(template_name="index.html")),
+    path('imageRecognition', TemplateView.as_view(template_name="index.html")),
+    path('yellow', TemplateView.as_view(template_name="index.html")),
+    path('force', TemplateView.as_view(template_name="index.html")),
+    path('wordRecognition', TemplateView.as_view(template_name="index.html")),
+    path('wordRecognition/idCard', TemplateView.as_view(template_name="index.html")),
+    path('wordRecognition/drivingLicence', TemplateView.as_view(template_name="index.html")),
+    path('wordRecognition/runningLicence', TemplateView.as_view(template_name="index.html")),
+    path('wordRecognition/commonUse', TemplateView.as_view(template_name="index.html")),
+    path('wordRecognition/businessLicence', TemplateView.as_view(template_name="index.html")),
+    path('wordRecognition/bankCard', TemplateView.as_view(template_name="index.html")),
+    path('wordRecognition/handwriten', TemplateView.as_view(template_name="index.html")),
+    path('wordRecognition/carNumber', TemplateView.as_view(template_name="index.html")),
+    path('wordRecognition/visitingCard', TemplateView.as_view(template_name="index.html")),
+    path('voiceRecognition', TemplateView.as_view(template_name="index.html")),
+    path('writeRecognition', TemplateView.as_view(template_name="index.html")),
+    path('videoRecognition', TemplateView.as_view(template_name="index.html")),
     path('api/', include('api.urls'))
 ]
 
