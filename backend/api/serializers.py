@@ -23,3 +23,14 @@ class FileUploadSerializer(serializers.HyperlinkedModelSerializer):
 
     def clean_json(self, obj):
         return obj.result
+
+class WordRecognitionSerializer(serializers.HyperlinkedModelSerializer):
+    
+    result = serializers.JSONField(True)
+
+    class Meta:
+        model = FileUpload
+        fields = ('datafile','result')
+
+    def clean_json(self, obj):
+        return obj.result

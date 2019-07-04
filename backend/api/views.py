@@ -6,13 +6,14 @@ from rest_framework import status
 from rest_framework.exceptions import ParseError
 # uload package
 from rest_framework.parsers import MultiPartParser,FormParser
-from .serializers import FileUploadSerializer
-from .models import FileUpload
+from .serializers import FileUploadSerializer,WordRecognitionSerializer
+from .models import FileUpload,WordRecognition
 # Handle Image
 from PIL import Image
 from io import BytesIO
 import json
 from .violence import check_violence
+from .ocr.chineseocr import OCR
 from django.conf import settings
 import os
 
@@ -60,6 +61,81 @@ class FileUploadViewSet(viewsets.ModelViewSet):
         print (file_path)
         check_result = check_violence(file_path)
         # print (check_result)
+
+        result = {
+                "ret": 0,
+                "msg": "ok",
+                "data": {
+                    "tag_list": [
+                    {
+                        "tag_name": "protest",
+                        "probability": check_result['protest']
+                    },
+                    {
+                        "tag_name": "violence",
+                        "probability": check_result['violence']
+                    },
+                    {
+                        "tag_name": "sign",
+                        "probability": check_result['sign']
+                    },
+                    {
+                        "tag_name": "photo",
+                        "probability": check_result['photo']
+                    },
+                    {
+                        "tag_name": "fire",
+                        "probability": check_result['fire']
+                    },
+                    {
+                        "tag_name": "police",
+                        "probability": check_result['police']
+                    },
+                    {
+                        "tag_name": "children",
+                        "probability": check_result['children']
+                    },
+                    {
+                        "tag_name": "group_20",
+                        "probability": check_result['group_20']
+                    },
+                    {
+                        "tag_name": "group_100",
+                        "probability": check_result['group_100']
+                    },
+                    {
+                        "tag_name": "flag",
+                        "probability": check_result['flag']
+                    },
+                    {
+                        "tag_name": "night",
+                        "probability": check_result['night']
+                    },
+                    {
+                        "tag_name": "shouting",
+                        "probability": check_result['shouting']
+                    }]
+                }
+            }
+        serializer.save(result=result)
+        
+        return Response(status=status.HTTP_201_CREATED)
+
+class WordRecognitionSet(viewsets.ModelViewSet):
+    
+    queryset = WordRecognition.objects.all()
+    serializer_class = WordRecognitionSerializer
+    parser_classes = (MultiPartParser, FormParser,)
+
+    def perform_create(self, serializer):
+        
+        print (self.request.data)
+        iserializer = serializer.save()
+
+        bill_model = '身份证'
+        file_path = iserializer.datafile.path
+        print (file_path)
+        check_result = OCR.getWordRecognition(file_path, bill_model)
 
         result = {
                 "ret": 0,

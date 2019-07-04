@@ -23,3 +23,7 @@ class FileUpload(models.Model):
     # datafile = models.ImageField(upload_to='photos')
     datafile = models.ImageField(upload_to=path_and_rename, max_length=255, null=True, blank=True)
     result = models.TextField(max_length=255,default='')
+
+class WordRecognition(models.Model):
+    datafile = models.ImageField(upload_to=path_and_rename, max_length=255, null=True, blank=True)
+    result = models.TextField(max_length=255,default='')
