@@ -17,4 +17,4 @@ yarn-error.log*
 /api/ocr/models/*.h5
 /api/ocr/models/*.pbtxt
 /api/ocr/models/*.weights
-/api/ocr/models/*.pd
+/api/ocr/models/*.pb
