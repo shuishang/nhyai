@@ -13,7 +13,7 @@ yarn-error.log*
 *.njsproj
 *.sln
 /api/model_best.pth.tar
-/ocr/models/*.pth
-/ocr/models/*.h5
-/ocr/models/*.pbtxt
-/ocr/models/*.weights
+/api/ocr/models/*.pth
+/api/ocr/models/*.h5
+/api/ocr/models/*.pbtxt
+/api/ocr/models/*.weights
