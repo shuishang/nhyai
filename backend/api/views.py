@@ -6,14 +6,16 @@ from rest_framework import status
 from rest_framework.exceptions import ParseError
 # uload package
 from rest_framework.parsers import MultiPartParser,FormParser
-from .serializers import FileUploadSerializer,WordRecognitionSerializer
-from .models import FileUpload,WordRecognition
+from .serializers import FileUploadSerializer,WordRecognitionSerializer,FileImageTerrorismUploadSerializer, FileVisionPornUploadSerializer
+from .models import FileUpload,WordRecognition,FileImageTerrorismUpload, FileVisionPornUpload
 # Handle Image
 from PIL import Image
 from io import BytesIO
 import json
 from .violence import check_violence
 from .ocr.chineseocr import OCR
+from violentsurveillance.image_terrorism import image_terrorism
+from violentsurveillance.vision_porn import vision_porn
 from django.conf import settings
 import os
 
@@ -41,7 +43,7 @@ class FileUploadViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         
-        print (self.request.data)
+        print(self.request.data)
         iserializer = serializer.save()
         # file_obj = self.request.data.get('datafile')
         # print (file_obj)
@@ -58,7 +60,7 @@ class FileUploadViewSet(viewsets.ModelViewSet):
         #     raise ParseError("Unsupported image type")
 
         file_path = iserializer.datafile.path
-        print (file_path)
+        print(file_path)
         check_result = check_violence(file_path)
         # print (check_result)
 
@@ -118,17 +120,17 @@ class FileUploadViewSet(viewsets.ModelViewSet):
                 }
             }
         serializer.save(result=result)
-        
+
         return Response(status=status.HTTP_201_CREATED)
 
 class WordRecognitionSet(viewsets.ModelViewSet):
-    
+
     queryset = WordRecognition.objects.all()
     serializer_class = WordRecognitionSerializer
     parser_classes = (MultiPartParser, FormParser,)
 
     def perform_create(self, serializer):
-        
+
         print (self.request.data)
         iserializer = serializer.save()
 
@@ -193,5 +195,65 @@ class WordRecognitionSet(viewsets.ModelViewSet):
                 }
             }
         serializer.save(result=result)
-        
+
         return Response(status=status.HTTP_201_CREATED)
+
+
+class FileImageTerrorismUploadViewSet(viewsets.ModelViewSet):
+    queryset = FileImageTerrorismUpload.objects.all()
+    serializer_class = FileImageTerrorismUploadSerializer
+    parser_classes = (MultiPartParser, FormParser,)
+
+    def perform_create(self, serializer):
+        print(self.request.data)
+        iserializer1 = serializer.save()
+        # file_obj = self.request.data.get('datafile')
+        # print (file_obj)
+        # ...
+        # do some stuff with uploaded file
+        # ...
+        # try:
+        #     img = Image.open(file_obj)
+        #     # img.verify()
+        #     pic_io = BytesIO()
+        #     img.save(pic_io,img.format)
+
+        # except:
+        #     raise ParseError("Unsupported image type")
+
+        file_path = iserializer1.datafile1.path
+        print(file_path)
+        check_result = image_terrorism(file_path)
+        # print (check_result)
+        serializer.save(result1=str(check_result))
+        return Response(status=status.HTTP_201_CREATED)
+
+
+class FileVisionPornUploadViewSet(viewsets.ModelViewSet):
+        queryset = FileVisionPornUpload.objects.all()
+        serializer_class = FileVisionPornUploadSerializer
+        parser_classes = (MultiPartParser, FormParser,)
+
+        def perform_create(self, serializer):
+            print(self.request.data)
+            iserializer2 = serializer.save()
+            # file_obj = self.request.data.get('datafile')
+            # print (file_obj)
+            # ...
+            # do some stuff with uploaded file
+            # ...
+            # try:
+            #     img = Image.open(file_obj)
+            #     # img.verify()
+            #     pic_io = BytesIO()
+            #     img.save(pic_io,img.format)
+
+            # except:
+            #     raise ParseError("Unsupported image type")
+
+            file_path = iserializer2.datafile2.path
+            print(file_path)
+            check_result = vision_porn(file_path)
+            # print (check_result)
+            serializer.save(result2=str(check_result))
+            return Response(status=status.HTTP_201_CREATED)

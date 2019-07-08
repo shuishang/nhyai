@@ -19,10 +19,23 @@ def path_and_rename(instance, filename):
     # return the whole path to the file
     return os.path.join(upload_to, filename)
 
+
 class FileUpload(models.Model):
     # datafile = models.ImageField(upload_to='photos')
     datafile = models.ImageField(upload_to=path_and_rename, max_length=255, null=True, blank=True)
-    result = models.TextField(max_length=255,default='')
+    result = models.TextField(max_length=256,default='')
+
+
+class FileImageTerrorismUpload(models.Model):
+    # datafile = models.ImageField(upload_to='photos')
+    datafile1 = models.ImageField(upload_to=path_and_rename, max_length=255, null=True, blank=True)
+    result1 = models.TextField(max_length=256,default='')
+
+
+class FileVisionPornUpload(models.Model):
+    # datafile = models.ImageField(upload_to='photos')
+    datafile2 = models.ImageField(upload_to=path_and_rename, max_length=255, null=True, blank=True)
+    result2 = models.TextField(max_length=256,default='')
 
 class WordRecognition(models.Model):
     datafile = models.ImageField(upload_to=path_and_rename, max_length=255, null=True, blank=True)

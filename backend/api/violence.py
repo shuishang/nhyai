@@ -80,7 +80,7 @@ def check_violence(img_file):
     if cuda:
         model = model.cuda()
     
-    with open(os.path.join(path, 'backend/api' ,model_path), 'rb') as f:
+    with open(os.path.join(path, 'api', model_path), 'rb') as f:
         model.load_state_dict(torch.load(f ,map_location='cpu')['state_dict'])
         # calculate output
     df = eval_one_file(img_file, model)
