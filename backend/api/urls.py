@@ -9,6 +9,7 @@ router.register(r'uploads', views.FileUploadViewSet)
 router.register(r'wordRecognitions', views.WordRecognitionSet)
 router.register(r'imageTerrorismUploads', views.FileImageTerrorismUploadViewSet)
 router.register(r'visionPornUploads', views.FileVisionPornUploadViewSet)
+router.register(r'videoUploads', views.VideoFileUploadViewSet)
 
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.

@@ -17,7 +17,12 @@ from .ocr.chineseocr import OCR
 from violentsurveillance.image_terrorism import image_terrorism
 from violentsurveillance.vision_porn import vision_porn
 from django.conf import settings
+from .serializers import VideoFileUploadSerializer
+from .models import VideoFileUpload
 import os
+import shutil
+import uuid
+import cv2
 
 class UserViewSet(viewsets.ModelViewSet):
     """
@@ -257,3 +262,80 @@ class FileVisionPornUploadViewSet(viewsets.ModelViewSet):
             # print (check_result)
             serializer.save(result2=str(check_result))
             return Response(status=status.HTTP_201_CREATED)
+
+class VideoFileUploadViewSet(viewsets.ModelViewSet):
+    queryset = VideoFileUpload.objects.all()
+    serializer_class = VideoFileUploadSerializer
+    parser_classes = (MultiPartParser, FormParser,)
+
+    def perform_create(self, serializer):
+        print(self.request.data)
+        iserializer = serializer.save()
+        totalCount = 0
+        file_path = iserializer.datafile.path
+        print (file_path)
+
+        # 读取视频
+        cap = cv2.VideoCapture(file_path)
+        # 获取FPS(每秒传输帧数(Frames Per Second))
+        fps = cap.get(cv2.CAP_PROP_FPS)
+        # 获取总帧数
+        totalFrameNumber = cap.get(cv2.CAP_PROP_FRAME_COUNT)
+        print(fps)
+        print(totalFrameNumber)
+        # 当前读取到第几帧
+        COUNT = 0
+        temp_path = "e:/capture_out_images/"+str(uuid.uuid1())+"/"
+        save_path = "e:/save_images/"+str(uuid.uuid1())+"/"
+        os.makedirs(temp_path) #重新创建文件夹 
+        os.makedirs(save_path) #重新创建文件夹 
+        contentList=[]
+        #violencePercent=1
+        # 若小于总帧数则读一帧图像
+        while COUNT < totalFrameNumber:
+            contentMap={}
+            # 一帧一帧图像读取
+            ret, frame = cap.read()
+            # 把每一帧图像保存成jpg格式（这一行可以根据需要选择保留）
+            imageName = str(COUNT) + '.jpg'
+            cv2.imwrite(temp_path+imageName, frame)
+            # 显示这一帧地图像
+            #cv2.imshow('video', frame)
+
+            jsonResultInfo  = check_violence(temp_path+imageName)
+            print(jsonResultInfo)
+            violencePercent = jsonResultInfo.get('violence')
+            
+            #print(violencePercent)
+            if violencePercent > 0.3:
+                totalCount = totalCount + 1
+                cv2.imwrite(save_path+imageName, frame)
+                #计算当前是第几秒
+                second = COUNT / fps
+                print("暴恐图片11222222222222")
+                print(second)
+                contentMap['image_url'] = save_path+imageName
+                contentMap['second'] = second
+                print(contentMap)
+                contentList.append(contentMap)
+
+            else:
+                print("不是暴恐图片")
+
+            COUNT = COUNT + 1
+            #if COUNT>3:
+            #    violencePercent=0
+            # 延时一段33ms（1s?30帧）再读取下一帧，如果没有这一句便无法正常显示视频
+            cv2.waitKey(33)
+            
+        cap.release();
+        print(COUNT)
+        print(contentList)
+        shutil.rmtree(temp_path)
+        print("删除成功1111111111111111")
+        print(totalCount)
+
+        serializer.save(result=contentList,datafile=file_path,duration=totalFrameNumber/fps,width=cap.get(3),height=cap.get(4),count=totalCount)
+        
+        # print (check_result)
+        return Response(status=status.HTTP_201_CREATED)
