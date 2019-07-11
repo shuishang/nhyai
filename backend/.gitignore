@@ -25,5 +25,6 @@ api/ocr/application/__pycache__/*.pyc
 api/ocr/crnn/__pycache__/*.pyc
 api/ocr/text/__pycache__/*.pyc
 api/ocr/text/detector/__pycache__/*.pyc
+api/ocr/text/detector/utils/__pycache__/*.pyc
 api/ocr/text/utils/__pycache__/*.pyc
 violentsurveillance/__pycache__/*.pyc
