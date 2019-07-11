@@ -18,3 +18,4 @@ yarn-error.log*
 /api/ocr/models/*.pbtxt
 /api/ocr/models/*.weights
 /api/ocr/models/*.pb
+/api/sensitives/*.csv
