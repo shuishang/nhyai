@@ -14,6 +14,8 @@ import os
 import codecs
 
 def check_sensitiveWords(keywords):
+    t = time.time()
+    startTime = int(round(t * 1000))
     pwd = os.getcwd()
     csvFile = os.path.join(pwd,"backend","api","sensitives","sensitiveWords.csv")
     #keywords="天安門屠殺"
@@ -34,11 +36,12 @@ def check_sensitiveWords(keywords):
                 "secondType": arr[1],
                 "keyword": keywords
             }
-        else:
-            print ("keywords not in ")
         rowNumber = rowNumber + 1
+    
+    t = time.time()
+    endTime = int(round(t * 1000))
+    result["millisecond"]=endTime-startTime
     print("result:",result)
     return result
-
 if __name__ == '__main__':
 	check_sensitiveWords("十八摸")	 
