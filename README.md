@@ -3,6 +3,6 @@
 
 数据库割接：
 
-python manage.py makemigrations
+python backend/manage.py makemigrations
 
-python manage.py migrate
+python backend/manage.py migrate
