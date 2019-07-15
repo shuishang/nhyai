@@ -73,7 +73,12 @@ class audio:
             # print ("line:%s %s\n" % (index,line))
             if (index == 8):
                 output = line.split("T0055G0036S0002")[1].strip()
-                output_utf8 = output.encode('gbk').decode('utf-8')
+                if (sysstr =="Windows"):
+                    output_utf8 = output.encode('gbk').decode('utf-8')
+                elif (sysstr =="Linux"):
+                    output_utf8 = output
+                else:
+                    output_utf8 = output
                 print ("Result:%s" % output_utf8)
                 return output_utf8
 
