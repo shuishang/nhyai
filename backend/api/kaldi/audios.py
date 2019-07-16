@@ -14,6 +14,18 @@ class audio:
     def __init__(self,filepath):
         self.filepath = filepath
 
+    def RunShellWithReturnCode(self,command):
+        p = subprocess.Popen(command,stdout=subprocess.PIPE,stderr=subprocess.PIPE,shell=True)
+        p.wait()
+        output = ""
+        while True:
+            line = p.stderr.read()
+            if not line:
+                break
+            output += line.decode("utf-8")
+        # print(output)
+        return output
+
     def getAudioContent(self):
 
         # print(platform.system())
@@ -63,24 +75,19 @@ class audio:
         
         # cmd = 'dir'
 
-        _, out = subprocess.getstatusoutput(cmd)
-        lines = out.split('\n')
+        out = self.RunShellWithReturnCode(cmd)
+        lines = str(out).split('\n')
         index = 0
         for line in lines:
             if 'IOR' in line:
                 break
             index += 1
-            # print ("line:%s %s\n" % (index,line))
             if (index == 8):
                 output = line.split("T0055G0036S0002")[1].strip()
-                if (sysstr =="Windows"):
-                    output_utf8 = output.encode('gbk').decode('utf-8')
-                elif (sysstr =="Linux"):
-                    output_utf8 = output
-                else:
-                    output_utf8 = output
-                print ("Result:%s" % output_utf8)
-                return output_utf8
+                #替换无法识别语音 <UNK>
+                output = output.replace("<UNK>", "")
+                print ("Result:%s" % output)
+                return output
 
 if __name__ == '__main__':
     myaudio = audio("test.wav")
