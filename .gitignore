@@ -16,6 +16,7 @@ backend/__pycache__/*.pyc
 backend/backend/__pycache__/*.pyc
 backend/api/__pycache__/*.pyc
 backend/api/migrations/__pycache__/*.pyc
+backend/api/migrations/*.py
 backend/api/kaldi/aidatatang_200zh/s5/exp/chain/tdnn_1a_sp/graph/HCLG.fst
 backend/api/kaldi/aidatatang_200zh/s5/exp/chain/tdnn_1a_sp/final.mdl
 backend/api/kaldi/aidatatang_200zh/s5/exp/chain/nnet_online/ivector_extractor/splice_opts
@@ -35,3 +36,4 @@ backend/api/kaldi/aidatatang_200zh/s5/exp/chain/nnet_online/tree
 backend/api/kaldi/aidatatang_200zh/s5/exp/chain/nnet_online/conf/*.conf
 backend/api/kaldi/aidatatang_200zh/s5/data/aidatatang_200zh/corpus/test/G0036/*.wav
 backend/api/kaldi/aidatatang_200zh/s5/20190619.txt
+backend/api/kaldi/__pycache__/*.pyc
