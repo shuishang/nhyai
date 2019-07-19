@@ -6,7 +6,7 @@ from rest_framework import status
 from rest_framework.exceptions import ParseError
 # uload package
 from rest_framework.parsers import MultiPartParser,FormParser
-from .serializers import FileUploadSerializer,WordRecognitionSerializer,FileImageTerrorismUploadSerializer, FileVisionPornUploadSerializer
+from .serializers import FileUploadSerializer,WordRecognitionSerializer,FileImageTerrorismUploadSerializer, FileVisionPornUploadSerializer,AudioFileUploadSerializer
 from .models import FileUpload,WordRecognition,FileImageTerrorismUpload, FileVisionPornUpload
 # Handle Image
 from PIL import Image
@@ -18,11 +18,12 @@ from violentsurveillance.image_terrorism import image_terrorism
 from violentsurveillance.vision_porn import vision_porn
 from django.conf import settings
 from .serializers import VideoFileUploadSerializer
-from .models import VideoFileUpload
+from .models import VideoFileUpload,AudioFileUpload
 import os
 import shutil
 import uuid
 import cv2
+from .kaldi.audios import audio
 
 class UserViewSet(viewsets.ModelViewSet):
     """
@@ -338,4 +339,20 @@ class VideoFileUploadViewSet(viewsets.ModelViewSet):
         serializer.save(result=contentList,datafile=file_path,duration=totalFrameNumber/fps,width=cap.get(3),height=cap.get(4),count=totalCount)
         
         # print (check_result)
+        return Response(status=status.HTTP_201_CREATED)
+
+class AudioFileUploadViewSet(viewsets.ModelViewSet):
+    queryset = AudioFileUpload.objects.all()
+    serializer_class = AudioFileUploadSerializer
+    parser_classes = (MultiPartParser, FormParser,)
+
+    def perform_create(self, serializer):
+        print(self.request.data)
+        iserializer = serializer.save()
+
+        file_path = iserializer.datafile.path
+        print(file_path)
+        check_result = audio().getOneAudioContent(file_path)
+        # print (check_result)
+        serializer.save(result=str(check_result))
         return Response(status=status.HTTP_201_CREATED)

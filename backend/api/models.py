@@ -19,6 +19,18 @@ def path_and_rename(instance, filename):
     # return the whole path to the file
     return os.path.join(upload_to, filename)
 
+def audiopath_and_rename(instance, filename):
+    upload_to = 'audios'
+    ext = filename.split('.')[-1]
+    # get filename
+    if instance.pk:
+        filename = '{}.{}'.format(instance.pk, ext)
+    else:
+        # set filename as random string
+        filename = '{}.{}'.format(uuid4().hex, ext)
+    # return the whole path to the file
+    return os.path.join(upload_to, filename)
+
 
 class FileUpload(models.Model):
     # datafile = models.ImageField(upload_to='photos')
@@ -49,3 +61,8 @@ class VideoFileUpload(models.Model):
     duration = models.FloatField(editable=False, null=True)
     count = models.PositiveIntegerField(editable=False, null=True)
     result = models.TextField(max_length=255,default='')
+
+class AudioFileUpload(models.Model):
+    # datafile = models.ImageField(upload_to='photos')
+    datafile = models.FileField(upload_to=audiopath_and_rename, max_length=255, null=True, blank=True)
+    result = models.TextField(max_length=256,default='')
