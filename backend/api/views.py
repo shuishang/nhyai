@@ -17,13 +17,14 @@ from .ocr.chineseocr import OCR
 from violentsurveillance.image_terrorism import image_terrorism
 from violentsurveillance.vision_porn import vision_porn
 from django.conf import settings
-from .serializers import VideoFileUploadSerializer,OcrGeneralSerializer,OcrIDCardSerializer
-from .models import VideoFileUpload,AudioFileUpload,OcrGeneral,OcrIDCard
+from .serializers import VideoFileUploadSerializer,OcrGeneralSerializer,OcrIDCardSerializer,AudioFileInspectionSerializer
+from .models import VideoFileUpload,AudioFileUpload,OcrGeneral,OcrIDCard,AudioFileInspection
 import os
 import shutil
 import uuid
 import cv2
 from .kaldi.audios import audio
+from .sensitives.sensitives import sensitiveClass
 
 class UserViewSet(viewsets.ModelViewSet):
     """
@@ -513,6 +514,23 @@ class AudioFileUploadViewSet(viewsets.ModelViewSet):
         file_path = iserializer.datafile.path
         print(file_path)
         check_result = audio().getOneAudioContent(file_path)
+        # print (check_result)
+        serializer.save(result=str(check_result))
+        return Response(status=status.HTTP_201_CREATED)
+
+class AudioFileInspectionViewSet(viewsets.ModelViewSet):
+    queryset = AudioFileInspection.objects.all()
+    serializer_class = AudioFileInspectionSerializer
+    parser_classes = (MultiPartParser, FormParser,)
+
+    def perform_create(self, serializer):
+        print(self.request.data)
+        iserializer = serializer.save()
+
+        file_path = iserializer.datafile.path
+        print(file_path)
+        audio_content = audio().getOneAudioContent(file_path)
+        check_result = sensitiveClass().check_sensitiveWords(audio_content)
         # print (check_result)
         serializer.save(result=str(check_result))
         return Response(status=status.HTTP_201_CREATED)

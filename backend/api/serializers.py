@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import serializers
 from .models import FileUpload, FileImageTerrorismUpload, FileVisionPornUpload
-from .models import VideoFileUpload,AudioFileUpload
+from .models import VideoFileUpload,AudioFileUpload,AudioFileInspection
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -98,6 +98,17 @@ class AudioFileUploadSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = AudioFileUpload
+        fields = ('datafile', 'result')
+
+    def clean_json(self, obj):
+        return obj.result
+
+class AudioFileInspectionSerializer(serializers.HyperlinkedModelSerializer):
+    
+    result = serializers.JSONField(True)
+
+    class Meta:
+        model = AudioFileInspection
         fields = ('datafile', 'result')
 
     def clean_json(self, obj):
