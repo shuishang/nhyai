@@ -37,6 +37,28 @@ class WordRecognitionSerializer(serializers.HyperlinkedModelSerializer):
     def clean_json(self, obj):
         return obj.result
 
+class OcrGeneralSerializer(serializers.HyperlinkedModelSerializer):
+
+    result = serializers.JSONField(True)
+
+    class Meta:
+        model = FileUpload
+        fields = ('datafile','result')
+
+    def clean_json(self, obj):
+        return obj.result
+
+class OcrIDCardSerializer(serializers.HyperlinkedModelSerializer):
+
+    result = serializers.JSONField(True)
+
+    class Meta:
+        model = FileUpload
+        fields = ('datafile','result')
+
+    def clean_json(self, obj):
+        return obj.result
+
 
 class FileImageTerrorismUploadSerializer(serializers.HyperlinkedModelSerializer):
     result1 = serializers.JSONField(True)

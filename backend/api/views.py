@@ -17,8 +17,8 @@ from .ocr.chineseocr import OCR
 from violentsurveillance.image_terrorism import image_terrorism
 from violentsurveillance.vision_porn import vision_porn
 from django.conf import settings
-from .serializers import VideoFileUploadSerializer
-from .models import VideoFileUpload,AudioFileUpload
+from .serializers import VideoFileUploadSerializer,OcrGeneralSerializer,OcrIDCardSerializer
+from .models import VideoFileUpload,AudioFileUpload,OcrGeneral,OcrIDCard
 import os
 import shutil
 import uuid
@@ -140,10 +140,170 @@ class WordRecognitionSet(viewsets.ModelViewSet):
         print (self.request.data)
         iserializer = serializer.save()
 
-        bill_model = '身份证'
+        bill_model = '通用'
         file_path = iserializer.datafile.path
         print (file_path)
         check_result = OCR.getWordRecognition(file_path, bill_model)
+
+        result = {
+                "ret": 0,
+                "msg": "ok",
+                "data": {
+                    "tag_list": [
+                    {
+                        "tag_name": "protest",
+                        "probability": check_result['protest']
+                    },
+                    {
+                        "tag_name": "violence",
+                        "probability": check_result['violence']
+                    },
+                    {
+                        "tag_name": "sign",
+                        "probability": check_result['sign']
+                    },
+                    {
+                        "tag_name": "photo",
+                        "probability": check_result['photo']
+                    },
+                    {
+                        "tag_name": "fire",
+                        "probability": check_result['fire']
+                    },
+                    {
+                        "tag_name": "police",
+                        "probability": check_result['police']
+                    },
+                    {
+                        "tag_name": "children",
+                        "probability": check_result['children']
+                    },
+                    {
+                        "tag_name": "group_20",
+                        "probability": check_result['group_20']
+                    },
+                    {
+                        "tag_name": "group_100",
+                        "probability": check_result['group_100']
+                    },
+                    {
+                        "tag_name": "flag",
+                        "probability": check_result['flag']
+                    },
+                    {
+                        "tag_name": "night",
+                        "probability": check_result['night']
+                    },
+                    {
+                        "tag_name": "shouting",
+                        "probability": check_result['shouting']
+                    }]
+                }
+            }
+        serializer.save(result=result)
+
+        return Response(status=status.HTTP_201_CREATED)
+
+class OcrGeneralSet(viewsets.ModelViewSet):
+
+    queryset = OcrGeneral.objects.all()
+    serializer_class = OcrGeneralSerializer
+    parser_classes = (MultiPartParser, FormParser,)
+
+    def list(self, request):
+        """GET - Show all users"""
+        api_result = {}
+        return Response(api_result)
+
+    def perform_create(self, serializer):
+
+        print (self.request.data)
+        iserializer = serializer.save()
+
+        bill_model = '通用'
+        file_path = iserializer.datafile.path
+        print (file_path)
+        check_result = OCR.getWordRecognition(file_path, bill_model)
+
+        result = {
+                "ret": 0,
+                "msg": "ok",
+                "data": {
+                    "tag_list": [
+                    {
+                        "tag_name": "protest",
+                        "probability": check_result['protest']
+                    },
+                    {
+                        "tag_name": "violence",
+                        "probability": check_result['violence']
+                    },
+                    {
+                        "tag_name": "sign",
+                        "probability": check_result['sign']
+                    },
+                    {
+                        "tag_name": "photo",
+                        "probability": check_result['photo']
+                    },
+                    {
+                        "tag_name": "fire",
+                        "probability": check_result['fire']
+                    },
+                    {
+                        "tag_name": "police",
+                        "probability": check_result['police']
+                    },
+                    {
+                        "tag_name": "children",
+                        "probability": check_result['children']
+                    },
+                    {
+                        "tag_name": "group_20",
+                        "probability": check_result['group_20']
+                    },
+                    {
+                        "tag_name": "group_100",
+                        "probability": check_result['group_100']
+                    },
+                    {
+                        "tag_name": "flag",
+                        "probability": check_result['flag']
+                    },
+                    {
+                        "tag_name": "night",
+                        "probability": check_result['night']
+                    },
+                    {
+                        "tag_name": "shouting",
+                        "probability": check_result['shouting']
+                    }]
+                }
+            }
+        serializer.save(result=result)
+
+        return Response(status=status.HTTP_201_CREATED)
+
+class OcrIDCardSet(viewsets.ModelViewSet):
+
+    queryset = OcrIDCard.objects.all()
+    serializer_class = OcrIDCardSerializer
+    parser_classes = (MultiPartParser, FormParser,)
+
+    def list(self, request):
+        """GET - Show all users"""
+        api_result = {}
+        return Response(api_result)
+
+    def perform_create(self, serializer):
+
+        print (self.request.data)
+        iserializer = serializer.save()
+
+        bill_model = '身份证'
+        file_path = iserializer.datafile.path
+        print (file_path)
+        # check_result = OCR.getWordRecognition(file_path, bill_model)
 
         result = {
                 "ret": 0,
@@ -329,7 +489,7 @@ class VideoFileUploadViewSet(viewsets.ModelViewSet):
             # 延时一段33ms（1s?30帧）再读取下一帧，如果没有这一句便无法正常显示视频
             cv2.waitKey(33)
             
-        cap.release();
+        cap.release()
         print(COUNT)
         print(contentList)
         shutil.rmtree(temp_path)
