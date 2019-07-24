@@ -4,6 +4,7 @@ from rest_framework import serializers
 from django.utils.timezone import datetime
 from uuid import uuid4
 import os
+from django.utils.translation import gettext_lazy as _
 
 # Create your models here.
 
@@ -50,7 +51,7 @@ class FileVisionPornUpload(models.Model):
     result2 = models.TextField(max_length=256,default='')
 
 class WordRecognition(models.Model):
-    datafile = models.ImageField(upload_to=path_and_rename, max_length=255, null=True, blank=True)
+    word = models.CharField(_('word'), max_length=255, null=True, blank=True)
     result = models.TextField(max_length=255,default='')
 
 class OcrGeneral(models.Model):

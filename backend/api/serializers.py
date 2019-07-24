@@ -33,7 +33,7 @@ class WordRecognitionSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = WordRecognition
-        fields = ('datafile','result')
+        fields = ('word','result')
 
     def clean_json(self, obj):
         return obj.result

@@ -130,7 +130,7 @@ class FileUploadViewSet(viewsets.ModelViewSet):
 
         return Response(status=status.HTTP_201_CREATED)
 
-class WordRecognitionSet(viewsets.ModelViewSet):
+class WordRecognitionViewSet(viewsets.ModelViewSet):
 
     queryset = WordRecognition.objects.all()
     serializer_class = WordRecognitionSerializer
@@ -141,71 +141,16 @@ class WordRecognitionSet(viewsets.ModelViewSet):
         print (self.request.data)
         iserializer = serializer.save()
 
-        bill_model = '通用'
-        file_path = iserializer.datafile.path
-        print (file_path)
-        check_result = OCR.getWordRecognition(file_path, bill_model)
+        word = iserializer.word
+        print (word)
+        check_result = sensitiveClass().check_sensitiveWords(word)
 
-        result = {
-                "ret": 0,
-                "msg": "ok",
-                "data": {
-                    "tag_list": [
-                    {
-                        "tag_name": "protest",
-                        "probability": check_result['protest']
-                    },
-                    {
-                        "tag_name": "violence",
-                        "probability": check_result['violence']
-                    },
-                    {
-                        "tag_name": "sign",
-                        "probability": check_result['sign']
-                    },
-                    {
-                        "tag_name": "photo",
-                        "probability": check_result['photo']
-                    },
-                    {
-                        "tag_name": "fire",
-                        "probability": check_result['fire']
-                    },
-                    {
-                        "tag_name": "police",
-                        "probability": check_result['police']
-                    },
-                    {
-                        "tag_name": "children",
-                        "probability": check_result['children']
-                    },
-                    {
-                        "tag_name": "group_20",
-                        "probability": check_result['group_20']
-                    },
-                    {
-                        "tag_name": "group_100",
-                        "probability": check_result['group_100']
-                    },
-                    {
-                        "tag_name": "flag",
-                        "probability": check_result['flag']
-                    },
-                    {
-                        "tag_name": "night",
-                        "probability": check_result['night']
-                    },
-                    {
-                        "tag_name": "shouting",
-                        "probability": check_result['shouting']
-                    }]
-                }
-            }
+        result = check_result
         serializer.save(result=result)
 
         return Response(status=status.HTTP_201_CREATED)
 
-class OcrGeneralSet(viewsets.ModelViewSet):
+class OcrGeneralViewSet(viewsets.ModelViewSet):
 
     queryset = OcrGeneral.objects.all()
     serializer_class = OcrGeneralSerializer
@@ -226,7 +171,7 @@ class OcrGeneralSet(viewsets.ModelViewSet):
 
         return Response(status=status.HTTP_201_CREATED)
 
-class OcrIDCardSet(viewsets.ModelViewSet):
+class OcrIDCardViewSet(viewsets.ModelViewSet):
 
     queryset = OcrIDCard.objects.all()
     serializer_class = OcrIDCardSerializer
