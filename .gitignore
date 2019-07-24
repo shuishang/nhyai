@@ -37,3 +37,4 @@ backend/api/kaldi/aidatatang_200zh/s5/exp/chain/nnet_online/conf/*.conf
 backend/api/kaldi/aidatatang_200zh/s5/data/aidatatang_200zh/corpus/test/G0036/*.wav
 backend/api/kaldi/aidatatang_200zh/s5/20190619.txt
 backend/api/kaldi/__pycache__/*.pyc
+backend/api/sensitives/__pycache__/*.pyc
