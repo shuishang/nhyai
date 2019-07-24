@@ -16,6 +16,8 @@ from .application import idcard
 
 class OCR:
     """通用OCR识别、身份证识别"""
+    def __init__(self):
+        self = self
 
     def getWordRecognition(self, img_file, bill_model):
         billModel = bill_model
