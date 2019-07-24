@@ -51,8 +51,13 @@ class FileVisionPornUpload(models.Model):
     result2 = models.TextField(max_length=256,default='')
 
 class WordRecognition(models.Model):
-    word = models.CharField(_('word'), max_length=255, null=True, blank=True)
-    result = models.TextField(max_length=255,default='')
+    text = models.CharField(_('text'), max_length=255, null=True, blank=True)
+    sensitive_hit_flag = models.IntegerField(_('sensitive_hit_flag'), null=True, blank=True)
+    sensitive_size = models.IntegerField(_('sensitive_size'), null=True, blank=True)
+    sensitive_list = models.TextField(max_length=1024, default='')
+    ret = models.IntegerField(_('ret'), null=True, blank=True)
+    msg = models.TextField(max_length=255, default='')
+    data = models.TextField(max_length=2048, default='')
 
 class OcrGeneral(models.Model):
     datafile = models.ImageField(upload_to=path_and_rename, max_length=255, null=True, blank=True)

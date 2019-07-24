@@ -29,14 +29,16 @@ class FileUploadSerializer(serializers.HyperlinkedModelSerializer):
 
 class WordRecognitionSerializer(serializers.HyperlinkedModelSerializer):
 
-    result = serializers.JSONField(True)
+    ret = serializers.JSONField(True)
+    msg = serializers.JSONField(True)
+    data = serializers.JSONField(True)
 
     class Meta:
         model = WordRecognition
-        fields = ('word','result')
+        fields = ('text','ret','msg','data')
 
     def clean_json(self, obj):
-        return obj.result
+        return obj.ret,obj.msg,obj.data
 
 class OcrGeneralSerializer(serializers.HyperlinkedModelSerializer):
 

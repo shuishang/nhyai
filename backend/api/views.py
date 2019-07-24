@@ -141,12 +141,12 @@ class WordRecognitionViewSet(viewsets.ModelViewSet):
         print (self.request.data)
         iserializer = serializer.save()
 
-        word = iserializer.word
-        print (word)
-        check_result = sensitiveClass().check_sensitiveWords(word)
+        text = iserializer.text
+        print (text)
+        sensitive_list = sensitiveClass().check_sensitiveWords(text)
 
-        result = check_result
-        serializer.save(result=result)
+        data = sensitive_list
+        serializer.save(data=data)
 
         return Response(status=status.HTTP_201_CREATED)
 
