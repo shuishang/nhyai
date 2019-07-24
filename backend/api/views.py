@@ -211,11 +211,6 @@ class OcrGeneralSet(viewsets.ModelViewSet):
     serializer_class = OcrGeneralSerializer
     parser_classes = (MultiPartParser, FormParser,)
 
-    def list(self, request):
-        """GET - Show all users"""
-        api_result = {}
-        return Response(api_result)
-
     def perform_create(self, serializer):
 
         print (self.request.data)
@@ -236,11 +231,6 @@ class OcrIDCardSet(viewsets.ModelViewSet):
     queryset = OcrIDCard.objects.all()
     serializer_class = OcrIDCardSerializer
     parser_classes = (MultiPartParser, FormParser,)
-
-    def list(self, request):
-        """GET - Show all users"""
-        api_result = {}
-        return Response(api_result)
 
     def perform_create(self, serializer):
 
