@@ -1,8 +1,8 @@
 {
-    "python.pythonPath": "D:\\Anaconda3\\envs\\py35\\python.exe",
+    "python.pythonPath": "C:\\Users\\xiong\\AppData\\Local\\Continuum\\Anaconda3\\envs\\py35\\python.exe",
     "code-runner.clearPreviousOutput": true,
     "code-runner.customCommand": "chcp 65001",
     "code-runner.executorMap": {
-        "python": "D:\\Anaconda3\\envs\\py35\\python.exe"
+        "python": "C:\\Users\\xiong\\AppData\\Local\\Continuum\\Anaconda3\\envs\\python35\\python.exe"
     }
 }
