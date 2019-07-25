@@ -200,26 +200,13 @@ class FileImageTerrorismUploadViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         print(self.request.data)
-        iserializer1 = serializer.save()
-        # file_obj = self.request.data.get('datafile')
-        # print (file_obj)
-        # ...
-        # do some stuff with uploaded file
-        # ...
-        # try:
-        #     img = Image.open(file_obj)
-        #     # img.verify()
-        #     pic_io = BytesIO()
-        #     img.save(pic_io,img.format)
+        iserializer = serializer.save()
 
-        # except:
-        #     raise ParseError("Unsupported image type")
-
-        file_path = iserializer1.datafile1.path
+        file_path = iserializer.datafile.path
         print(file_path)
-        check_result = image_terrorism(file_path)
+        check_result = check_violence(file_path)
         # print (check_result)
-        serializer.save(result1=str(check_result))
+        serializer.save(result=str(check_result))
         return Response(status=status.HTTP_201_CREATED)
 
 
@@ -230,26 +217,13 @@ class FileVisionPornUploadViewSet(viewsets.ModelViewSet):
 
         def perform_create(self, serializer):
             print(self.request.data)
-            iserializer2 = serializer.save()
-            # file_obj = self.request.data.get('datafile')
-            # print (file_obj)
-            # ...
-            # do some stuff with uploaded file
-            # ...
-            # try:
-            #     img = Image.open(file_obj)
-            #     # img.verify()
-            #     pic_io = BytesIO()
-            #     img.save(pic_io,img.format)
+            iserializer = serializer.save()
 
-            # except:
-            #     raise ParseError("Unsupported image type")
-
-            file_path = iserializer2.datafile2.path
+            file_path = iserializer.datafile.path
             print(file_path)
             check_result = vision_porn(file_path)
             # print (check_result)
-            serializer.save(result2=str(check_result))
+            serializer.save(result=str(check_result))
             return Response(status=status.HTTP_201_CREATED)
 
 class VideoFileUploadViewSet(viewsets.ModelViewSet):

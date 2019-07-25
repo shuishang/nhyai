@@ -64,25 +64,25 @@ class OcrIDCardSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class FileImageTerrorismUploadSerializer(serializers.HyperlinkedModelSerializer):
-    result1 = serializers.JSONField(True)
+    result = serializers.JSONField(True)
 
     class Meta:
         model = FileImageTerrorismUpload
-        fields = ('datafile1', 'result1')
+        fields = ('datafile', 'result')
 
     def clean_json(self, obj):
-        return obj.result1
+        return obj.result
 
 
 class FileVisionPornUploadSerializer(serializers.HyperlinkedModelSerializer):
-    result2 = serializers.JSONField(True)
+    result = serializers.JSONField(True)
 
     class Meta:
         model = FileVisionPornUpload
-        fields = ('datafile2', 'result2')
+        fields = ('datafile', 'result')
 
     def clean_json(self, obj):
-        return obj.result2
+        return obj.result
 
 class VideoFileUploadSerializer(serializers.HyperlinkedModelSerializer):
     

@@ -41,14 +41,14 @@ class FileUpload(models.Model):
 
 class FileImageTerrorismUpload(models.Model):
     # datafile = models.ImageField(upload_to='photos')
-    datafile1 = models.ImageField(upload_to=path_and_rename, max_length=255, null=True, blank=True)
+    datafile = models.ImageField(upload_to=path_and_rename, max_length=255, null=True, blank=True)
     result1 = models.TextField(max_length=256,default='')
 
 
 class FileVisionPornUpload(models.Model):
     # datafile = models.ImageField(upload_to='photos')
-    datafile2 = models.ImageField(upload_to=path_and_rename, max_length=255, null=True, blank=True)
-    result2 = models.TextField(max_length=256,default='')
+    datafile = models.ImageField(upload_to=path_and_rename, max_length=255, null=True, blank=True)
+    result = models.TextField(max_length=256,default='')
 
 class WordRecognition(models.Model):
     text = models.CharField(_('text'), max_length=255, null=True, blank=True)
