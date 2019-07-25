@@ -145,8 +145,15 @@ class WordRecognitionViewSet(viewsets.ModelViewSet):
         print (text)
         sensitive_list = sensitiveClass().check_sensitiveWords(text)
 
+        if sensitive_list.get('sensitive_hit_flag') == 0:
+            ret = 1
+            msg = "无匹配记录"
+        else:
+            ret = 0
+            msg = "匹配到记录"
+
         data = sensitive_list
-        serializer.save(data=data)
+        serializer.save(ret=ret,msg=msg,data=data)
 
         return Response(status=status.HTTP_201_CREATED)
 
