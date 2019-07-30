@@ -264,7 +264,7 @@ class VideoFileUploadViewSet(viewsets.ModelViewSet):
         contentList=[]
         #violencePercent=1
 
-        FPS_FLAG = settings.FPS_FLAG
+        FPS_FLAG = settings.FPS_FLAG  #为True时，按帧读取；False时，按秒读取
         if FPS_FLAG:
             # 若小于总帧数则读一帧图像
             while COUNT < totalFrameNumber:
