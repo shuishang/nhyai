@@ -38,3 +38,7 @@ backend/api/kaldi/aidatatang_200zh/s5/data/aidatatang_200zh/corpus/test/G0036/*.
 backend/api/kaldi/aidatatang_200zh/s5/20190619.txt
 backend/api/kaldi/__pycache__/*.pyc
 backend/api/sensitives/__pycache__/*.pyc
+backend/api/yahoo/open_nsfw/images/*.jpg
+backend/api/yahoo/open_nsfw/images/*.jpeg
+backend/api/yahoo/open_nsfw/nsfw_model/*
+backend/api/yahoo/open_nsfw/images/*.jpeg
