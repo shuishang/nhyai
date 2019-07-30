@@ -229,9 +229,11 @@ class FileVisionPornUploadViewSet(viewsets.ModelViewSet):
 
             file_path = iserializer.datafile.path
             print(file_path)
-            check_result = vision_porn(file_path)
+            # check_result = vision_porn(file_path)
+            scores = settings.NSFW.caffe_preprocess_and_compute_api(file_path)
+            
             # print (check_result)
-            serializer.save(result=str(check_result))
+            serializer.save(result=str(scores[1]))
             return Response(status=status.HTTP_201_CREATED)
 
 class VideoFileUploadViewSet(viewsets.ModelViewSet):

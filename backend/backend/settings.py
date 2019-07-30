@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 
 import os
 import pandas as pd
+from  api.yahoo.open_nsfw.classify_nsfw import nsfw
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -168,3 +169,6 @@ TEMP_PATH = 'e:/capture_out_images/'
 SAVE_PATH = 'e:/save_images/'
 #按秒或者帧读取视屏
 FPS_FLAG = False
+
+#色情模型预加载
+NSFW = nsfw()

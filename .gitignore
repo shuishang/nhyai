@@ -42,3 +42,4 @@ backend/api/yahoo/open_nsfw/images/*.jpg
 backend/api/yahoo/open_nsfw/images/*.jpeg
 backend/api/yahoo/open_nsfw/nsfw_model/*
 backend/api/yahoo/open_nsfw/images/*.jpeg
+backend/api/yahoo/open_nsfw/__pycache__/*.pyc
