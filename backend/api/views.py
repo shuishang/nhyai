@@ -13,7 +13,7 @@ from PIL import Image
 from io import BytesIO
 import json
 from .violence import check_violence
-from .ocr.chineseocr import OCR
+#from .ocr.chineseocr import OCR
 from violentsurveillance.image_terrorism import image_terrorism
 from violentsurveillance.vision_porn import vision_porn
 from django.conf import settings
@@ -171,8 +171,8 @@ class OcrGeneralViewSet(viewsets.ModelViewSet):
         bill_model = "通用OCR"
         file_path = iserializer.datafile.path
         # print (file_path)
-        check_result = OCR().getWordRecognition(file_path, bill_model)
-
+        #check_result = OCR().getWordRecognition(file_path, bill_model)
+        
         result = check_result
         serializer.save(result=check_result)
 
@@ -192,8 +192,8 @@ class OcrIDCardViewSet(viewsets.ModelViewSet):
         bill_model = "身份证"
         file_path = iserializer.datafile.path
         # print (file_path)
-        check_result = OCR().getWordRecognition(file_path, bill_model)
-
+        #check_result = OCR().getWordRecognition(file_path, bill_model)
+        
         result = check_result
         serializer.save(result=result)
 
@@ -242,7 +242,7 @@ class VideoFileUploadViewSet(viewsets.ModelViewSet):
         print(self.request.data)
         iserializer = serializer.save()
         totalCount = 0
-        file_path = iserializer.datafile.path
+        file_path = iserializer.video.path
         print (file_path)
 
         # 读取视频
@@ -305,7 +305,7 @@ class VideoFileUploadViewSet(viewsets.ModelViewSet):
         print("删除成功1111111111111111")
         print(totalCount)
 
-        serializer.save(result=contentList,datafile=file_path,duration=totalFrameNumber/fps,width=cap.get(3),height=cap.get(4),count=totalCount)
+        serializer.save(result=contentList,video=file_path,duration=totalFrameNumber/fps,width=cap.get(3),height=cap.get(4),count=totalCount)
         
         # print (check_result)
         return Response(status=status.HTTP_201_CREATED)

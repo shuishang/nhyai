@@ -71,8 +71,8 @@
 								<p>支持视频格式：flv、mkv 、mp4 、rmvb 、avi 、wmv、3gp、ts、mov，大小限制<100M，视频时长<3</p>
 								<div class="local_upload">
 									<!--<p>本地上传</p>-->
-									<input id="datafile" name="datafile" type="file" accept="video/*" class="inputfile" @change="changeImage($event)">
-									<label for="datafile">开始选择</label>
+									<input id="vedio" name="vedio" type="file" accept="video/*" class="inputfile" @change="changeImage($event)">
+									<label for="vedio">开始选择</label>
 								</div>
 							</div>
 						</div>
@@ -196,8 +196,8 @@
 							</div>
 							<div class="local_upload">
 								<!--<p>本地上传</p>-->
-								<input id="videofile" name="datafile" type="file" accept="video/*" class="inputfile" @change="changeImage($event)">
-								<label for="datafile">开始选择</label>
+								<input id="videofile" name="video" type="file" accept="video/*" class="inputfile" @change="changeImage($event)">
+								<label for="video">开始选择</label>
 							</div>
 						</div>
 						<p class="suggest"><span style="color: red">*</span> 提示: 敏感系数<50%为合规，50%～90%为疑似违规，>90%为违规<span v-show="imageIsBig" style="color: red;margin-left: 10px;display: inline-block;">！该图片大小超过1M</span></p>
@@ -431,7 +431,7 @@
                 this.loading = this.$loading(this.options);
                 this.imageRight = false;
                 var formData = new FormData($(this));
-                formData.append('datafile', $('#datafile')[0].files[0]);
+                formData.append('video', $('#video')[0].files[0]);
                 $.ajax({
                     url: "http://172.31.11.171:8000/api/uploads/",
                     type: "post",

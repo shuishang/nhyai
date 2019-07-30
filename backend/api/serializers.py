@@ -90,7 +90,7 @@ class VideoFileUploadSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = VideoFileUpload
-        fields = ('datafile','width','height','duration','count', 'result')
+        fields = ('video','width','height','duration','count', 'result')
 
     def clean_json(self, obj):
         return obj.result
