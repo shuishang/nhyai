@@ -161,3 +161,10 @@ CORS_ORIGIN_REGEX_WHITELIST = (
 
 
 DF = pd.read_csv(os.path.join(os.getcwd(),"backend","api","sensitives","sensitiveWords.csv"),encoding='gbk')
+
+#视屏临时文件存放路径，使用完自动删除
+TEMP_PATH = 'e:/capture_out_images/'
+#视屏检测到的违规图片存放路径
+SAVE_PATH = 'e:/save_images/'
+#按秒或者帧读取视屏
+FPS_FLAG = False
