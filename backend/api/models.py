@@ -70,11 +70,9 @@ class OcrIDCard(models.Model):
 class VideoFileUpload(models.Model):
     # datafile = models.ImageField(upload_to='photos')
     video = models.FileField(upload_to=path_and_rename, max_length=255, null=True, blank=True)
-    width = models.PositiveIntegerField(editable=False, null=True)
-    height = models.PositiveIntegerField(editable=False, null=True)
-    duration = models.FloatField(editable=False, null=True)
-    count = models.PositiveIntegerField(editable=False, null=True)
-    result = models.TextField(max_length=255,default='')
+    ret = models.IntegerField(_('ret'), null=True, blank=True)
+    msg = models.TextField(max_length=255, default='')
+    data = models.TextField(max_length=2048, default='')
 
 class AudioFileUpload(models.Model):
     # datafile = models.ImageField(upload_to='photos')
