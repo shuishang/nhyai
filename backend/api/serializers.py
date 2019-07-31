@@ -86,6 +86,8 @@ class FileVisionPornUploadSerializer(serializers.HyperlinkedModelSerializer):
 
 class VideoFileUploadSerializer(serializers.HyperlinkedModelSerializer):
     
+    ret = serializers.JSONField(True)
+    msg = serializers.JSONField(True)
     data = serializers.JSONField(True)
 
     class Meta:
@@ -93,7 +95,7 @@ class VideoFileUploadSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('video','data','ret','msg')
 
     def clean_json(self, obj):
-        return obj.data
+        return obj.ret,obj.msg,obj.data
 
 class AudioFileUploadSerializer(serializers.HyperlinkedModelSerializer):
     
