@@ -14,7 +14,7 @@ from io import BytesIO
 import json
 from .violence import check_violence
 from .video import check_video
-#from .ocr.chineseocr import OCR
+from .ocr.chineseocr import OCR
 from violentsurveillance.image_terrorism import image_terrorism
 from violentsurveillance.vision_porn import vision_porn
 from django.conf import settings
@@ -168,14 +168,15 @@ class OcrGeneralViewSet(viewsets.ModelViewSet):
 
         print (self.request.data)
         iserializer = serializer.save()
-
+        ret = 0
+        msg = "成功"
         bill_model = "通用OCR"
         file_path = iserializer.datafile.path
         # print (file_path)
-        #check_result = OCR().getWordRecognition(file_path, bill_model)
+        check_result = OCR().getWordRecognition(file_path, bill_model)
         
         result = check_result
-        serializer.save(result=check_result)
+        serializer.save(data=check_result,ret=ret,msg=msg)
 
         return Response(status=status.HTTP_201_CREATED)
 
@@ -189,14 +190,15 @@ class OcrIDCardViewSet(viewsets.ModelViewSet):
 
         print (self.request.data)
         iserializer = serializer.save()
-
+        ret = 0
+        msg = "成功"
         bill_model = "身份证"
-        file_path = iserializer.datafile.path
+        file_path = iserializer.idcardImage.path
         # print (file_path)
-        #check_result = OCR().getWordRecognition(file_path, bill_model)
+        check_result = OCR().getWordRecognition(file_path, bill_model)
         
         result = check_result
-        serializer.save(result=result)
+        serializer.save(data=result,ret=ret,msg=msg)
 
         return Response(status=status.HTTP_201_CREATED)
 
@@ -209,12 +211,13 @@ class FileImageTerrorismUploadViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         print(self.request.data)
         iserializer = serializer.save()
-
+        ret = 0
+        msg = "成功"
         file_path = iserializer.datafile.path
         print(file_path)
         check_result = check_violence(file_path)
         # print (check_result)
-        serializer.save(result=str(check_result))
+        serializer.save(data=str(check_result),ret=ret,msg=msg)
         return Response(status=status.HTTP_201_CREATED)
 
 
@@ -226,14 +229,15 @@ class FileVisionPornUploadViewSet(viewsets.ModelViewSet):
         def perform_create(self, serializer):
             print(self.request.data)
             iserializer = serializer.save()
-
+            ret = 0
+            msg = "成功"
             file_path = iserializer.datafile.path
             print(file_path)
             # check_result = vision_porn(file_path)
             scores = settings.NSFW.caffe_preprocess_and_compute_api(file_path)
             
             # print (check_result)
-            serializer.save(result=str(scores[1]))
+            serializer.save(data=str(scores[1]),ret=ret,msg=msg)
             return Response(status=status.HTTP_201_CREATED)
 
 class VideoFileUploadViewSet(viewsets.ModelViewSet):
@@ -264,12 +268,13 @@ class AudioFileUploadViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         print(self.request.data)
         iserializer = serializer.save()
-
+        ret = 0
+        msg = "成功"
         file_path = iserializer.datafile.path
         print(file_path)
         check_result = audio().getOneAudioContent(file_path)
         # print (check_result)
-        serializer.save(result=str(check_result))
+        serializer.save(data=str(check_result),ret=ret,msg=msg)
         return Response(status=status.HTTP_201_CREATED)
 
 class AudioFileInspectionViewSet(viewsets.ModelViewSet):
@@ -280,11 +285,12 @@ class AudioFileInspectionViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         print(self.request.data)
         iserializer = serializer.save()
-
+        ret = 0
+        msg = "成功"
         file_path = iserializer.datafile.path
         print(file_path)
         audio_content = audio().getOneAudioContent(file_path)
         check_result = sensitiveClass().check_sensitiveWords(audio_content)
         # print (check_result)
-        serializer.save(result=str(check_result))
+        serializer.save(data=str(check_result),ret=ret,msg=msg)
         return Response(status=status.HTTP_201_CREATED)
