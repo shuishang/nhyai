@@ -75,7 +75,7 @@ def check_video(file_path):
 
             infoMap = {}
             infoMap['image_url'] = temp_path+imageName
-            infoMap['sensitivity_time'] = COUNT / fps
+            infoMap['sensitivity_time'] = get_two_float(COUNT / fps,2)
             infoMap['violence_sensitivity_level'] = get_two_float(violenceScore * 100,2)
             infoMap['porn_sensitivity_level'] = get_two_float(float(pornPercent[1]) * 100,2)
             #infoMap['politics_ sensitivity_level'] = 
@@ -138,7 +138,7 @@ def check_video(file_path):
                 pornScoreArr[COUNT] = pornScore
                 infoMap = {}
                 infoMap['image_url'] = temp_path+imageName
-                infoMap['sensitivity_time'] = COUNT / fps
+                infoMap['sensitivity_time'] = get_two_float(COUNT / fps,2)
                 infoMap['violence_sensitivity_level'] = get_two_float(violenceScore * 100,2)
                 infoMap['porn_sensitivity_level'] = get_two_float(float(pornPercent[1]) * 100,2)
                 #infoMap['politics_ sensitivity_level'] = 
