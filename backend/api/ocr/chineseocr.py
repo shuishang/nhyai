@@ -73,4 +73,4 @@ class OCR:
         
         timeTake = time.time()-timeTake
         
-        return json.dumps({'res':res,'timeTake':round(timeTake,4)},ensure_ascii=False)
+        return {'res':res,'timeTake':round(timeTake,4)}
