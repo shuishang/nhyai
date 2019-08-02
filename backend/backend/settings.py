@@ -168,7 +168,12 @@ TEMP_PATH = 'capture_out_images/'
 SAVE_PATH = '/var/www/gallery/media/videos/capture_out_images/'
 #按秒或者帧读取视屏
 FPS_FLAG = True
-VIDEO_URL = 'http://127.0.0.1:8000/media/videos/'
+VIDEO_URL = 'http://172.31.4.7:8000/media/videos/'
 
 #色情模型预加载
 NSFW = nsfw()
+
+#暴恐级别比例
+VIOLENCESCORE = 0.5
+#色情级别比例
+PORNSCORE = 0.5
