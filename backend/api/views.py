@@ -174,9 +174,12 @@ class OcrGeneralViewSet(viewsets.ModelViewSet):
         file_path = iserializer.datafile.path
         # print (file_path)
         check_result = OCR().getWordRecognition(file_path, bill_model)
-        
-        result = check_result
-        serializer.save(data=check_result,ret=ret,msg=msg)
+        arr = check_result['res']
+        dataArr = []
+        for each in arr:
+            dataArr.append(each["text"])
+        #result = check_result
+        serializer.save(data=dataArr,ret=ret,msg=msg)
 
         return Response(status=status.HTTP_201_CREATED)
 
@@ -196,9 +199,12 @@ class OcrIDCardViewSet(viewsets.ModelViewSet):
         file_path = iserializer.idcardImage.path
         # print (file_path)
         check_result = OCR().getWordRecognition(file_path, bill_model)
-        
-        result = check_result
-        serializer.save(data=result,ret=ret,msg=msg)
+        arr = check_result['res']
+        dataMap= {}
+        for each in arr:
+            dataMap[each['name']] = each['text']
+        #result = check_result
+        serializer.save(data=dataMap,ret=ret,msg=msg)
 
         return Response(status=status.HTTP_201_CREATED)
 
@@ -213,11 +219,14 @@ class FileImageTerrorismUploadViewSet(viewsets.ModelViewSet):
         iserializer = serializer.save()
         ret = 0
         msg = "成功"
-        file_path = iserializer.datafile.path
+        file_path = iserializer.image.path
         print(file_path)
         check_result = check_violence(file_path)
         # print (check_result)
-        serializer.save(data=str(check_result),ret=ret,msg=msg)
+        violence = check_result['violence']
+        resultMap = {}
+        resultMap['violence'] = violence
+        serializer.save(data=resultMap,ret=ret,msg=msg)
         return Response(status=status.HTTP_201_CREATED)
 
 
@@ -231,13 +240,14 @@ class FileVisionPornUploadViewSet(viewsets.ModelViewSet):
             iserializer = serializer.save()
             ret = 0
             msg = "成功"
-            file_path = iserializer.datafile.path
+            file_path = iserializer.image.path
             print(file_path)
             # check_result = vision_porn(file_path)
             scores = settings.NSFW.caffe_preprocess_and_compute_api(file_path)
-            
+            resultMap = {}
+            resultMap['normal_hot_porn'] = scores[1]
             # print (check_result)
-            serializer.save(data=str(scores[1]),ret=ret,msg=msg)
+            serializer.save(data=resultMap,ret=ret,msg=msg)
             return Response(status=status.HTTP_201_CREATED)
 
 class VideoFileUploadViewSet(viewsets.ModelViewSet):
@@ -270,11 +280,13 @@ class AudioFileUploadViewSet(viewsets.ModelViewSet):
         iserializer = serializer.save()
         ret = 0
         msg = "成功"
-        file_path = iserializer.datafile.path
+        file_path = iserializer.speech.path
         print(file_path)
         check_result = audio().getOneAudioContent(file_path)
         # print (check_result)
-        serializer.save(data=str(check_result),ret=ret,msg=msg)
+        resultMap ={}
+        resultMap['text'] = check_result
+        serializer.save(data=resultMap,ret=ret,msg=msg)
         return Response(status=status.HTTP_201_CREATED)
 
 class AudioFileInspectionViewSet(viewsets.ModelViewSet):
