@@ -164,9 +164,11 @@ CORS_ORIGIN_REGEX_WHITELIST = (
 DF = pd.read_csv(os.path.join(os.getcwd(),"backend","api","sensitives","sensitiveWords.csv"),encoding='gbk')
 
 #视屏检测图片存放路径
-TEMP_PATH = '/var/www/gallery/video/capture_out_images/'
+TEMP_PATH = '/capture_out_images/'
+SAVE_PATH = '/var/www/gallery/media/videos/capture_out_images/'
 #按秒或者帧读取视屏
 FPS_FLAG = True
+VIDEO_URL = 'http://127.0.0.1:8000/media/videos/'
 
 #色情模型预加载
 NSFW = nsfw()
