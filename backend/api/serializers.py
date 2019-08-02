@@ -49,7 +49,7 @@ class OcrGeneralSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = OcrGeneral
-        fields = ('datafile','ret','msg','data')
+        fields = ('image','ret','msg','data')
 
     def clean_json(self, obj):
         return obj.ret,obj.msg,obj.data
@@ -62,7 +62,7 @@ class OcrIDCardSerializer(serializers.HyperlinkedModelSerializer):
     data = serializers.JSONField(True)
     class Meta:
         model = OcrIDCard
-        fields = ('idcardImage','ret','msg','data')
+        fields = ('image','ret','msg','data')
 
     def clean_json(self, obj):
         return obj.ret,obj.msg,obj.data
@@ -128,7 +128,7 @@ class AudioFileInspectionSerializer(serializers.HyperlinkedModelSerializer):
     data = serializers.JSONField(True)
     class Meta:
         model = AudioFileInspection
-        fields = ('datafile','data','ret','msg')
+        fields = ('image','data','ret','msg')
 
     def clean_json(self, obj):
         return obj.ret,obj.msg,obj.data

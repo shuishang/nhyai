@@ -171,7 +171,7 @@ class OcrGeneralViewSet(viewsets.ModelViewSet):
         ret = 0
         msg = "成功"
         bill_model = "通用OCR"
-        file_path = iserializer.datafile.path
+        file_path = iserializer.image.path
         # print (file_path)
         check_result = OCR().getWordRecognition(file_path, bill_model)
         arr = check_result['res']
@@ -196,7 +196,7 @@ class OcrIDCardViewSet(viewsets.ModelViewSet):
         ret = 0
         msg = "成功"
         bill_model = "身份证"
-        file_path = iserializer.idcardImage.path
+        file_path = iserializer.image.path
         # print (file_path)
         check_result = OCR().getWordRecognition(file_path, bill_model)
         arr = check_result['res']
@@ -299,7 +299,7 @@ class AudioFileInspectionViewSet(viewsets.ModelViewSet):
         iserializer = serializer.save()
         ret = 0
         msg = "成功"
-        file_path = iserializer.datafile.path
+        file_path = iserializer.image.path
         print(file_path)
         audio_content = audio().getOneAudioContent(file_path)
         check_result = sensitiveClass().check_sensitiveWords(audio_content)
