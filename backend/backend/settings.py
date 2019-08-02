@@ -166,7 +166,7 @@ DF = pd.read_csv(os.path.join(os.getcwd(),"backend","api","sensitives","sensitiv
 #视屏检测图片存放路径
 TEMP_PATH = 'capture_out_images/'
 SAVE_PATH = '/var/www/gallery/media/videos/capture_out_images/'
-#按秒或者帧读取视屏
+#按秒或者帧读取视屏（True：按帧  False：按秒）
 FPS_FLAG = True
 VIDEO_URL = 'http://172.31.4.7:8000/media/videos/'
 
