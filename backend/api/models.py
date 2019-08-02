@@ -95,7 +95,7 @@ class AudioFileUpload(models.Model):
 
 class AudioFileInspection(models.Model):
     # datafile = models.ImageField(upload_to='photos')
-    image = models.FileField(upload_to=audiopath_and_rename, max_length=255, null=True, blank=True)
+    speech = models.FileField(upload_to=audiopath_and_rename, max_length=255, null=True, blank=True)
     #result = models.TextField(max_length=256,default='')
     ret = models.IntegerField(_('ret'), null=True, blank=True)
     msg = models.TextField(max_length=255, default='')

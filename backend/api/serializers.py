@@ -128,7 +128,7 @@ class AudioFileInspectionSerializer(serializers.HyperlinkedModelSerializer):
     data = serializers.JSONField(True)
     class Meta:
         model = AudioFileInspection
-        fields = ('image','data','ret','msg')
+        fields = ('speech','data','ret','msg')
 
     def clean_json(self, obj):
         return obj.ret,obj.msg,obj.data

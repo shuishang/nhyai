@@ -299,7 +299,7 @@ class AudioFileInspectionViewSet(viewsets.ModelViewSet):
         iserializer = serializer.save()
         ret = 0
         msg = "成功"
-        file_path = iserializer.image.path
+        file_path = iserializer.speech.path
         print(file_path)
         audio_content = audio().getOneAudioContent(file_path)
         check_result = sensitiveClass().check_sensitiveWords(audio_content)
