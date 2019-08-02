@@ -32,6 +32,17 @@ def audiopath_and_rename(instance, filename):
     # return the whole path to the file
     return os.path.join(upload_to, filename)
 
+def video_and_rename(instance, filename):
+    upload_to = 'videos'
+    ext = filename.split('.')[-1]
+    # get filename
+    if instance.pk:
+        filename = '{}.{}'.format(instance.pk, ext)
+    else:
+        # set filename as random string
+        filename = '{}.{}'.format(uuid4().hex, ext)
+    # return the whole path to the file
+    return os.path.join(upload_to, filename)
 
 class FileUpload(models.Model):
     # datafile = models.ImageField(upload_to='photos')
@@ -80,7 +91,7 @@ class OcrIDCard(models.Model):
 
 class VideoFileUpload(models.Model):
     # datafile = models.ImageField(upload_to='photos')
-    video = models.FileField(upload_to=path_and_rename, max_length=255, null=True, blank=True)
+    video = models.FileField(upload_to=video_and_rename, max_length=255, null=True, blank=True)
     ret = models.IntegerField(_('ret'), null=True, blank=True)
     msg = models.TextField(max_length=255, default='')
     data = models.TextField(max_length=2048, default='')
