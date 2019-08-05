@@ -32,6 +32,8 @@ def get_two_float(f_str, n):
     return ".".join([a, c])
 
 def check_video(file_path):
+    t = time.time()
+    startTime = int(round(t * 1000))
     # 读取视频
     totalCount = 0
     pornTotalCount = 0
@@ -79,7 +81,8 @@ def check_video(file_path):
                 infoMap['violence_sensitivity_level'] = get_two_float(violenceScore * 100,2)
                 infoMap['porn_sensitivity_level'] = get_two_float(float(pornPercent[1]) * 100,2)
                 infoMap['image_url'] =  settings.VIDEO_URL + settings.TEMP_PATH + uuidStr + '/' + imageName
-                infoMap['sensitivity_time'] = get_two_float(COUNT / fps,2)
+                infoMap['sensitivity_time'] = get_two_float((COUNT+1) / fps,2)
+                infoMap['current_fps'] = COUNT
                 contentList.append(infoMap)
             COUNT = COUNT + 1
             #if COUNT>3:
@@ -111,6 +114,11 @@ def check_video(file_path):
         resultMap['violence_sensitivity_level'] = violence_sensitivity_level
         resultMap['porn_sensitivity_level'] = porn_sensitivity_level
         resultMap['video_evidence_information'] = contentList
+        resultMap['interval'] = get_two_float(float(get_two_float((COUNT+1) / fps,2)) - float(get_two_float((COUNT) / fps,2)),3)
+        t = time.time()
+        endTime = int(round(t * 1000))
+        print(endTime - startTime)
+        resultMap['taketimes'] = endTime - startTime
         #contentMap['politics_ sensitivity_level'] = 
         #shutil.rmtree(temp_path)
         #print(totalCount)
@@ -142,7 +150,8 @@ def check_video(file_path):
                     infoMap['violence_sensitivity_level'] = get_two_float(violenceScore * 100,2)
                     infoMap['porn_sensitivity_level'] = get_two_float(float(pornPercent[1]) * 100,2)
                     infoMap['image_url'] =  settings.VIDEO_URL + settings.TEMP_PATH + uuidStr + '/' + imageName
-                    infoMap['sensitivity_time'] = get_two_float(COUNT / fps,2)
+                    infoMap['sensitivity_time'] = get_two_float(COUNT+1,2)
+                    infoMap['current_fps'] = c+1
                     contentList.append(infoMap)
                 COUNT = COUNT + 1
             c = c + 1
@@ -173,7 +182,11 @@ def check_video(file_path):
         resultMap['violence_sensitivity_level'] = violence_sensitivity_level
         resultMap['porn_sensitivity_level'] = porn_sensitivity_level
         resultMap['video_evidence_information'] = contentList
-    
+        resultMap['interval'] = get_two_float(float(get_two_float((COUNT+1) / fps,2)) - float(get_two_float((COUNT) / fps,2)),3)
+        t = time.time()
+        endTime = int(round(t * 1000))
+        print(endTime - startTime)
+        resultMap['taketimes'] = endTime - startTime
     return resultMap
 
     
