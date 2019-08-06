@@ -46,7 +46,7 @@ class sensitiveClass:
                     sensitive_list.append(result)
                     
             if (temp_flag == 1):
-                web_text = web_text + "<a class='red_txt'>" +keyword +"&nbsp;</a>"
+                web_text = web_text + "<a style='color:red'>" +keyword +"&nbsp;</a>"
             else:
                 web_text = web_text + keyword+"&nbsp;"
             temp_flag = 0
@@ -86,7 +86,7 @@ class sensitiveClass:
                     sensitive_size = sensitive_size + 1
                     sensitive_list.append(result)
             if (temp_flag == 1):
-                web_text = web_text + "<a class='red_txt'>" +keyword +"&nbsp;</a>"
+                web_text = web_text + "<a style='color:red'>" +keyword +"&nbsp;</a>"
             else:
                 web_text = web_text + keyword+"&nbsp;"
             temp_flag = 0
