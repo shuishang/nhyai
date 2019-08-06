@@ -141,7 +141,7 @@ class WordRecognitionViewSet(viewsets.ModelViewSet):
 
         print (self.request.data)
         iserializer = serializer.save()
-
+        
         text = iserializer.text
         print (text)
         sensitive_list = sensitiveClass().check_sensitiveWords(text)
