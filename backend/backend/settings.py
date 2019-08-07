@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
+import pandas as pd
+from  api.yahoo.open_nsfw.classify_nsfw import nsfw
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -144,10 +146,34 @@ MEDIA_URL = '/media/'
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_WHITELIST = (
-    '10.10.43.41:8080',
-    '10.10.43.114:8000',
+    '172.31.11.171:8080',
+    '172.31.11.214:8000',
+    '172.31.4.35:8000',
+    '172.31.4.7:8000',
+    '172.31.4.47:8000',
 )
 CORS_ORIGIN_REGEX_WHITELIST = (
-    '10.10.43.41:8080',
-    '10.10.43.114:8000',
+    '172.31.11.171:8080',
+    '172.31.11.214:8000',
+    '172.31.4.35:8000',
+    '172.31.4.7:8000',
+    '172.31.4.47:8000',
 )
+
+
+DF = pd.read_csv(os.path.join(os.getcwd(),"backend","api","sensitives","sensitiveWords.csv"),encoding='gbk')
+
+#视屏检测图片存放路径
+TEMP_PATH = 'capture_out_images/'
+SAVE_PATH = '/var/www/gallery/media/videos/capture_out_images/'
+#按秒或者帧读取视屏（True：按帧  False：按秒）
+FPS_FLAG = True
+VIDEO_URL = 'http://172.31.4.7:8000/media/videos/'
+
+#色情模型预加载
+NSFW = nsfw()
+
+#暴恐级别比例
+VIOLENCESCORE = 0.5
+#色情级别比例
+PORNSCORE = 0.5
