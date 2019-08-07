@@ -202,7 +202,21 @@ class OcrIDCardViewSet(viewsets.ModelViewSet):
         arr = check_result['res']
         dataMap= {}
         for each in arr:
-            dataMap[each['name']] = each['text']
+            name = ""
+            if(each['name']=='姓名'):
+                name = "name"
+            if(each['name']=='性别'):
+                name = "sex"
+            if(each['name']=='民族'):
+                name = "nation"
+            if(each['name']=='出生年月'):
+                name = "birth"
+            if(each['name']=='身份证号码'):
+                name = "id"
+            if(each['name']=='身份证地址'):
+                name = "address"
+            dataMap[name] = each['text']
+            #dataMap[each['name']] = each['text']
         #result = check_result
         serializer.save(data=dataMap,ret=ret,msg=msg)
 
