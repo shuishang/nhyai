@@ -46,8 +46,8 @@
 					<div class="choose_image" v-show="!isImage">
 						<div class="add_before">
 							<!--<img src="../assets/image/yellow/image_upload.png" alt="">-->
-							<input id="imagefile" name="imagefile" type="file"  class="inputfile" @change="addImage($event)">
-							<label for="imagefile"></label>
+							<!--<input id="imagefile" name="imagefile" type="file"  class="inputfile" @change="addImage($event)">
+							<label for="imagefile"></label>-->
 							<!--<el-upload
 								action="https://jsonplaceholder.typicode.com/posts/"
 								list-type="picture-card"
@@ -58,6 +58,13 @@
 								:on-remove="handleRemove">
 								<i class="el-icon-plus"></i>
 							</el-upload>-->
+							<el-upload
+								class="avatar-uploader"
+								action="https://jsonplaceholder.typicode.com/posts/"
+								:auto-upload="false"
+								:on-change="onImageChange">
+								<i class="el-icon-plus avatar-uploader-icon"></i>
+							</el-upload>
 						</div>
 						<p class="choose_suggest">支持图片多张上传，一次检测十张</p>
 					</div>
@@ -218,7 +225,10 @@
             },
             onImageChange(file, fileList){
                this.fileList.push(file);
-               console.log(file)
+               console.log(file);
+               if(!file.url){
+                   file.url = URL.createObjectURL(file.raw);
+			   }
                this.isImage = true;
 			},
             addImage(e){

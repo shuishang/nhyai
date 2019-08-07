@@ -5,8 +5,7 @@
 			<el-col :md={span:11,offset:2} :lg={span:11,offset:2} :xl={span:10,offset:4}>
 				<div class="show_video_outer">
 					<div class="show_video">
-						{% load static %}
-						<video id="video" src="{% static "../../assets/video/dragen_wind.mp4" %}" controls style="height: 100%;width: 100%;background-color: #333333"></video>
+						<video id="video" src="../../assets/video/dragen_wind.mp4" controls style="height: 100%;width: 100%;background-color: #333333"></video>
 					</div>
 					<div>
 
@@ -134,7 +133,7 @@
                 console.log(newVal);
                 if(newVal){
                     var myVideo = document.getElementById("video")
-                    if(!myVideo.paused){
+                    if(myVideo.currentTime > 0){
                         myVideo.pause();
 					}
 

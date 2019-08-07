@@ -53,6 +53,15 @@
     width: 160px;
     line-height: 160px;
 }
+.avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 130px;
+    height: 130px;
+    line-height: 130px;
+    text-align: center;
+    border: 2px dashed #acc3ff;
+}
 
 /*场景推荐样式*/
 .el-carousel__item h3 {
@@ -79,4 +88,35 @@
     border: 1px solid #b6b6b6;
     border-radius: 5px;
     margin: 20px auto;
+}
+.el-dialog__body{padding: 0;}
+.el-dialog--center .el-dialog__body{padding: 0;}
+.el-dialog__header{padding: 0;}
+.el-dialog__headerbtn .el-dialog__close{color: white;}
+.el-dialog__headerbtn{font-size: 40px;top: -5px;right: -50px;}
+.el-loading-mask{overflow: hidden;}
+.el-loading-spinner .circular{
+    width: 260px;
+    height: 100%;
+    animation: loading-rotate 2s linear infinite;
+    display: none;
+}
+.el-loading-spinner{
+    background: url(../../assets/image/video/load.png) no-repeat;
+    /*background-size: 48px 48px;*/
+    width: 100%;
+    height: 100%;
+    position: relative;
+    top: 0;
+    margin-top: 0;
+    animation: transformit 2s infinite;
+    /*left: 45%;*/
+}
+@keyframes transformit {
+    0%{
+        transform: translateX(-260px);
+    }
+    100%{
+        transform: translateX(100%);
+    }
 }

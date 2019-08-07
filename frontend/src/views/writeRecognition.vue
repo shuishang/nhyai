@@ -63,9 +63,16 @@
 			<el-row>
 				<el-col :xs={span:24} :sm={span:22,offset:1} :md={span:20,offset:2} :lg={span:18,offset:3} :xl={span:16,offset:4}>
 					<div class="voice_experience_outer">
-						<textarea class="write_content" placeholder="输入或粘贴要检测的文字，不超过600字" id="orgAuditDesc" name="orgAuditDesc"></textarea>
-						<p class="word_more" id="text-count">还可输入600个字</p>
-						<p class="begin_record" @click="beginRecord">{{recordWord}}</p>
+						<div v-if="isCheck!=3" class="input_outer"  element-loading-background="rgba(0, 0, 0, 0.3)"
+							  v-loading="isLoading">
+							<textarea class="write_content" placeholder="输入或粘贴要检测的文字，不超过600字" id="orgAuditDesc" name="orgAuditDesc" v-model="recWord"></textarea>
+						</div>
+						<div id="show_result" v-else></div>
+						<p class="word_more" id="text-count" v-show="isCheck==1">您还可输入600个字</p>
+						<p v-show="isAgainst" class="against">违规（检测文本含有涉黄、涉政、涉爆、广告等违规信息）</p>
+						<p class="begin_record" @click="submitWord" v-if="isCheck==1">开始识别</p>
+						<p class="again_record" v-if="isCheck==2">正在识别</p>
+						<p class="again_record" @click="againWord" v-if="isCheck==3">再次识别</p>
 					</div>
 				</el-col>
 			</el-row>
@@ -137,30 +144,39 @@
 			return{
                 buttonWord:"开始检测",
                 options:{background:"rgba(0, 0, 0, 0.3)",fullscreen:false,target:document.querySelector(".show_json_outer")},
-                isLoading:false,
                 recommendedList:[{'imgUrl':"../../static/imgs/usage_image1.png"},{'imgUrl':'../../static/imgs/usage_image2.png'},{'imgUrl':'../../static/imgs/usage_image03.png'}],
                 voiceSecond:'00',
                 recordWord:'开始识别',
-                intervalId:null
+                intervalId:null,
+                recWord:'',
+                isAgainst:false,
+                isCheck:1,
+                isLoading:false
 			}
         },
         mounted:function () {
-            $("#orgAuditDesc").on("input propertychange",function() {
-                var $this = $(this),
-                    _val = $this.val(),
-                    count = "";
-                if (_val.length > 600) {
-                    $this.val(_val.substring(0, 600));
-                }
-                count = 600 - $this.val().length;
-                $("#text-count").text(`您还可以输入${count}字`);
-            });
+            this.resetNumber();
         },
         methods: {
+            resetNumber(){
+                $('#orgAuditDesc').on('keyup',function() {
+                    var txtval = $('#orgAuditDesc').val().length;
+//							console.log(txtval);
+                    var str = parseInt(600 - txtval);
+//							console.log(str);
+                    if (str > 0) {
+                        $('#text-count').html('剩余可输入' + str + '字');
+                    } else {
+                        $('#text-count').html('剩余可输入0字');
+                        $('#orgAuditDesc').val($('#orgAuditDesc').val().substring(0, 600)); //这里意思是当里面的文字小于等于0的时候，那么字数不能再增加，只能是600个字
+                    }
+                });
+            },
             beginRecord(){
 				if(this.recordWord =="停止录音"){
                     clearInterval(this.intervalId) ;
                     this.recordWord ="重新录音"
+                    this.submitWord();
 				}else{
                     this.voiceSecond="00";
                     var intervalId =  setInterval(()=>{
@@ -171,10 +187,56 @@
                             clearInterval(intervalId) ;
                             this.recordWord ="重新录音"
                         }
-                    },1000)
+                    },1000);
 					this.intervalId = intervalId;
 				}
 
+			},
+			submitWord(){
+                if(this.recWord==''){
+                    this.$message.error('请输入要识别的内容！');
+                    return;
+				}
+				this.isCheck = 2;
+                var formData = new FormData($(this));
+                formData.append('text', this.recWord);
+                $.ajax({
+                    url: this.api+"/api/v1/text/get_text_recognition/",
+                    type: "post",
+                    data: formData,
+//                    headers: {'Authorization': 'Token mytoken'},
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success:(response)=>{
+                        console.log(response);
+                        this.isCheck = 3;
+                        window.setTimeout(()=>{
+                            document.getElementById('show_result').innerHTML= response.data.web_text;
+						},200);
+                        if(response.ret==0){
+                            this.isAgainst = true;
+						}
+//                        document.getElementsByClassName('write_content')[0].innerHTML=response.data.web_text;
+
+//                        this.recWord =response.data.web_text;
+
+                    },
+                    error:()=>{
+                        this.isCheck = 3;
+					}
+                });
+			},
+            againWord(){
+                document.getElementById('show_result').innerHTML= "";
+                this.isCheck = 1;
+                this.recWord ="";
+                this.isAgainst = false;
+                window.setTimeout(()=>{
+                    document.getElementById("orgAuditDesc").value="";
+                    $('#text-count').html('剩余可输入600字');
+                    this.resetNumber()
+				},200)
 			}
         },
 		components:{
@@ -210,8 +272,11 @@
 	.functional_experience .title{text-align: center;color: #000;margin: 40px 0 15px;font-size: 36px;}
 	.functional_experience .voice_experience_outer{height: 415px;border: 2px dashed #acc3ff;margin-top: 50px;padding: 20px;background-color: #fbfcff;position: relative;}
 	.write_content{background-color: #ffffff;height: 305px;border: 1px solid #e2ecfc;width: 100%;color: #666666;font-size: 14px;padding: 10px;box-sizing: border-box;line-height: 26px;}
+	#show_result{height: 300px;background-color: #ffffff;border: 1px solid #e2ecfc;padding: 10px;}
+	.voice_experience_outer .against{text-align: center;color: #FE0808;font-size: 15px;margin-top: 10px;}
 	.word_more{position: absolute;right: 40px;margin-top: -35px;font-size: 14px;color: #666666;}
-	.begin_record{height: 45px;width: 160px;line-height: 45px;background-color: #316dff;color: #fff;margin: 40px auto;font-size: 16px;text-align: center;}
+	.begin_record{height: 45px;width: 160px;line-height: 45px;background-color: #316dff;color: #fff;margin: 20px auto;font-size: 16px;text-align: center;cursor:pointer;}
+	.again_record{height: 45px;width: 160px;line-height: 45px;background-color: #FFFFFF;color: #333;margin: 20px auto;font-size: 16px;text-align: center;border: 1px solid #E7E9EC;cursor:pointer;}
 
 	.advantage_product{padding: 65px 0 80px ;overflow: hidden;background-color: #f2f2f5;}
 	.advantage_product .title{text-align: center;color: #000000;margin: 10px 0;font-size: 36px;}

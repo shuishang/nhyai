@@ -5,10 +5,10 @@ export default {
 		//接口地址
 		// Vue.prototype.api = "http://www.ischoolhn.com";	//测试环境
         //内网环境
-        Vue.prototype.api = "http://220.174.232.142:9016";	//测试环境
+        // Vue.prototype.api = "http://220.174.232.142:9016";	//测试环境
 
 		// Vue.prototype.api = "http://www.ischoolhn.com";	//试运行环境
-		// Vue.prototype.api = "http://10.10.43.28:9013";	//卫俊
+		Vue.prototype.api = "http://172.31.4.7:8000";	//卫俊
 
 		//Vue.prototype.api = "http://www.hn-ssc.com";	//正式环境
         // Vue.prototype.api = "";	//打包环境
