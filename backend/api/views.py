@@ -18,8 +18,8 @@ from .ocr.chineseocr import OCR
 from violentsurveillance.image_terrorism import image_terrorism
 from violentsurveillance.vision_porn import vision_porn
 from django.conf import settings
-from .serializers import VideoFileUploadSerializer,OcrGeneralSerializer,OcrIDCardSerializer,AudioFileInspectionSerializer
-from .models import VideoFileUpload,AudioFileUpload,OcrGeneral,OcrIDCard,AudioFileInspection
+from .serializers import VideoFileUploadSerializer,OcrGeneralSerializer,OcrIDCardSerializer,AudioFileInspectionSerializer,ImageFileUploadSerializer
+from .models import VideoFileUpload,AudioFileUpload,OcrGeneral,OcrIDCard,AudioFileInspection,ImageFileUpload
 import os
 import shutil
 import uuid
@@ -324,3 +324,48 @@ class AudioFileInspectionViewSet(viewsets.ModelViewSet):
         # print (check_result)
         serializer.save(data=str(check_result),ret=ret,msg=msg)
         return Response(status=status.HTTP_201_CREATED)
+class ImageFileUploadViewSet(viewsets.ModelViewSet):
+    queryset = ImageFileUpload.objects.all()
+    serializer_class = ImageFileUploadSerializer
+    parser_classes = (MultiPartParser, FormParser,)
+    
+    def perform_create(self, serializer):
+        print(self.request.data)
+        iserializer = serializer.save()
+        ret = 0
+        msg = "成功"
+        file_path = iserializer.image.path
+        print(file_path)
+        # check_result = vision_porn(file_path)
+        scores = settings.NSFW.caffe_preprocess_and_compute_api(file_path)
+        resultMap = {}
+        porn_sensitivity_level = "0"
+        if (float(scores[1]) < 0.5):
+            porn_sensitivity_level = "0"
+        if (float(scores[1]) >= 0.5 and float(scores[1])<=0.9):
+            porn_sensitivity_level = "1"
+        if (float(scores[1]) > 0.9):
+            porn_sensitivity_level = "2"
+        resultMap['porn_sensitivity_level'] = porn_sensitivity_level
+        resultMap['porn_percent'] = get_two_float(float(scores[1]) * 100,2)
+
+        check_result = check_violence(file_path)        
+        violence = check_result['violence']
+        violence_sensitivity_level = "0"
+        if (float(violence) < 0.5):
+            violence_sensitivity_level = "0"
+        if (float(violence) >= 0.5 and float(violence)<=0.9):
+            violence_sensitivity_level = "1"
+        if (float(violence) > 0.9):
+            violence_sensitivity_level = "2"
+        resultMap['violence_sensitivity_level'] = violence_sensitivity_level
+        resultMap['violence_percent'] = get_two_float(float(violence) * 100,2)
+
+        resultMap['politics_sensitivity_level'] = ""
+        resultMap['politics_percent'] = ""
+        resultMap['public_character_level'] = ""
+        resultMap['public_percent'] = ""
+        
+        
+        serializer.save(data=resultMap,ret=ret,msg=msg)
+        return Response(status=status.HTTP_201_CREATED)        
