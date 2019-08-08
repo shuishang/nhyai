@@ -26,7 +26,11 @@ import uuid
 import cv2
 from .kaldi.audios import audio
 from .sensitives.sensitives import sensitiveClass
-
+def get_two_float(f_str, n):
+    f_str = str(f_str)      # f_str = '{}'.format(f_str) 也可以转换为字符串
+    a, b, c = f_str.partition('.')
+    c = (c+"0"*n)[:n]       # 如论传入的函数有几位小数，在字符串后面都添加n为小数0
+    return ".".join([a, c])
 class UserViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
@@ -239,7 +243,7 @@ class FileImageTerrorismUploadViewSet(viewsets.ModelViewSet):
         # print (check_result)
         violence = check_result['violence']
         resultMap = {}
-        resultMap['violence'] = violence
+        resultMap['violence'] = get_two_float(float(violence) * 100,2)
         serializer.save(data=resultMap,ret=ret,msg=msg)
         return Response(status=status.HTTP_201_CREATED)
 
@@ -248,7 +252,7 @@ class FileVisionPornUploadViewSet(viewsets.ModelViewSet):
         queryset = FileVisionPornUpload.objects.all()
         serializer_class = FileVisionPornUploadSerializer
         parser_classes = (MultiPartParser, FormParser,)
-
+        
         def perform_create(self, serializer):
             print(self.request.data)
             iserializer = serializer.save()
@@ -259,7 +263,7 @@ class FileVisionPornUploadViewSet(viewsets.ModelViewSet):
             # check_result = vision_porn(file_path)
             scores = settings.NSFW.caffe_preprocess_and_compute_api(file_path)
             resultMap = {}
-            resultMap['normal_hot_porn'] = scores[1]
+            resultMap['normal_hot_porn'] = get_two_float(float(scores[1]) * 100,2)
             # print (check_result)
             serializer.save(data=resultMap,ret=ret,msg=msg)
             return Response(status=status.HTTP_201_CREATED)
