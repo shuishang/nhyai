@@ -10,6 +10,7 @@ router.register(r'image/get_violence_identify', views.FileImageTerrorismUploadVi
 router.register(r'image/get_vision_porn', views.FileVisionPornUploadViewSet)
 router.register(r'image/get_image_inspection', views.ImageFileUploadViewSet)
 router.register(r'text/get_text_recognition', views.WordRecognitionViewSet)
+router.register(r'text/get_text_recoginition_inspection', views.WordRecognitionInspectionViewSet)
 router.register(r'ocr/get_general_ocr', views.OcrGeneralViewSet)
 router.register(r'ocr/get_idcard_ocr', views.OcrIDCardViewSet)
 router.register(r'audio/get_chinese_speech', views.AudioFileUploadViewSet)
@@ -24,6 +25,7 @@ image.register(r'get_image_inspection', views.ImageFileUploadViewSet)
 
 text = routers.DefaultRouter()
 text.register(r'get_text_recognition', views.WordRecognitionViewSet)
+text.register(r'get_text_recoginition_inspection', views.WordRecognitionInspectionViewSet)
 
 ocr = routers.DefaultRouter()
 ocr.register(r'get_general_ocr', views.OcrGeneralViewSet)

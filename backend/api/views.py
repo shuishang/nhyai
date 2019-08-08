@@ -18,8 +18,8 @@ from .ocr.chineseocr import OCR
 from violentsurveillance.image_terrorism import image_terrorism
 from violentsurveillance.vision_porn import vision_porn
 from django.conf import settings
-from .serializers import VideoFileUploadSerializer,OcrGeneralSerializer,OcrIDCardSerializer,AudioFileInspectionSerializer,ImageFileUploadSerializer
-from .models import VideoFileUpload,AudioFileUpload,OcrGeneral,OcrIDCard,AudioFileInspection,ImageFileUpload
+from .serializers import VideoFileUploadSerializer,OcrGeneralSerializer,OcrIDCardSerializer,AudioFileInspectionSerializer,ImageFileUploadSerializer,WordRecognitionInspectionSerializer
+from .models import VideoFileUpload,AudioFileUpload,OcrGeneral,OcrIDCard,AudioFileInspection,ImageFileUpload,WordRecognitionInspection
 import os
 import shutil
 import uuid
@@ -161,6 +161,52 @@ class WordRecognitionViewSet(viewsets.ModelViewSet):
         serializer.save(ret=ret,msg=msg,data=data)
 
         return Response(status=status.HTTP_201_CREATED)
+
+class WordRecognitionInspectionViewSet(viewsets.ModelViewSet):
+
+    queryset = WordRecognitionInspection.objects.all()
+    serializer_class = WordRecognitionInspectionSerializer
+    parser_classes = (MultiPartParser, FormParser,)
+
+    def perform_create(self, serializer):
+
+        print (self.request.data)
+        iserializer = serializer.save()
+        
+        txtfile = iserializer.text.path
+        print(txtfile)
+        text = "";
+        f=open(txtfile,"r")
+        lines = f.readlines()
+        sensitive_map = {}
+        text_content = ""
+        #lines=f.readline()     #按行读取文件中的内容
+        sensitive_list = []
+        for line in lines:     #循环输出读取的内容
+            #text = text + line
+            result = sensitiveClass().check_sensitiveWords(line)
+            text_content = text_content + line 
+            
+            print(line)
+            sensitive_list.append(result)
+
+        #print(text)
+        #sensitive_list = sensitiveClass().check_sensitiveWords(text)
+        print(sensitive_list)
+        # if sensitive_list.get('sensitive_hit_flag') == 0:
+        #     ret = 1
+        #     msg = "无匹配记录"
+        # else:
+        #     ret = 0
+        #     msg = "匹配到记录"
+        ret = 0
+        msg = "匹配记录"
+        sensitive_map["text_content"] = text_content
+        sensitive_map["sensitive_info"] = sensitive_list
+        data = sensitive_map
+        serializer.save(ret=ret,msg=msg,data=data)
+
+        return Response(status=status.HTTP_201_CREATED)        
 
 class OcrGeneralViewSet(viewsets.ModelViewSet):
 
@@ -322,7 +368,7 @@ class AudioFileInspectionViewSet(viewsets.ModelViewSet):
         audio_content = audio().getOneAudioContent(file_path)
         check_result = sensitiveClass().check_sensitiveWords(audio_content)
         # print (check_result)
-        serializer.save(data=str(check_result),ret=ret,msg=msg)
+        serializer.save(data=check_result,ret=ret,msg=msg)
         return Response(status=status.HTTP_201_CREATED)
 class ImageFileUploadViewSet(viewsets.ModelViewSet):
     queryset = ImageFileUpload.objects.all()

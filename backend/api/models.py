@@ -75,6 +75,11 @@ class WordRecognition(models.Model):
     ret = models.IntegerField(_('ret'), null=True, blank=True)
     msg = models.TextField(max_length=255, default='')
     data = models.TextField(max_length=2048, default='')
+class WordRecognitionInspection(models.Model):
+    text = models.FileField(_('text'), max_length=255, null=True, blank=True)
+    ret = models.IntegerField(_('ret'), null=True, blank=True)
+    msg = models.TextField(max_length=255, default='')
+    data = models.TextField(max_length=2048, default='')    
 
 class OcrGeneral(models.Model):
     image = models.ImageField(upload_to=path_and_rename, max_length=255, null=True, blank=True)
