@@ -47,14 +47,11 @@
 						<div class="add_before">
 							<!--<img src="../assets/image/yellow/image_upload.png" alt="">-->
 							<el-upload
+								class="avatar-uploader"
 								action="https://jsonplaceholder.typicode.com/posts/"
-								list-type="picture-card"
 								:auto-upload="false"
-								:on-preview="handlePictureCardPreview"
-								:file-list="fileList"
-								:on-change="onImageChange"
-								:on-remove="handleRemove">
-								<i class="el-icon-plus"></i>
+								:on-change="onImageChange">
+								<i class="el-icon-plus avatar-uploader-icon"></i>
 							</el-upload>
 						</div>
 						<p class="choose_suggest">支持图片多张上传，一次检测十张</p>
@@ -214,9 +211,13 @@
                 }
             },
             onImageChange(file, fileList){
-               this.fileList.push(file);
-               this.isImage = true;
-			},
+                this.fileList.push(file);
+                console.log(file);
+                if(!file.url){
+                    file.url = URL.createObjectURL(file.raw);
+                }
+                this.isImage = true;
+            },
             changeImage(e){
                 this.imageIsBig = false;
                 this.imageRight = false;

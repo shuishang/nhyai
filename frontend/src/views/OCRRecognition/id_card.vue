@@ -3,7 +3,10 @@
 		<el-row class="loading_con">
 			<el-col :xs={span:24} :sm={span:11,offset:1} :md={span:10,offset:2} :lg={span:9,offset:3} :xl={span:8,offset:4}>
 				<div class="image_outer">
-					<div class="outer_add">
+					<div class="outer_add"
+						 element-loading-background="rgba(0, 0, 0, 0.3)"
+						 fullscreen="isForce"
+						 v-loading="isLoading">
 						<span class="original_style">原始图片</span>
 						<img class="show_add_image" :src="dialogImageUrl">
 
@@ -29,9 +32,9 @@
 						<p>姓名：{{showJson.name}}</p>
 						<p>性别：{{showJson.sex}}</p>
 						<p>民族：{{showJson.nation}}</p>
-						<p>出生：{{showJson.birthday}}</p>
+						<p>出生：{{showJson.birth}}</p>
 						<p>住址：{{showJson.address}}</p>
-						<p>公民身份证号：{{showJson.idNumber}}</p>
+						<p>公民身份证号：{{showJson.id}}</p>
 					</div>
 				</div>
 			</el-col>
@@ -46,7 +49,7 @@
             return {
                 dialogImageUrl: require("../../assets/image/ocr/idCard_image_sample.png"),
                 dialogVisible: false,
-                jsonDemo:'{"name":"艾米","sex":"女","nation":"汉","birthday":"1986年4月23日","address":"上海徐汇区田林路397号腾云大厦6F","idNumber":"310104198604230289"}',
+                jsonDemo:'{"name":"艾米","sex":"女","nation":"汉","birth":"1986年4月23日","address":"上海徐汇区田林路397号腾云大厦6F","id":"310104198604230289"}',
                 buttonWord:"开始检测",
                 imageName:"",
                 showPercent:"概率：1.75%",
@@ -55,58 +58,29 @@
                 imageIsBig:false,
                 activeName: 'first',
                 showJson :{},
-                options:{background:"rgba(0, 0, 0, 0.3)",fullscreen:false,target:document.querySelector(".show_json_outer")}
+                isLoading:false
 
             };
         },
         mounted:function () {
             var that = this;
             var jdata = JSON.stringify(JSON.parse(this.jsonDemo), null, 4);
-            var loading = this.$loading({fullscreen:false,target:document.querySelector(".show_json_outer"),text:"正在加载..."});
+            var loading = this.$loading({fullscreen:false,target:document.querySelector(".outer_add")});
             this.intervalid1 = setTimeout(() => {
                 this.showJson = JSON.parse(this.jsonDemo);
                 clearInterval(this.intervalid1);
                 loading.close();
-            }, 2000)
-
-//            $("#show_json").html("<pre>"+jdata+"</pre>");//这时数据展示正确
-            $('form').submit(function(e) {
-                that.imageRight = false;
-                that.$loading({fullscreen:false,target:document.querySelector(".show_json_outer"),text:"正在加载..."});
-                var formData = new FormData($(this));
-                formData.append('datafile', $('#datafile')[0].files[0]);
-                $.ajax({
-                    url: $(this).attr('action'),
-                    type: $(this).attr('method'),
-                    data: formData,
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    success:(response)=>{
-                        var result = response.result;
-                        console.log( result.data.tag_list[1].probability,"hhhhhhhhhhhh") ;
-                        var jdata = JSON.stringify(result, null, 4);
-                        $("#show_json").html("<pre>"+jdata+"</pre>");//这时数据展示正确
-                        var forcePercent = result.data.tag_list[1].probability.toString();
-                        forcePercent = forcePercent.substring(0,forcePercent.indexOf(".")+5)*100;
-                        console.log(forcePercent);
-                        that.showPercent =`概率：${forcePercent}%`;
-                        if(forcePercent>80){
-                            that.isForce = true;
-                        }
-                    },
-                });
-                e.preventDefault();
-            });
+            }, 2000);
+//            this.uploadImage();
         },
         methods: {
             uploadImage(e){
-                this.loading = this.$loading(this.options);
-                this.imageRight = false;
+                this.isCheck= true;
+                var loading = this.$loading({fullscreen:false,target:document.querySelector(".outer_add")});
                 var formData = new FormData($(this));
-                formData.append('datafile', $('#datafile')[0].files[0]);
+                formData.append('image', $('#datafile')[0].files[0]);
                 $.ajax({
-                    url: "http://172.31.11.171:8000/api/uploads/",
+                    url: this.api+"/api/v1/ocr/get_idcard_ocr/",
                     type: "post",
                     data: formData,
 //                    headers: {'Authorization': 'Token mytoken'},
@@ -114,21 +88,15 @@
                     contentType: false,
                     processData: false,
                     success:(response)=>{
-                        this.$loading().close();
-//                        this.uploadInfo(response);
-                        console.log(this)
-                        var result = response.result;
-                        console.log( result.data.tag_list[1].probability,"hhhhhhhhhhhh") ;
-                        var jdata = JSON.stringify(result, null, 4);
-                        $("#show_json").html("<pre>"+jdata+"</pre>");//这时数据展示正确
-                        var forcePercent = result.data.tag_list[1].probability.toString();
-                        forcePercent = forcePercent.substring(0,forcePercent.indexOf(".")+5)*100;
-                        console.log(forcePercent);
-                        this.showPercent =`概率：${forcePercent}%`;
-
-                        if(forcePercent>80){
-                            this.isForce = true;
-                        }
+                        console.log(response.data);
+                        var text =''
+                        /*response.data.forEach((res)=>{
+                            text= text+res+'<br/>'
+                        });
+                        document.getElementById('show_json').innerHTML= text;*/
+                        this.showJson = response.data;
+                        loading.close();
+                        this.isCheck= false;
                     },
                 });
                 e.preventDefault();
@@ -144,13 +112,14 @@
                     that.dialogImageUrl = this.result;
                 };
                 let size=file.size;//文件的大小，判断图片的大小
-                if(size>1048576){
-                    console.log("图片太大了")
-                }else {
-                    this.imageRight = true;
-                    console.log('开始上传')
-//                    this.uploadImage(e);
-                }
+                this.uploadImage(e);
+//                if(size>1048576){
+//                    console.log("图片太大了")
+//                }else {
+//                    this.imageRight = true;
+//                    console.log('开始上传')
+////                    this.uploadImage(e);
+//                }
             },
         }
     }

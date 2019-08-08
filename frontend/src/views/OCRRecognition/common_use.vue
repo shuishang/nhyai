@@ -9,10 +9,13 @@
 
 					</div>
 					<div class="upload_outer">
-						<div class="local_upload">
+						<div class="local_upload" v-if="!isCheck">
 							<!--<p>本地上传</p>-->
 							<input id="datafile" name="datafile" type="file" class="inputfile" @change="changeImage($event)">
 							<label for="datafile">本地上传</label>
+						</div>
+						<div class="local_upload" v-else>
+							<p class="is_check">正在检测</p>
 						</div>
 						<div class="show_input_outer">
 							<input type="text" class="init_url_style">
@@ -55,22 +58,23 @@
                 imageIsBig:false,
                 activeName: 'first',
                 showJson :{},
-                options:{background:"rgba(0, 0, 0, 0.3)",fullscreen:false,target:document.querySelector(".show_json_outer")}
+                options:{fullscreen:false,target:document.querySelector(".outer_add")},
+				isCheck:false
 
             };
         },
         mounted:function () {
             var that = this;
             var jdata = JSON.stringify(JSON.parse(this.jsonDemo), null, 4);
-            var loading = this.$loading({fullscreen:false,target:document.querySelector(".show_json_outer"),text:"正在加载..."});
+            var loading = this.$loading({fullscreen:false,target:document.querySelector(".outer_add")});
             this.intervalid1 = setTimeout(() => {
                 this.showJson = JSON.parse(this.jsonDemo);
                 clearInterval(this.intervalid1);
                 loading.close();
-            }, 2000)
+            }, 2000);
 
 //            $("#show_json").html("<pre>"+jdata+"</pre>");//这时数据展示正确
-            $('form').submit(function(e) {
+            /*$('form').submit(function(e) {
                 that.imageRight = false;
                 that.$loading({fullscreen:false,target:document.querySelector(".show_json_outer"),text:"正在加载..."});
                 var formData = new FormData($(this));
@@ -97,16 +101,16 @@
                     },
                 });
                 e.preventDefault();
-            });
+            });*/
         },
         methods: {
             uploadImage(e){
-                this.loading = this.$loading(this.options);
-                this.imageRight = false;
+                this.isCheck= true;
+                var loading = this.$loading({fullscreen:false,target:document.querySelector(".outer_add")});
                 var formData = new FormData($(this));
-                formData.append('datafile', $('#datafile')[0].files[0]);
+                formData.append('image', $('#datafile')[0].files[0]);
                 $.ajax({
-                    url: "http://172.31.11.171:8000/api/uploads/",
+                    url: this.api+"/api/v1/ocr/get_general_ocr/",
                     type: "post",
                     data: formData,
 //                    headers: {'Authorization': 'Token mytoken'},
@@ -114,21 +118,14 @@
                     contentType: false,
                     processData: false,
                     success:(response)=>{
-                        this.$loading().close();
-//                        this.uploadInfo(response);
-                        console.log(this)
-                        var result = response.result;
-                        console.log( result.data.tag_list[1].probability,"hhhhhhhhhhhh") ;
-                        var jdata = JSON.stringify(result, null, 4);
-                        $("#show_json").html("<pre>"+jdata+"</pre>");//这时数据展示正确
-                        var forcePercent = result.data.tag_list[1].probability.toString();
-                        forcePercent = forcePercent.substring(0,forcePercent.indexOf(".")+5)*100;
-                        console.log(forcePercent);
-                        this.showPercent =`概率：${forcePercent}%`;
-
-                        if(forcePercent>80){
-                            this.isForce = true;
-                        }
+						console.log(response.data);
+						var text =''
+                        response.data.forEach((res)=>{
+                            text= text+res+'<br/>'
+						});
+						document.getElementById('show_json').innerHTML= text;
+                        loading.close();
+                        this.isCheck= false;
                     },
                 });
                 e.preventDefault();
@@ -144,13 +141,14 @@
                     that.dialogImageUrl = this.result;
                 };
                 let size=file.size;//文件的大小，判断图片的大小
-                if(size>1048576){
-                    console.log("图片太大了")
-                }else {
-                    this.imageRight = true;
-                    console.log('开始上传')
-//                    this.uploadImage(e);
-                }
+                this.uploadImage(e);
+//                if(size>1048576){
+//                    console.log("图片太大了")
+//                }else {
+//                    this.imageRight = true;
+//                    console.log('开始上传')
+////                    this.uploadImage(e);
+//                }
             },
         }
     }
@@ -174,8 +172,9 @@
 	.inputfile{z-index: -11111;width: 0px;height:1px;opacity: 0;position: absolute;}
 	.local_upload label{display:inline-block;height: 43px;line-height: 43px;font-size: 16px;background-color: #316DFF;color:white;border: 1px solid #316DFF;padding: 0 15px;text-align: center;cursor: pointer;}
 	.local_upload label:hover{background-color: white;color: #316DFF}
+	.is_check{display:inline-block;height: 43px;line-height: 43px;font-size: 16px;background-color: #f5f5f5;color:#666666;border: 1px solid #dddddd;padding: 0 15px;text-align: center;}
 	.show_input_outer{display: flex;flex: 1;}
-	#show_json{margin: 50px auto;padding: 10px 30px;}
+	#show_json{margin: 50px auto;padding: 10px 30px;word-break:break-all}
 	#show_json p{height: 30px;line-height: 30px;}
 
 	.advantage_product span{display: inline-block;padding: 10px;}

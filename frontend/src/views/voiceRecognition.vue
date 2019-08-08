@@ -70,10 +70,7 @@
 									<span>语种/方言:</span>
 									<select name="language" id="language" readonly="readonly">
 										<option value="中文普通话">中文普通话</option>
-										<option value="中文河南话">中文河南话</option>
-										<option value="中文海南话">中文海南话</option>
-										<option value="中文东北话">中文东北话</option>
-										<option value="英文">英文</option>
+										<!--<option value="英文">英文</option>-->
 									</select>
 								</div>
 								<div class="voice_time_outer" v-show="recordWord =='停止录音'">
@@ -221,8 +218,39 @@
                 this.recordSrc =URL.createObjectURL(wav) ;
                 console.log(this.recordSrc)
 				this.record.clear();
+                this.submitVoice(wav);
 //                document.getElementsByTagName('audio')[0].load();
 
+            },
+            submitVoice(wav){
+                var loading = this.$loading({fullscreen:false,target:document.querySelector(".voice_content")});
+                if(this.recWord==''){
+                    this.$message.error('请输入要识别的内容！');
+                    return;
+                }
+                this.isCheck = 2;
+                var formData = new FormData($(this));
+                formData.append('speech', wav);
+                $.ajax({
+                    url: this.api+"/api/v1/audio/get_chinese_speech/",
+                    type: "post",
+                    data: formData,
+//                    headers: {'Authorization': 'Token mytoken'},
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success:(response)=>{
+                        loading.close();
+                        console.log(response);
+//                        document.getElementsByClassName('write_content')[0].innerHTML=response.data.web_text;
+
+//                        this.recWord =response.data.web_text;
+
+                    },
+                    error:()=>{
+                        this.isCheck = 3;
+                    }
+                });
             },
         },
 		components:{
