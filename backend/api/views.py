@@ -26,6 +26,8 @@ import uuid
 import cv2
 from .kaldi.audios import audio
 from .sensitives.sensitives import sensitiveClass
+import wave
+import contextlib
 def get_two_float(f_str, n):
     f_str = str(f_str)      # f_str = '{}'.format(f_str) 也可以转换为字符串
     a, b, c = f_str.partition('.')
@@ -365,10 +367,17 @@ class AudioFileInspectionViewSet(viewsets.ModelViewSet):
         msg = "成功"
         file_path = iserializer.speech.path
         print(file_path)
+        duration = 0
+        with contextlib.closing(wave.open(file_path,'r')) as f:
+            frames = f.getnframes()
+            rate = f.getframerate()
+            duration = frames / float(rate)
         audio_content = audio().getOneAudioContent(file_path)
         check_result = sensitiveClass().check_sensitiveWords(audio_content)
-        # print (check_result)
-        serializer.save(data=check_result,ret=ret,msg=msg)
+        resultMap = {}
+        resultMap["speech_time"]=duration
+        resultMap["speech_contents"]=check_result
+        serializer.save(data=resultMap,ret=ret,msg=msg)
         return Response(status=status.HTTP_201_CREATED)
 class ImageFileUploadViewSet(viewsets.ModelViewSet):
     queryset = ImageFileUpload.objects.all()
