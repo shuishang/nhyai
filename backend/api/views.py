@@ -185,28 +185,14 @@ class WordRecognitionInspectionViewSet(viewsets.ModelViewSet):
         #lines=f.readline()     #按行读取文件中的内容
         sensitive_list = []
         for line in lines:     #循环输出读取的内容
-            #text = text + line
-            result = sensitiveClass().check_sensitiveWords(line)
-            text_content = text_content + line 
-            
-            print(line)
-            sensitive_list.append(result)
-
-        #print(text)
-        #sensitive_list = sensitiveClass().check_sensitiveWords(text)
-        print(sensitive_list)
-        # if sensitive_list.get('sensitive_hit_flag') == 0:
-        #     ret = 1
-        #     msg = "无匹配记录"
-        # else:
-        #     ret = 0
-        #     msg = "匹配到记录"
+            text_content = text_content + " " + line 
+        result = sensitiveClass().check_sensitiveWords(text_content)
         ret = 0
         msg = "匹配记录"
         sensitive_map["text_content"] = text_content
-        sensitive_map["sensitive_info"] = sensitive_list
+        sensitive_map["sensitive_info"] = result
         data = sensitive_map
-        serializer.save(ret=ret,msg=msg,data=data)
+        serializer.save(ret=ret,msg=msg,data=result)
 
         return Response(status=status.HTTP_201_CREATED)        
 
