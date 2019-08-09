@@ -18,15 +18,21 @@ from .ocr.chineseocr import OCR
 from violentsurveillance.image_terrorism import image_terrorism
 from violentsurveillance.vision_porn import vision_porn
 from django.conf import settings
-from .serializers import VideoFileUploadSerializer,OcrGeneralSerializer,OcrIDCardSerializer,AudioFileInspectionSerializer
-from .models import VideoFileUpload,AudioFileUpload,OcrGeneral,OcrIDCard,AudioFileInspection
+from .serializers import VideoFileUploadSerializer,OcrGeneralSerializer,OcrIDCardSerializer,AudioFileInspectionSerializer,ImageFileUploadSerializer,WordRecognitionInspectionSerializer
+from .models import VideoFileUpload,AudioFileUpload,OcrGeneral,OcrIDCard,AudioFileInspection,ImageFileUpload,WordRecognitionInspection
 import os
 import shutil
 import uuid
 import cv2
 from .kaldi.audios import audio
 from .sensitives.sensitives import sensitiveClass
-
+import wave
+import contextlib
+def get_two_float(f_str, n):
+    f_str = str(f_str)      # f_str = '{}'.format(f_str) 也可以转换为字符串
+    a, b, c = f_str.partition('.')
+    c = (c+"0"*n)[:n]       # 如论传入的函数有几位小数，在字符串后面都添加n为小数0
+    return ".".join([a, c])
 class UserViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
@@ -158,6 +164,38 @@ class WordRecognitionViewSet(viewsets.ModelViewSet):
 
         return Response(status=status.HTTP_201_CREATED)
 
+class WordRecognitionInspectionViewSet(viewsets.ModelViewSet):
+
+    queryset = WordRecognitionInspection.objects.all()
+    serializer_class = WordRecognitionInspectionSerializer
+    parser_classes = (MultiPartParser, FormParser,)
+
+    def perform_create(self, serializer):
+
+        print (self.request.data)
+        iserializer = serializer.save()
+        
+        txtfile = iserializer.text.path
+        print(txtfile)
+        text = "";
+        f=open(txtfile,"r")
+        lines = f.readlines()
+        sensitive_map = {}
+        text_content = ""
+        #lines=f.readline()     #按行读取文件中的内容
+        sensitive_list = []
+        for line in lines:     #循环输出读取的内容
+            text_content = text_content + " " + line 
+        result = sensitiveClass().check_sensitiveWords(text_content)
+        ret = 0
+        msg = "匹配记录"
+        sensitive_map["text_content"] = text_content
+        sensitive_map["sensitive_info"] = result
+        data = sensitive_map
+        serializer.save(ret=ret,msg=msg,data=result)
+
+        return Response(status=status.HTTP_201_CREATED)        
+
 class OcrGeneralViewSet(viewsets.ModelViewSet):
 
     queryset = OcrGeneral.objects.all()
@@ -239,7 +277,7 @@ class FileImageTerrorismUploadViewSet(viewsets.ModelViewSet):
         # print (check_result)
         violence = check_result['violence']
         resultMap = {}
-        resultMap['violence'] = violence
+        resultMap['violence'] = get_two_float(float(violence) * 100,2)
         serializer.save(data=resultMap,ret=ret,msg=msg)
         return Response(status=status.HTTP_201_CREATED)
 
@@ -248,7 +286,7 @@ class FileVisionPornUploadViewSet(viewsets.ModelViewSet):
         queryset = FileVisionPornUpload.objects.all()
         serializer_class = FileVisionPornUploadSerializer
         parser_classes = (MultiPartParser, FormParser,)
-
+        
         def perform_create(self, serializer):
             print(self.request.data)
             iserializer = serializer.save()
@@ -259,7 +297,7 @@ class FileVisionPornUploadViewSet(viewsets.ModelViewSet):
             # check_result = vision_porn(file_path)
             scores = settings.NSFW.caffe_preprocess_and_compute_api(file_path)
             resultMap = {}
-            resultMap['normal_hot_porn'] = scores[1]
+            resultMap['normal_hot_porn'] = get_two_float(float(scores[1]) * 100,2)
             # print (check_result)
             serializer.save(data=resultMap,ret=ret,msg=msg)
             return Response(status=status.HTTP_201_CREATED)
@@ -315,8 +353,60 @@ class AudioFileInspectionViewSet(viewsets.ModelViewSet):
         msg = "成功"
         file_path = iserializer.speech.path
         print(file_path)
+        duration = 0
+        with contextlib.closing(wave.open(file_path,'r')) as f:
+            frames = f.getnframes()
+            rate = f.getframerate()
+            duration = frames / float(rate)
         audio_content = audio().getOneAudioContent(file_path)
         check_result = sensitiveClass().check_sensitiveWords(audio_content)
-        # print (check_result)
-        serializer.save(data=str(check_result),ret=ret,msg=msg)
+        resultMap = {}
+        resultMap["speech_time"]=duration
+        resultMap["speech_contents"]=check_result
+        serializer.save(data=resultMap,ret=ret,msg=msg)
         return Response(status=status.HTTP_201_CREATED)
+class ImageFileUploadViewSet(viewsets.ModelViewSet):
+    queryset = ImageFileUpload.objects.all()
+    serializer_class = ImageFileUploadSerializer
+    parser_classes = (MultiPartParser, FormParser,)
+    
+    def perform_create(self, serializer):
+        print(self.request.data)
+        iserializer = serializer.save()
+        ret = 0
+        msg = "成功"
+        file_path = iserializer.image.path
+        print(file_path)
+        # check_result = vision_porn(file_path)
+        scores = settings.NSFW.caffe_preprocess_and_compute_api(file_path)
+        resultMap = {}
+        porn_sensitivity_level = "0"
+        if (float(scores[1]) < 0.5):
+            porn_sensitivity_level = "0"
+        if (float(scores[1]) >= 0.5 and float(scores[1])<=0.9):
+            porn_sensitivity_level = "1"
+        if (float(scores[1]) > 0.9):
+            porn_sensitivity_level = "2"
+        resultMap['porn_sensitivity_level'] = porn_sensitivity_level
+        resultMap['porn_percent'] = get_two_float(float(scores[1]) * 100,2)
+
+        check_result = check_violence(file_path)        
+        violence = check_result['violence']
+        violence_sensitivity_level = "0"
+        if (float(violence) < 0.5):
+            violence_sensitivity_level = "0"
+        if (float(violence) >= 0.5 and float(violence)<=0.9):
+            violence_sensitivity_level = "1"
+        if (float(violence) > 0.9):
+            violence_sensitivity_level = "2"
+        resultMap['violence_sensitivity_level'] = violence_sensitivity_level
+        resultMap['violence_percent'] = get_two_float(float(violence) * 100,2)
+
+        resultMap['politics_sensitivity_level'] = ""
+        resultMap['politics_percent'] = ""
+        resultMap['public_character_level'] = ""
+        resultMap['public_percent'] = ""
+        
+        
+        serializer.save(data=resultMap,ret=ret,msg=msg)
+        return Response(status=status.HTTP_201_CREATED)        

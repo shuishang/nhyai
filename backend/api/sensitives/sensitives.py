@@ -57,9 +57,22 @@ class sensitiveClass:
         resultMap = {} 
         resultMap["sensitive_hit_flag"] = sensitive_hit_flag
         resultMap["sensitive_size"] = sensitive_size
+        sensitive_list_result = []
+        temp_map = {}
+        tmp_map = {}
+        for each in sensitive_list:
+            temp_map = each
+            temp_flag = 0
+            for i in sensitive_list:
+                tmp_map = i              
+                if (temp_map["firstType"] == tmp_map["firstType"] and temp_map["secondType"] == tmp_map["secondType"]):
+                    temp_flag = 1
+                    break
+            if (temp_flag == 1):
+                sensitive_list_result.append(temp_map)
+                sensitive_list.remove(temp_map)
         resultMap["sensitive_list"] = sensitive_list
         resultMap["web_text"] = web_text
-        print("resultMap:",resultMap)
         return resultMap
 
     def check_sensitiveWords(self, input_word):
@@ -98,12 +111,24 @@ class sensitiveClass:
         resultMap = {} 
         resultMap["sensitive_hit_flag"] = sensitive_hit_flag
         resultMap["sensitive_size"] = sensitive_size
+        temp_map = {}
+        tmp_map = {}
+        for each in sensitive_list:
+            temp_map = each
+            temp_flag = 0
+            for i in sensitive_list:
+                tmp_map = i              
+                if (temp_map["firstType"] == tmp_map["firstType"] and temp_map["secondType"] == tmp_map["secondType"]):
+                    temp_flag = 1
+                    break
+            if (temp_flag == 1):
+                sensitive_list.remove(temp_map)
         resultMap["sensitive_list"] = sensitive_list
         resultMap["web_text"] = web_text
-        print("resultMap:",resultMap)
         return resultMap
 
 if __name__ == '__main__':
     df = pd.read_csv(os.path.join(os.getcwd(),"backend","api","sensitives","sensitiveWords.csv"),encoding='gbk')
-    sensitiveClass().check_sensitiveWords_test(df, "sssss 十八摸 十八摸 强奸")
+    #sensitiveClass().check_sensitiveWords_test(df, "sssss 十八摸 十八摸 强奸")
+    sensitiveClass().check_sensitiveWords_test(df, "heheh ")
     #sensitiveClass().check_sensitiveWords_test(df, "你 不是 跟 我 讲的 笑话 吗 欲死欲仙 十八摸")
