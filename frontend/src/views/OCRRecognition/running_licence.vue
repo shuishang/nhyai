@@ -6,7 +6,6 @@
 					<div class="outer_add">
 						<span class="original_style">原始图片</span>
 						<img class="show_add_image" :src="dialogImageUrl">
-
 					</div>
 					<div class="upload_outer">
 						<div class="local_upload">
@@ -67,37 +66,7 @@
                 this.showJson = JSON.parse(this.jsonDemo);
                 clearInterval(this.intervalid1);
                 loading.close();
-            }, 2000)
-
-//            $("#show_json").html("<pre>"+jdata+"</pre>");//这时数据展示正确
-            $('form').submit(function(e) {
-                that.imageRight = false;
-                that.$loading({fullscreen:false,target:document.querySelector(".show_json_outer"),text:"正在加载..."});
-                var formData = new FormData($(this));
-                formData.append('datafile', $('#datafile')[0].files[0]);
-                $.ajax({
-                    url: $(this).attr('action'),
-                    type: $(this).attr('method'),
-                    data: formData,
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    success:(response)=>{
-                        var result = response.result;
-                        console.log( result.data.tag_list[1].probability,"hhhhhhhhhhhh") ;
-                        var jdata = JSON.stringify(result, null, 4);
-                        $("#show_json").html("<pre>"+jdata+"</pre>");//这时数据展示正确
-                        var forcePercent = result.data.tag_list[1].probability.toString();
-                        forcePercent = forcePercent.substring(0,forcePercent.indexOf(".")+5)*100;
-                        console.log(forcePercent);
-                        that.showPercent =`概率：${forcePercent}%`;
-                        if(forcePercent>80){
-                            that.isForce = true;
-                        }
-                    },
-                });
-                e.preventDefault();
-            });
+            }, 2000);
         },
         methods: {
             uploadImage(e){
@@ -143,14 +112,6 @@
                 reader.onload = function() {
                     that.dialogImageUrl = this.result;
                 };
-                let size=file.size;//文件的大小，判断图片的大小
-                if(size>1048576){
-                    console.log("图片太大了")
-                }else {
-                    this.imageRight = true;
-                    console.log('开始上传')
-//                    this.uploadImage(e);
-                }
             },
         }
     }

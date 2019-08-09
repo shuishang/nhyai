@@ -28,13 +28,7 @@
 			<el-col :xs={span:24} :sm={span:11} :md="10" :lg="9" :xl="8">
 				<div class="show_json_outer">
 					<span class="original_style">识别结果</span>
-					<div id="show_json" v-show="showJson.name">
-						<p>姓名：{{showJson.name}}</p>
-						<p>性别：{{showJson.sex}}</p>
-						<p>民族：{{showJson.nation}}</p>
-						<p>出生：{{showJson.birthday}}</p>
-						<p>住址：{{showJson.address}}</p>
-						<p>公民身份证号：{{showJson.idNumber}}</p>
+					<div id="show_common_json">
 					</div>
 				</div>
 			</el-col>
@@ -65,43 +59,21 @@
         },
         mounted:function () {
             var that = this;
+            this.isCheck= true;
             var jdata = JSON.stringify(JSON.parse(this.jsonDemo), null, 4);
             var loading = this.$loading({fullscreen:false,target:document.querySelector(".outer_add")});
             this.intervalid1 = setTimeout(() => {
-                this.showJson = JSON.parse(this.jsonDemo);
+//                this.showJson = JSON.parse(this.jsonDemo);
+                document.getElementById('show_common_json').innerHTML= "夏天的飞鸟，飞到我窗前唱歌，又飞去了。\n" +'<br/>'+
+                    "秋天的黄叶，他们没有什么可唱，只叹息一声，飞落在那里。\n"+'<br/>'+
+                    "Stray birds of summer to my windows to sing and fly away.\n"+'<br/>' +
+                    "And yellow leaves of autumn,which have no songs,flutter and fall there with a sign. \n"+'<br/>' +
+                    "飞鸟集\n" +'<br/>'+
+                    "STRAY BIRDS";
                 clearInterval(this.intervalid1);
+                this.isCheck= false;
                 loading.close();
             }, 2000);
-
-//            $("#show_json").html("<pre>"+jdata+"</pre>");//这时数据展示正确
-            /*$('form').submit(function(e) {
-                that.imageRight = false;
-                that.$loading({fullscreen:false,target:document.querySelector(".show_json_outer"),text:"正在加载..."});
-                var formData = new FormData($(this));
-                formData.append('datafile', $('#datafile')[0].files[0]);
-                $.ajax({
-                    url: $(this).attr('action'),
-                    type: $(this).attr('method'),
-                    data: formData,
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    success:(response)=>{
-                        var result = response.result;
-                        console.log( result.data.tag_list[1].probability,"hhhhhhhhhhhh") ;
-                        var jdata = JSON.stringify(result, null, 4);
-                        $("#show_json").html("<pre>"+jdata+"</pre>");//这时数据展示正确
-                        var forcePercent = result.data.tag_list[1].probability.toString();
-                        forcePercent = forcePercent.substring(0,forcePercent.indexOf(".")+5)*100;
-                        console.log(forcePercent);
-                        that.showPercent =`概率：${forcePercent}%`;
-                        if(forcePercent>80){
-                            that.isForce = true;
-                        }
-                    },
-                });
-                e.preventDefault();
-            });*/
         },
         methods: {
             uploadImage(e){
@@ -123,7 +95,7 @@
                         response.data.forEach((res)=>{
                             text= text+res+'<br/>'
 						});
-						document.getElementById('show_json').innerHTML= text;
+						document.getElementById('show_common_json').innerHTML= text;
                         loading.close();
                         this.isCheck= false;
                     },
@@ -140,15 +112,7 @@
                 reader.onload = function() {
                     that.dialogImageUrl = this.result;
                 };
-                let size=file.size;//文件的大小，判断图片的大小
                 this.uploadImage(e);
-//                if(size>1048576){
-//                    console.log("图片太大了")
-//                }else {
-//                    this.imageRight = true;
-//                    console.log('开始上传')
-////                    this.uploadImage(e);
-//                }
             },
         }
     }
@@ -174,8 +138,8 @@
 	.local_upload label:hover{background-color: white;color: #316DFF}
 	.is_check{display:inline-block;height: 43px;line-height: 43px;font-size: 16px;background-color: #f5f5f5;color:#666666;border: 1px solid #dddddd;padding: 0 15px;text-align: center;}
 	.show_input_outer{display: flex;flex: 1;}
-	#show_json{margin: 50px auto;padding: 10px 30px;word-break:break-all}
-	#show_json p{height: 30px;line-height: 30px;}
+	#show_common_json{margin: 50px auto;padding: 10px 30px;word-break:break-all;line-height: 30px;}
+	#show_common_json p{height: 30px;line-height: 30px;}
 
 	.advantage_product span{display: inline-block;padding: 10px;}
 	.show_word{width: 192px;height: 148px;  display: inline-block;  text-align: center;  font-size: 22px;  font-style: normal;  color: #fff;  box-sizing: border-box;  padding-top: 58px;}

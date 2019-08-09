@@ -33,34 +33,25 @@
 					</div>
 				</el-col>
 				<el-col :xs="10" :sm="8" :md="6" :lg="6" :xl="5">
-					<div class="local_upload">
+					<div class="local_upload" v-if="!isCheck">
 						<!--<p>本地上传</p>-->
 						<input id="datafile" name="datafile" type="file" class="inputfile" @change="changeImage($event)">
 						<label for="datafile">本地上传</label>
+					</div>
+					<div class="local_upload" v-else>
+						<p class="is_check">正在检测</p>
 					</div>
 				</el-col>
 			</el-row>
 			<el-row style="min-width: 800px;">
 				<el-col :md={span:20,offset:2} :lg={span:20,offset:2} :xl={span:16,offset:4}>
 					<p class="top_suggest">图片文件类型支持PNG、JPG、JPEG、BMP，图片大小不超过2M。</p>
-					<div class="choose_image" v-show="!isImage">
+					<div class="choose_image" v-show="isImage==1">
 						<div class="add_before">
 							<!--<img src="../assets/image/yellow/image_upload.png" alt="">-->
-							<!--<input id="imagefile" name="imagefile" type="file"  class="inputfile" @change="addImage($event)">
-							<label for="imagefile"></label>-->
-							<!--<el-upload
-								action="https://jsonplaceholder.typicode.com/posts/"
-								list-type="picture-card"
-								:auto-upload="false"
-								:on-preview="handlePictureCardPreview"
-								:file-list="fileList"
-								:on-change="onImageChange"
-								:on-remove="handleRemove">
-								<i class="el-icon-plus"></i>
-							</el-upload>-->
 							<el-upload
 								class="avatar-uploader"
-								action="https://jsonplaceholder.typicode.com/posts/"
+								action="http://172.31.4.7:8000/api/v1/image/get_vision_porn/"
 								:auto-upload="false"
 								:on-change="onImageChange">
 								<i class="el-icon-plus avatar-uploader-icon"></i>
@@ -68,22 +59,50 @@
 						</div>
 						<p class="choose_suggest">支持图片多张上传，一次检测十张</p>
 					</div>
-					<div class="choose_image" v-show="isImage">
+					<div class="choose_image_list" v-show="isImage==2">
 						<el-upload
-							action="https://jsonplaceholder.typicode.com/posts/"
+							ref="upload"
+							action="http://172.31.4.7:8000/api/v1/image/get_vision_porn/"
 							list-type="picture-card"
 							:auto-upload="false"
 							:on-preview="handlePictureCardPreview"
 							:file-list="fileList"
 							:limit="10"
-							:on-change="onImageChange"
+							:on-change="onListChange"
+							:http-request="uploadImage"
+							:on-exceed="outSuggest"
 							:on-remove="handleRemove">
 							<i class="el-icon-plus"></i>
 						</el-upload>
 						<el-dialog :visible.sync="dialogVisible">
 							<img width="100%" :src="dialogImageUrl" alt="">
 						</el-dialog>
-						<p class="begin_check">开始检测</p>
+						<p class="begin_check" @click="submitUpload($event)">开始检测</p>
+					</div>
+					<div class="choose_result" v-show="isImage==3">
+						<div class="result_title">
+							<img src="../assets/image/yellow/yellow_result_top.png" alt="">
+							<span>暴恐识别  |  审查结果</span>
+							<div class="yellow_result_outer clearfix" >
+								<div class="fl" v-for="item in resultList">
+									<img :src="item.image" alt="">
+									<div class="result_outer" v-if="item.number>90">
+										<p class="red_style_name">违规</p>
+										<p class="red_style_number">{{item.number}}</p>
+									</div>
+									<div class="result_outer" v-else-if="item.number>50">
+										<p class="orange_style_name">疑似违规</p>
+										<p class="orange_style_number">{{item.number}}</p>
+									</div>
+									<div class="result_outer" v-else>
+										<p class="green_style_name">合规</p>
+										<p class="green_style_number">{{item.number}}</p>
+									</div>
+								</div>
+							</div>
+						</div>
+						<p class="again_check" @click="uploadAgain">重新上传</p>
+						<p class="yellow_result_suggest"><span class="">*</span>提示：检测结果百分比越高代表违规越严重</p>
 					</div>
 				</el-col>
 			</el-row>
@@ -151,143 +170,143 @@
     export default {
         data() {
 			return{
-                dialogImageUrl: "",
+			    dialogImageUrl: "",
                 dialogVisible: false,
-                jsonDemo:'{"ret":0,"msg":"ok","data":{"tag_list":[{"tag_name":"protest","probability":0.3087675468623638},{"tag_name":"violence","probability":0.017580988407135},{"tag_name":"sign","probability":0.795149803161621},{"tag_name":"photo","probability":0.0147841582074761},{"tag_name":"fire","probability":0.0184208210557699},{"tag_name":"police","probability":0.0153429144993424},{"tag_name":"children","probability":0.00931504089385271},{"tag_name":"group_20","probability":0.683478415012359},{"tag_name":"group_100","probability":0.207240253686904},{"tag_name":"flag","probability":0.122076518833637},{"tag_name":"night","probability":0.212110564112663},{"tag_name":"shouting","probability":0.0291868895292282}]}}',
-                buttonWord:"开始检测",
-                imageName:"",
                 showPercent:"概率：1.75%",
-                isForce:false,
                 imageRight:false,
                 imageIsBig:false,
-                activeName: 'first',
-                showJson :{},
                 options:{background:"rgba(0, 0, 0, 0.3)",fullscreen:false,target:document.querySelector(".show_json_outer")},
-                currentImage:1,
-                isLoading:false,
-                clickFirst:0,
                 fileList: [],
-				isImage:false,
-                imgUrl1:require('../../static/imgs/usage_image1.png'),
-                imgUrl2:require('../../static/imgs/usage_image2.png'),
-                imgUrl3:require('../../static/imgs/usage_image03.png'),
-                recommendedList:[{'imgUrl':"../../static/imgs/usage_image1.png"},{'imgUrl':'../../static/imgs/usage_image2.png'},{'imgUrl':'../../static/imgs/usage_image03.png'}]
-            }
+                isImage:1,
+                recommendedList:[{'imgUrl':"../../static/imgs/usage_image1.png"},{'imgUrl':'../../static/imgs/usage_image2.png'},{'imgUrl':'../../static/imgs/usage_image03.png'}],
+                srcList:[],
+                url: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
+                completeNumber:0,
+                resultList:[],
+				isCheck:false
+			}
         },
         mounted:function () {
-            var that = this;
-            this.loadDate();
-            var jdata = JSON.stringify(JSON.parse(this.jsonDemo), null, 4);
-            $("#show_json").html("<pre>"+jdata+"</pre>");//这时数据展示正确
-            $('form').submit(function(e) {
-                that.imageRight = false;
-                var formData = new FormData($(this));
-                formData.append('datafile', $('#datafile')[0].files[0]);
-                $.ajax({
-                    url: $(this).attr('action'),
-                    type: $(this).attr('method'),
-                    data: formData,
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    success:(response)=>{
-                        var result = response.result;
-                        console.log( result.data.tag_list[1].probability,"hhhhhhhhhhhh") ;
-                        var jdata = JSON.stringify(result, null, 4);
-                        $("#show_json").html("<pre>"+jdata+"</pre>");//这时数据展示正确
-                        var forcePercent = result.data.tag_list[1].probability.toString();
-                        forcePercent = forcePercent.substring(0,forcePercent.indexOf(".")+5)*100;
-                        console.log(forcePercent);
-                        that.showPercent =`概率：${forcePercent}%`;
-                        if(forcePercent>80){
-                            that.isForce = true;
-                        }
-                    },
-                });
-                e.preventDefault();
-            });
-            console.log(this.recommendedList)
         },
         methods: {
-            uploadInfo(response){
-                var result = response.result;
-                console.log( result.data.tag_list[1].probability,"hhhhhhhhhhhh") ;
-                var jdata = JSON.stringify(result, null, 4);
-                $("#show_json").html("<pre>"+jdata+"</pre>");//这时数据展示正确
-                var forcePercent = result.data.tag_list[1].probability.toString();
-                forcePercent = forcePercent.substring(0,forcePercent.indexOf(".")+5)*100;
-                console.log(forcePercent);
-                this.showPercent =`概率：${forcePercent}%`;
-
-                if(forcePercent>80){
-                    this.isForce = true;
+            onImageChange(file, fileList){
+                console.log(file);
+                if(!file.url){
+                    file.url = URL.createObjectURL(file.raw);
+                }
+                this.fileList.push(file);
+                this.isImage = 2;
+            },
+            onListChange(file, fileList){
+                this.fileList=fileList;
+                if(this.fileList.length==10){
+                    this.$message.error('一次最多选择10张图片！');
                 }
             },
-            onImageChange(file, fileList){
-               this.fileList.push(file);
-               console.log(file);
-               if(!file.url){
-                   file.url = URL.createObjectURL(file.raw);
-			   }
-               this.isImage = true;
-			},
-            addImage(e){
-                var file = e.target.files[0];
-                file.url = 'blob:http://localhost:8080/64f6d0fb-dfe1-45d9-bac6-9f8fe1758084'
-                this.fileList.push(file);
-                console.log(file)
-                this.isImage = true;
-			},
+            outSuggest(){
+                this.$message.error('一次最多选择10张图片！');
+            },
             changeImage(e){
-
                 this.imageIsBig = false;
                 this.imageRight = false;
                 var file = e.target.files[0]
                 var reader = new FileReader()
                 var that = this
                 reader.readAsDataURL(file);
-                this.imageName = file.name;
                 reader.onload = function(e) {
                     that.dialogImageUrl = this.result
                 }
-                let size=file.size;//文件的大小，判断图片的大小
-                debugger;
-                if(size>1048576){
-                    this.imageIsBig = true;
-                }else {
-                    this.imageRight = true;
-                }
+                this.uploadImage(e,file)
+//                let size=file.size;//文件的大小，判断图片的大小
             },
-            clickImage(index){
-                if(index!=this.currentImage){
-                    this.currentImage =index;
-                    this.dialogImageUrl = require(`../assets/image/yellow//y-${index}.jpg`);
-                    if(this.clickFirst===0){
-                        this.loadDate();
-                    }
-                }
+            submitUpload(e){
+                if(this.fileList.length==0){
+                    this.$message.error("请先选择图片！")
+                    return;
+				}
+                this.isCheck= true;
+                this.completeNumber= 0;
+                this.resultList=[];
+//                this.$refs.upload.submit();
+                console.log(this.fileList);
+                var loading = this.$loading({fullscreen:false,target:document.querySelector(".choose_image_list")});
+                this.fileList.forEach(file=>{
+                    this.uploadImageTotal(e,file.raw,loading);
+                })
             },
-            loadDate() {
-                this.isLoading = true;
-                $(".show_sm_image").attr("disabled",true).css("pointer-events","none");
-                console.log(this.clickFirst)
-                if(this.clickFirst===0){
-                    this.isLoading = true;
-                    this.clickFirst+=1;
-                    $("#show_json").html("");//这时数据展示正确
-                    var intervalid1 = setTimeout(() => {
-                        var jdata = JSON.stringify(JSON.parse(this.jsonDemo), null, 4);
-                        $("#show_json").html("<pre>"+jdata+"</pre>");//这时数据展示正确
-                        clearInterval(intervalid1);
-                        this.isLoading = false;
-                        $(".show_sm_image").attr("disabled",false).css("pointer-events","auto");
-                        this.clickFirst = 0;
-                    }, 4000)
-                }
+            uploadImageTotal(e,file,loading){
+                this.imageRight = false;
+//                this.loading = this.$loading(this.options);
+                var formData = new FormData($(this));
+                formData.append('image', file);
+                $.ajax({
+                    url: this.api+"/api/v1/image/get_violence_identify/",
+                    type: "post",
+                    data: formData,
+//                    headers: {'Authorization': 'Token mytoken'},
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success:(response)=>{
+                        console.log(response);
+                        this.completeNumber++;
+                        this.resultList.push({
+                            image:response.image,
+                            number:response.data.violence
+                        });
+                        if(this.completeNumber==this.fileList.length){
+                            console.log("complete",this.fileList.length);
+                            loading.close();
+                            this.isImage = 3;
+                            this.isCheck= false;
+                        }
+                    },
+                });
+                e.preventDefault();
+            },
+            uploadImage(e,file){
+                this.isCheck= true;
 
+                if(this.isImage == 1){
+                    var loading = this.$loading({fullscreen:false,target:document.querySelector(".choose_image")});
+                }else if(this.isImage == 2){
+                    var loading = this.$loading({fullscreen:false,target:document.querySelector(".choose_image_list")});
+                }else {
+                    var loading = this.$loading({fullscreen:false,target:document.querySelector(".choose_result")});
+                }
+//                this.loading = this.$loading(this.options);
+                var formData = new FormData($(this));
+                formData.append('image', file);
+                $.ajax({
+                    url: this.api+"/api/v1/image/get_violence_identify/",
+                    type: "post",
+                    data: formData,
+//                    headers: {'Authorization': 'Token mytoken'},
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success:(response)=>{
+                        this.resultList=[];
+                        console.log(response);
+                        this.resultList.push({
+                            image:response.image,
+                            number:response.data.violence
+                        });
+                        this.isImage = 3;
+                        this.isCheck= false;
+                        loading.close();
+                    },
+                });
+                e.preventDefault();
+            },
+            uploadAgain(){
+                this.isImage = 2;
             },
             handleRemove(file, fileList) {
                 console.log(file, fileList);
+                this.fileList = fileList;
+                console.log(this.fileList.length)
+
             },
             handlePictureCardPreview(file) {
                 this.dialogImageUrl = file.url;
@@ -326,14 +345,34 @@
 	.local_upload{height: 33px;line-height: 33px;font-size: 16px;}
 	.local_upload:before{content: "或";margin: 0 25px;}
 	.inputfile{z-index: -11111;width: 0px;height:1px;opacity: 0;position: absolute;}
+	.is_check{display:inline-block;height: 35px;line-height: 35px;font-size: 16px;background-color: #f5f5f5;color:#666666;border: 1px solid #dddddd;padding: 0 15px;text-align: center;}
 	.local_upload label{display:inline-block;height: 33px;line-height: 33px;font-size: 16px;background-color: #316DFF;color:white;border: 2px solid #316DFF;width: 100px;text-align: center;cursor: pointer;}
 	.local_upload label:hover{background-color: white;color: #316DFF}
 	.show_input_outer{display: flex;}
 	.choose_image{border: 2px dashed #acc3ff;padding: 40px 0 40px 40px;position: relative;margin-top: 15px;min-height: 330px;}
+	.choose_image_list{border: 2px dashed #acc3ff;padding: 40px 0 40px 40px;position: relative;margin-top: 15px;min-height: 330px;}
+	.choose_result{border: 2px dashed #acc3ff;padding: 15px 0 30px 40px;position: relative;margin-top: 15px;min-height: 330px;}
 	.add_before{width: 160px;height: 160px;margin: 50px auto 15px;}
-	.add_before label{background: url("../assets/image/yellow/image_upload.png") no-repeat ;display: inline-block;height: 100px;width: 100px;background-size: 100px 100px;}
 	.choose_suggest{text-align: center;font-size: 14px;color: #333;}
-	.begin_check{width: 160px;height: 45px;line-height: 45px;background-color: #316dff;color: #ffffff;font-size: 16px;margin: 50px auto 0;text-align: center;}
+	.begin_check{width: 160px;height: 45px;line-height: 45px;background-color: #316DFF;color: white;font-size: 16px;margin: 50px auto 0;text-align: center;cursor: pointer;}
+	.again_check{width: 160px;height: 45px;line-height: 45px;border:1px solid #E2E5E8;background-color: #ffffff;color: #333333;font-size: 16px;margin: 40px auto 0;text-align: center;cursor: pointer;}
+	.yellow_result_outer{margin-top: 15px;}
+	.yellow_result_outer>div{width: 160px;overflow: hidden;text-align: center;margin-right: 30px;}
+	.yellow_result_outer>div>img{width: 160px;height: 160px;}
+	.result_title{text-align: center;vertical-align: middle;}
+	.result_title img{vertical-align: middle;}
+	.result_title span{vertical-align: middle;font-size: 18px;}
+	.result_outer{margin: 10px 2px;display: flex;color: #000000;height: 28px;line-height: 28px;}
+	.result_outer p:nth-of-type(1){font-size: 16px;flex: 5;}
+	.result_outer p:nth-of-type(2){font-size: 16px;flex: 4;text-align: center}
+	.result_outer .green_style_name{background-color: #54cd62;border: 1px solid #54cd62;color: #fff}
+	.result_outer .green_style_number{border: 1px solid #54cd62;color: #54cd62}
+	.result_outer .orange_style_name{background-color: #ffac09;border: 1px solid #ffac09;color: #fff}
+	.result_outer .orange_style_number{border: 1px solid #ffac09;color: #ffac09}
+	.result_outer .red_style_name{background-color: #ff524a;border: 1px solid #ff524a;color: #fff}
+	.result_outer .red_style_number{border: 1px solid #ff524a;color: #ff524a}
+	.yellow_result_suggest{text-align: center;font-size: 15px;color: #999999;margin-top: 10px;}
+	.yellow_result_suggest span{color: #ff4949;}
 
 	.advantage_product{padding: 65px 0 30px ;overflow: hidden;background-color: #f2f2f5;}
 	.advantage_product .title{text-align: center;color: #000000;margin: 10px 0;font-size: 36px;}

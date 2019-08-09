@@ -10,15 +10,13 @@
 							<img src="../../assets/image/voice_mark.png" class="fl icon_music" id="music_icon">
 							<div class="audio_wrapper_outer">
 								<div class="audio-wrapper">
-									<audio size="#4.50MB" duration="#01:57" filename="#Launch_Kan R. Gao.mp3">
-                                        {% load static %}
-										<source :src="{% static "recordSrc" %}" type="audio/wav">
+									<audio id="audio">
+										<source :src="recordSrc" type="audio/wav">
 									</audio>
 									<div class="audio-left">
 										<img id="audioPlayer" src="../../assets/image/audio/play.png">
 									</div>
 									<div class="audio-right">
-
 										<div class="progress-bar-bg" id="progressBarBg">
 											<span id="progressDot"></span>
 											<div class="progress-bar" id="progressBar"></div>
@@ -27,7 +25,7 @@
 											<span class="audio-length-current" id="audioCurTime">00:00</span>
 											<span class="audio-length-total"></span>
 										</div>
-										<p style="max-width: 536px;">Launch_Kan R. Gao.mp3</p>
+										<p style="max-width: 536px;">{{audioName}}</p>
 									</div>
 								</div>
 							</div>
@@ -35,44 +33,8 @@
 						</div>
 						<div class="voice_result_outer">
 							<div class="show_voice_word">
-								<span class="fl"> 1:05 - 1:06</span>
-								<span class="fl ell"> 好，现在<span class="red_color">违禁词</span>到室当中呢，<span class="red_color">违禁词</span>了三十位</span>
-							</div>
-							<div class="show_voice_word">
-								<span class="fl"> 1:05 - 1:06</span>
-								<span class="fl ell"> 好，现在呢我们匆匆那年人机<span class="red_color">违禁词</span>交锋的第二轮，大家可以看到，违禁词 室当中呢，<span class="red_color">违禁词</span>了三十位</span>
-							</div>
-							<div class="show_voice_word">
-								<span class="fl"> 1:05 - 1:06</span>
-								<span class="fl ell"> 好，现在呢我们匆<span class="red_color">违禁词</span>匆那年人机交<span class="red_color">违禁词</span>室当中呢，了三十位</span>
-							</div>
-							<div class="show_voice_word">
-								<span class="fl"> 1:05 - 1:06</span>
-								<span class="fl ell"> 好<span class="red_color">违禁词</span>当中呢，<span class="red_color">违禁词</span>了三十位</span>
-							</div>
-							<div class="show_voice_word">
-								<span class="fl"> 1:05 - 1:06</span>
-								<span class="fl ell"> 好，现在呢我们匆匆那年人机<span class="red_color">违禁词</span>交锋的第二轮，大家可以看到，违禁词 室当中呢，<span class="red_color">违禁词</span>了三十位</span>
-							</div>
-							<div class="show_voice_word">
-								<span class="fl"> 1:05 - 1:06</span>
-								<span class="fl ell"> 好，现在呢我们匆<span class="red_color">违禁词</span>匆那年人机交<span class="red_color">违禁词</span>室当中呢，了三十位</span>
-							</div>
-							<div class="show_voice_word">
-								<span class="fl"> 1:05 - 1:06</span>
-								<span class="fl ell"> 好<span class="red_color">违禁词</span>当中呢，<span class="red_color">违禁词</span>了三十位</span>
-							</div>
-							<div class="show_voice_word">
-								<span class="fl"> 1:05 - 1:06</span>
-								<span class="fl ell"> 好，现在呢我们匆匆那年人机<span class="red_color">违禁词</span>交锋的第二轮，大家可以看到，违禁词 室当中呢，<span class="red_color">违禁词</span>了三十位</span>
-							</div>
-							<div class="show_voice_word">
-								<span class="fl"> 1:05 - 1:06</span>
-								<span class="fl ell"> 好，现在呢我们匆<span class="red_color">违禁词</span>匆那年人机交<span class="red_color">违禁词</span>室当中呢，了三十位</span>
-							</div>
-							<div class="show_voice_word">
-								<span class="fl"> 1:05 - 1:06</span>
-								<span class="fl ell"> 好<span class="red_color">违禁词</span>当中呢，<span class="red_color">违禁词</span>了三十位</span>
+								<!--<span class="fl"> 1:05 - 1:06</span>-->
+								<!--<span class="fl ell"> 好，现在<span class="red_color">违禁词</span>到室当中呢，<span class="red_color">违禁词</span>了三十位</span>-->
 							</div>
 						</div>
 					</div>
@@ -82,30 +44,12 @@
 			<el-col :md="6" :lg="7" :xl="5">
 				<div class="show_json_outer">
 					<p class="result_title">审查结果</p>
-					<div class="result_outer">
-						<p>暴恐识别</p>
-						<p class="green_style_name">合规</p>
-						<p class="green_style_number">12.35%</p>
-					</div>
-					<div class="result_outer">
-						<p>色情识别</p>
-						<p class="green_style_name">合规</p>
-						<p class="green_style_number">12.56%</p>
-					</div>
-					<div class="result_outer">
-						<p class="ell">政治敏感识别</p>
-						<p class="orange_style_name">疑似违规</p>
-						<p class="orange_style_number">60.35%</p>
-					</div>
-					<div class="result_outer">
-						<p>公众人物识别</p>
+					<div class="result_outer" v-for="item in resultType">
+						<p>{{item.firstType}}</p>
 						<p class="red_style_name">违规</p>
-						<p class="red_style_number">90.35%</p>
 					</div>
-					<div class="result_outer">
-						<p>广告检测</p>
-						<p class="red_style_name">违规</p>
-						<p class="red_style_number">90.16%</p>
+					<div class="result_outer" v-show="isNone">
+						<p class="green_style_name">合规</p>
 					</div>
 				</div>
 			</el-col>
@@ -119,7 +63,11 @@
 	    data(){
             return{
                 imageIsBig:false,
-				recordSrc:require("../../assets/audio/1.mp3")
+				recordSrc:require("../../assets/audio/1.mp3"),
+				resultType:[],
+                audioName:'',
+				isNone:true
+
 			}
         },
 		mounted(){
@@ -143,23 +91,6 @@
                 var audio = document.getElementsByTagName('audio')[0];
                 var audioPlayer = document.getElementById('audioPlayer');
                 var musicIcon = document.getElementById('music_icon');
-
-                // // 添加音频自动播放功能
-                // // PS：不完善，在chrome下会报错，原因看这里https://developers.google.com/web/updates/2017/09/autoplay-policy-changes
-                // audio.addEventListener('canplaythrough', function (event) {
-                //     var playPromise = audio.play();
-                //     if (playPromise !== undefined) {
-                //         playPromise.then(() => {
-                //                 audioPlayer.src = './image/pause.png';
-                //             })
-                //             .catch(error => {
-                //                 // Auto-play was prevented
-                //                 // Show paused UI.
-                //                 console.log(error.message)
-                //             });
-                //     }
-                // });
-
                 // 监听音频播放时间并更新进度条
                 audio.addEventListener('timeupdate', ()=>{
                     this.updateProgress(audio);
@@ -346,6 +277,49 @@
                 time += s[i].length == 1 ? ("0" + s[i]) : s[i];
 
                 return time;
+            },
+            submitAudio(e,file){
+                console.log(file);
+                this.audioName = file.name;
+                var loading = this.$loading({fullscreen:false,target:document.querySelector(".outer_voice")});
+                console.log("音频提交中。。。")
+                var formData = new FormData($(this));
+                formData.append('speech', file);
+                $.ajax({
+                    url: this.api+"/api/v1/audio/get_chinese_speech_inspection/",
+                    type: "post",
+                    data: formData,
+//                    headers: {'Authorization': 'Token mytoken'},
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success:(response)=>{
+                        console.log(response);
+                        this.recordSrc = response.speech;
+                        var audio = document.getElementById('audio').load();
+                        window.setTimeout(()=>{
+                            var audio = document.getElementById('audio');
+							document.getElementsByClassName('audio-length-total')[0].innerText = this.transTime(audio.duration);
+							document.getElementsByClassName('show_voice_word')[0].innerHTML= response.data.speech_contents.web_text;
+                            loading.close();
+						},100);
+//                        this.updateProgress(audio);
+                        if(response.data.speech_contents.sensitive_list.length!=0){
+                            this.resultType = response.data.speech_contents.sensitive_list;
+                            this.isNone = false;
+						}else {
+                            this.resultType=[];
+                            this.isNone = true;
+						}
+                        this.$parent.changeUploadState(false);
+                    },
+                    error:err=>{
+                        loading.close();
+                        console.log(err)
+                        this.$parent.changeUploadState(false);
+                    }
+                });
+                e.preventDefault();
             }
 		}
 	}
@@ -358,14 +332,14 @@
 	.outer_voice{height:500px;z-index: 1;text-align: center;background-color: #f4f5f7;padding-right: 20px;}
 	.voice_title{height: 34px;line-height:34px;width: 135px;margin: 0 auto;background-color: #deecf9;color: #007bff;margin-bottom: 20px;}
 	.voice_player_outer{height: 125px;width: 94%;margin: 10px auto;border-radius: 5px;background-color: white;}
-	.voice_result_outer{height: 290px;background-color: white;width: 94%;margin: 10px auto;border-radius: 5px;overflow-y: scroll;overflow-x: hidden;}
+	.voice_result_outer{height: 290px;background-color: white;width: 94%;margin: 10px auto;border-radius: 5px;overflow-y: auto;overflow-x: hidden;}
 	.audio_wrapper_outer{margin-left: 180px;margin-right: 20%;}
 	.icon_music{margin: 25px 0 0 95px;}
 	.show_voice_word{margin: 20px ;color: #010101;font-size: 14px;display: flex}
 	.show_voice_word span{display: inline-block;text-align: left;}
 	.show_voice_word span:nth-of-type(2){margin-left: 20px;flex: 1;}
 
-	.show_json_outer{height: 430px;z-index: 99;background-color: white;position: relative;left: -20px;top: 35px;box-shadow:5px 0 20px #c5cff1}
+	.show_json_outer{height: 430px;z-index: 99;background-color: white;position: relative;left: -20px;top: 35px;box-shadow:5px 0 20px #c5cff1;overflow-y: auto;}
 	.show_json_outer .result_title{font-size: 24px;color: #000000;text-align: center;height: 100px;padding-top: 30px;}
 	.show_json_outer .result_title:before{content: "";background: url("../../assets/image/result_top_image.png") no-repeat center center;height: 23px;display: block;margin-bottom: 10px;}
 	.suggest{color: #b2b2b2;font-size: 14px;min-height: 30px;margin:8px 0;}
@@ -373,7 +347,7 @@
 	.result_outer p:nth-of-type(1){font-size: 16px;flex: 5;margin-left: 10px;}
 	.result_outer p:nth-of-type(2){font-size: 16px;flex: 3;text-align: center}
 	.result_outer p:nth-of-type(3){font-size: 16px;flex: 4;text-align: center}
-	.result_outer .green_style_name{background-color: #54cd62;border: 1px solid #54cd62;color: #fff}
+	.result_outer .green_style_name{background-color: #54cd62;border: 1px solid #54cd62;color: #fff;text-align: center;}
 	.result_outer .green_style_number{border: 1px solid #54cd62;color: #54cd62}
 	.result_outer .orange_style_name{background-color: #ffac09;border: 1px solid #ffac09;color: #fff}
 	.result_outer .orange_style_number{border: 1px solid #ffac09;color: #ffac09}

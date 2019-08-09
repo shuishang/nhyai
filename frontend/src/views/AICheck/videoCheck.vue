@@ -5,12 +5,12 @@
 			<el-col :md={span:11,offset:2} :lg={span:11,offset:2} :xl={span:10,offset:4}>
 				<div class="show_video_outer">
 					<div class="show_video">
-						<video id="video" src="../../assets/video/dragen_wind.mp4" controls style="height: 100%;width: 100%;background-color: #333333"></video>
+						<video id="video" class="video-js vjs-defalut-skin" controls preload="metadata" :src="videoUrl.url">
+							<source :src="videoUrl.url" type="video/mp4">
+							<!--<source src="" type="video/mp4">-->
+							您的浏览器不支持视频
+						</video>
 					</div>
-					<div>
-
-					</div>
-
 				</div>
 			</el-col>
 			<el-col :md="6" :lg="6" :xl="4">
@@ -18,24 +18,28 @@
 					<p class="result_title">审查结果</p>
 					<div class="result_outer">
 						<p>暴恐识别</p>
-						<p class="green_style_name">合规</p>
+						<p class="red_style_name" v-if="this.forceInfo>=90">违规</p>
+						<p class="orange_style_name" v-else-if="50<this.forceInfo">疑似违规</p>
+						<p class="green_style_name" v-else>合规</p>
 					</div>
 					<div class="result_outer">
 						<p>色情识别</p>
-						<p class="green_style_name">合规</p>
+						<p class="red_style_name" v-if="this.sexInfo>=90">违规</p>
+						<p class="orange_style_name" v-else-if="50<this.sexInfo">疑似违规</p>
+						<p class="green_style_name" v-else>合规</p>
 					</div>
 					<div class="result_outer">
 						<p class="ell">政治敏感识别</p>
-						<p class="orange_style_name">疑似违规</p>
+						<p class="green_style_name">合规</p>
 					</div>
-					<div class="result_outer">
+					<!--<div class="result_outer">
 						<p>公众人物识别</p>
 						<p class="red_style_name">违规</p>
 					</div>
 					<div class="result_outer">
 						<p>广告检测</p>
 						<p class="red_style_name">违规</p>
-					</div>
+					</div>-->
 				</div>
 			</el-col>
 		</el-row>
@@ -44,71 +48,24 @@
 				<div class="video_image_outer">
 					<p>证据信息</p>
 					<div class="video_image_con clearfix">
-						<div class="video_image_item fl">
+						<div class="video_image_item fl" v-for="(item,index) in imageUrl">
 							<div class="show_result_title">
 								<div></div>
-								<span class="video_result_red_title">违规</span>
-								<span class="video_result_red_number">95.62%</span>
+								<span class="video_result_red_title" v-if="item.state=='违规'">{{item.state}}</span>
+								<span class="video_result_orange_title" v-else>{{item.state}}</span>
+								<span class="video_result_red_number" v-if="item.state=='违规'">{{item.number}}</span>
+								<span class="video_result_orange_number" v-else>{{item.number}}</span>
 							</div>
-							<img src="../../assets/image/force_image_example.png" alt="">
-							<p>视频时间：00:10:25</p>
-						</div>
-						<div class="video_image_item fl">
-							<div class="show_result_title">
-								<div></div>
-								<span class="video_result_red_title">违规</span>
-								<span class="video_result_red_number">95.62%</span>
-							</div>
-							<img src="../../assets/image/force_image_example.png" alt="">
-							<p>视频时间：00:10:25</p>
-						</div>
-						<div class="video_image_item fl">
-							<div class="show_result_title">
-								<div></div>
-								<span class="video_result_orange_title">疑似违规</span>
-								<span class="video_result_orange_number">80.62%</span>
-							</div>
-							<img src="../../assets/image/force_image_example.png" alt="">
-							<p>视频时间：00:10:25</p>
-						</div>
-						<div class="video_image_item fl">
-							<div class="show_result_title">
-								<div></div>
-								<span class="video_result_red_title">违规</span>
-								<span class="video_result_red_number">95.62%</span>
-							</div>
-							<img src="../../assets/image/force_image_example.png" alt="">
-							<p>视频时间：00:10:25</p>
-						</div>
-						<div class="video_image_item fl">
-							<div class="show_result_title">
-								<div></div>
-								<span class="video_result_orange_title">疑似违规</span>
-								<span class="video_result_orange_number">80.62%</span>
-							</div>
-							<img src="../../assets/image/force_image_example.png" alt="">
-							<p>视频时间：00:10:25</p>
-						</div>
-						<div class="video_image_item fl">
-							<div class="show_result_title">
-								<div></div>
-								<span class="video_result_red_title">违规</span>
-								<span class="video_result_red_number">95.62%</span>
-							</div>
-							<img src="../../assets/image/force_image_example.png" alt="">
-							<p>视频时间：00:10:25</p>
-						</div>
-						<div class="video_image_item fl">
-							<div class="show_result_title">
-								<div></div>
-								<span class="video_result_orange_title">疑似违规</span>
-								<span class="video_result_orange_number">80.62%</span>
-							</div>
-							<img src="../../assets/image/force_image_example.png" alt="">
-							<p>视频时间：00:10:25</p>
+							<img :src="item.image" alt="">
+							<p>视频时间：{{item.time}}</p>
 						</div>
 					</div>
-					<p class="choose_again">重新选择</p>
+					<div class="local_upload_video" v-if="!isLoading">
+						<!--<p>本地上传</p>-->
+						<input id="videofile" name="inputVideo" type="file"  class="inputfile" @change="onChangeFile($event)">
+						<label for="inputVideo">重新选择</label>
+					</div>
+					<p class="choose_again" v-else>重新选择</p>
 				</div>
 				<p class="suggest"><span style="color: red">*</span> 提示: 敏感系数<50%为合规，50%～90%为疑似违规，>90%为违规<span v-show="imageIsBig" style="color: red;margin-left: 10px;display: inline-block;">！该图片大小超过1M</span></p>
 
@@ -122,7 +79,15 @@
         props:['stopVideo'],
 	    data(){
 	        return{
-                imageIsBig:false
+                imageIsBig:false,
+                videoUrl:[],
+                imageUrl:[],
+                markerInfo:[],
+                sexInfo:5,
+                forceInfo:5,
+                player:null,
+                first:true,
+                isLoading:false
 			}
 		},
 		mounted(){
@@ -132,8 +97,9 @@
             stopVideo:(newVal,oldVal) => {
                 console.log(newVal);
                 if(newVal){
-                    var myVideo = document.getElementById("video")
-                    if(myVideo.currentTime > 0){
+                    var myVideo = document.getElementById("video");
+                    console.log(myVideo);
+                    if(myVideo.currentTime&myVideo.currentTime > 0){
                         myVideo.pause();
 					}
 
@@ -142,7 +108,225 @@
         },
 
 		methods:{
+		    onChangeFile(e){
+                this.$parent.changeImage(e);
+			},
+            submitVideo(e,file){
+                this.isLoading = true;
+                var url = URL.createObjectURL(file);
+                console.log(url);
+                this.videoUrl={url:url} ;
+                console.log(file);
+                var loading = this.$loading({fullscreen:false,target:document.querySelector(".show_video")});
+                console.log("视频提交中。。。")
+                var formData = new FormData($(this));
+                formData.append('video', file);
+                $.ajax({
+                    url: this.api+"/api/v1/video/get_video_inspection/",
+                    type: "post",
+                    data: formData,
+//                    headers: {'Authorization': 'Token mytoken'},
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success:(response)=>{
+                        loading.close();
+                        console.log(response);
+                        this.sexInfo= 5;
+                        this.forceInfo= 5;
+                        this.imageUrl= [];
+                        this.markerInfo= [];
+                        this.isLoading = false;
+//                        this.uploadInfo(response);
+//                        this.videoUrl={url:response.data.video_url} ;
+                        this.videoUrl={url:response.data.video};
+//						this.video_url= response.data.video_url;
+                        response.data.video_evidence_information.forEach((item,index)=>{
+                            if(parseFloat(item.porn_sensitivity_level)>this.sexInfo){
+                                this.sexInfo = parseFloat(item.porn_sensitivity_level);
+                            }
+                            if(parseFloat(item.violence_sensitivity_level)>this.forceInfo){
+                                this.forceInfo = parseFloat(item.violence_sensitivity_level);
+                            }
+                            if(item.porn_sensitivity_level>item.violence_sensitivity_level){
+                                if(parseFloat(item.porn_sensitivity_level)>90){
+                                    this.markerInfo.push({
+                                        time:item.sensitivity_time-response.data.interval/2,
+                                        text:"违规",
+                                        class:"red_style"
+                                    });
+                                    this.imageUrl.push({
+                                        image:item.image_url,
+                                        time:(item.sensitivity_time-response.data.interval/2).toFixed(2),
+                                        number:item.porn_sensitivity_level,
+                                        state:"违规"
+                                    });
+                                }else if(50<=parseFloat(item.porn_sensitivity_level)<90) {
+                                    this.markerInfo.push({
+                                        time:item.sensitivity_time,
+                                        text:"疑似违规",
+                                        class:"orange_style"
+                                    });
+                                    this.imageUrl.push({
+                                        image:item.image_url,
+                                        time:(item.sensitivity_time-response.data.interval/2).toFixed(2),
+                                        number:item.porn_sensitivity_level,
+                                        state:"疑似违规"
+                                    });
+                                }
+                            }else {
+                                if(parseFloat(item.violence_sensitivity_level)>90){
+                                    this.markerInfo.push({
+                                        time:item.sensitivity_time-response.data.interval/2,
+                                        text:"违规",
+                                        class:"red_style"
+                                    });
+                                    this.imageUrl.push({
+                                        image:item.image_url,
+                                        time:(item.sensitivity_time-response.data.interval/2).toFixed(2),
+                                        number:item.violence_sensitivity_level,
+                                        state:"疑似违规"
+                                    });
+                                }else if(50<=parseFloat(item.violence_sensitivity_level)<90){
+                                    this.markerInfo.push({
+                                        time:item.sensitivity_time-response.data.interval/2,
+                                        text:"疑似违规",
+                                        class:"orange_style"
+                                    });
+                                    this.imageUrl.push({
+                                        image:item.image_url,
+                                        time:(item.sensitivity_time-response.data.interval/2).toFixed(2),
+                                        number:item.violence_sensitivity_level,
+                                        state:"疑似违规"
+                                    });
+                                }
+                            }
+                        });
+                        if(this.first){
+                            this.initVideo(this.markerInfo);
+                            this.first = false;
+                        }else {
+                            this.resetMarker(this.markerInfo);
+                        }
 
+                        this.$parent.changeUploadState(false);
+                        console.log( this.imageUrl,this.markerTime);
+                        console.log( response);
+                        console.log( this.markerInfo);
+                    },
+					error:err=>{
+                        loading.close();
+                        console.log(err);
+                        this.$parent.changeUploadState(false);
+					}
+                });
+                e.preventDefault();
+            },
+            resetMarker(marker){
+                this.player = videojs('video');
+                var player = this.player;
+                player.markers.reset(marker)
+            },
+            initVideo(item){
+                this.player = videojs('video');
+                var player = this.player;
+                player.markers({
+                    markerStyle:{  //标记样式
+                        'width':'5px',
+                        'border-radius': '5px',
+                        /* 'background-color': 'red'*/
+                    },
+                    markerTip:{  //悬停标记提示对象
+                        display:true,  //是否显示markerTips
+                        /*
+						  用于动态构建标记提示文本的回调函数。
+						  只需返回一个字符串，参数标记是传递给插件的标记对象
+						 */
+                        text: function(marker) {
+                            return "This is a break: " + marker.text;
+                        }
+                    },
+                    breakOverlay:{  //每个标记的中断覆盖选项
+                        display: true,  //是否显示叠加层
+                        displayTime: 3,
+                        style:{  //为叠加层添加css样式
+                            color:"red"
+                        },
+                        text: function(marker) {  //回调函数动态构建叠加文本
+                            return "This is an break overlay: " + marker.text;
+                        }
+                    },
+                    onMarkerReached:function(marker, index){  //只要播放到标记的时间间隔，就会出发此回调函数
+
+                    },
+                    onMarkerClick:function(marker,index){  //单击标记时会触发此回调函数，
+                        /*
+						  单击标记的默认行为是在视频中寻找该点，
+						  但是，如果onMarkerClick返回false，则将阻止默认行为
+						*/
+                    },
+                    markers:item,
+                });
+                /****** 返回插件中当前标记的数组，按升序时间排序 ******/
+                var getMarkers = player.markers.getMarkers()
+
+                /****** 从视频中的当前时间转到下一个标记。 如果没有下一个标记，那么什么都不做 ******/
+
+                $("#btn-next").click(function(){
+                    player.markers.next();
+                })
+
+                /****** 从视频中的当前时间转到上一个标记。 如果没有上一个标记，那么什么都不做 ******/
+
+                $("#btn-prev").click(function(){
+                    player.markers.prev();
+                })
+
+                /****** 允许动态修改标记时间（传入原始标记对象） ******/
+                $("#btn-confirm").click(function(){
+                    var markers = player.markers.getMarkers();
+                    var add_time = parseInt( $("#add-time").val() );
+                    console.log(add_time);
+                    for (var i = 0; i < markers.length; i++) {
+                        markers[i].time += add_time;
+                    }
+                    //调用updateTime以立即反应UI中的更改
+                    player.markers.updateTime();
+                })
+
+                /****** 删除给定索引数组中的标记（从0开始） ******/
+                $("#btn-del").click(function(){
+                    //player.markers.remove([1,3]);
+
+                    //删除所有标记
+                    player.markers.removeAll();
+                })
+
+                /****** 动态添加新标记 ******/
+                $("#btn-add").click(function(){
+                    player.markers.add([{
+                        time: 40,
+                        text: "I'm added dynamically"
+                    }]);
+                })
+
+                /****** 重置视频中的所有标记（相当于removeAll后再设置） ******/
+                $("#btn-reset").click(function(){
+                    player.markers.reset([{
+                        time: 4,
+                        text: "I'm new"
+                    },
+                        {
+                            time:2,
+                            text: "I'm new too"
+                        }]);
+                })
+
+                /*验证描点*/
+                $('label.click').removeAttr('for').on('click', function() {
+                    $('.box').scrollTop(200); //'xxx'表示滚动数值
+                });
+            },
 		}
 	}
 </script>
@@ -152,6 +336,7 @@
 	.show_video_outer{height: 400px}
 	.show_video{height:440px;position: relative;overflow: hidden;}
 
+	.show_video #video{width: 100%;height: 440px;}
 	.video_result_outer{height: 440px;z-index: 99;background-color: white;box-shadow:5px 0 20px #c5cff1}
 	.video_result_outer .result_title{font-size: 24px;color: #000000;text-align: center;height: 100px;padding-top: 30px;}
 	.video_result_outer .result_title:before{content: "";background: url("../../assets/image/result_top_image.png") no-repeat center center;height: 23px;display: block;margin-bottom: 10px;}
@@ -170,6 +355,10 @@
 	.video_result_orange_number{color: #ffac09;border: 1px solid #ffac09;}
 	.video_result_orange_title{background-color: #ffac09;color: white;}
 	.choose_again{color: #333333;font-size: 16px;height: 42px;width: 120px;line-height: 42px;margin: 40px auto;border: 1px solid #e1e3e7;text-align: center;background-color: #fafcfe;cursor: pointer;}
+	.inputfile{z-index: -11111;width: 0px;height:1px;opacity: 0;}
+	.local_upload_video{height: 45px;line-height: 45px;font-size: 16px;margin: 40px auto;text-align: center;}
+	.local_upload_video label{display:inline-block;color: #ffffff;font-size: 16px;height: 42px;width: 120px;line-height: 42px;border: 1px solid #e1e3e7;text-align: center;background-color: #316dff;cursor: pointer;}
+	.local_upload_video p{display:inline-block;color: #666666;font-size: 16px;height: 42px;width: 120px;line-height: 42px;border: 1px solid #e1e3e7;text-align: center;background-color: #dddddd;cursor: pointer;}
 
 
 	.show_json_outer .result_title{font-size: 24px;color: #000000;text-align: center;height: 100px;padding-top: 30px;}

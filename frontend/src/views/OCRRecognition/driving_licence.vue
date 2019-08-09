@@ -6,7 +6,6 @@
 					<div class="outer_add">
 						<span class="original_style">原始图片</span>
 						<img class="show_add_image" :src="dialogImageUrl">
-
 					</div>
 					<div class="upload_outer">
 						<div class="local_upload">

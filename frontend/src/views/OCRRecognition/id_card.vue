@@ -3,19 +3,19 @@
 		<el-row class="loading_con">
 			<el-col :xs={span:24} :sm={span:11,offset:1} :md={span:10,offset:2} :lg={span:9,offset:3} :xl={span:8,offset:4}>
 				<div class="image_outer">
-					<div class="outer_add"
-						 element-loading-background="rgba(0, 0, 0, 0.3)"
-						 fullscreen="isForce"
-						 v-loading="isLoading">
+					<div class="outer_add">
 						<span class="original_style">原始图片</span>
 						<img class="show_add_image" :src="dialogImageUrl">
 
 					</div>
 					<div class="upload_outer">
-						<div class="local_upload">
+						<div class="local_upload" v-if="!isCheck">
 							<!--<p>本地上传</p>-->
 							<input id="datafile" name="datafile" type="file" class="inputfile" @change="changeImage($event)">
 							<label for="datafile">本地上传</label>
+						</div>
+						<div class="local_upload" v-else>
+							<p class="is_check">正在检测</p>
 						</div>
 						<div class="show_input_outer">
 							<input type="text" class="init_url_style">
@@ -49,7 +49,7 @@
             return {
                 dialogImageUrl: require("../../assets/image/ocr/idCard_image_sample.png"),
                 dialogVisible: false,
-                jsonDemo:'{"name":"艾米","sex":"女","nation":"汉","birth":"1986年4月23日","address":"上海徐汇区田林路397号腾云大厦6F","id":"310104198604230289"}',
+                jsonId:'{"name":"阿星","sex":"男","nation":"汉","birth":"1997年6月01日","address":"北京市东城区景山前街4号紫禁城","id":"110100199706013218"}',
                 buttonWord:"开始检测",
                 imageName:"",
                 showPercent:"概率：1.75%",
@@ -58,20 +58,20 @@
                 imageIsBig:false,
                 activeName: 'first',
                 showJson :{},
-                isLoading:false
+                isLoading:false,
+				isCheck:false
 
             };
         },
         mounted:function () {
-            var that = this;
-            var jdata = JSON.stringify(JSON.parse(this.jsonDemo), null, 4);
+            this.isCheck= true;
             var loading = this.$loading({fullscreen:false,target:document.querySelector(".outer_add")});
             this.intervalid1 = setTimeout(() => {
-                this.showJson = JSON.parse(this.jsonDemo);
+                this.showJson = JSON.parse(this.jsonId);
                 clearInterval(this.intervalid1);
+                this.isCheck= false;
                 loading.close();
             }, 2000);
-//            this.uploadImage();
         },
         methods: {
             uploadImage(e){
@@ -89,11 +89,6 @@
                     processData: false,
                     success:(response)=>{
                         console.log(response.data);
-                        var text =''
-                        /*response.data.forEach((res)=>{
-                            text= text+res+'<br/>'
-                        });
-                        document.getElementById('show_json').innerHTML= text;*/
                         this.showJson = response.data;
                         loading.close();
                         this.isCheck= false;
@@ -111,15 +106,7 @@
                 reader.onload = function() {
                     that.dialogImageUrl = this.result;
                 };
-                let size=file.size;//文件的大小，判断图片的大小
                 this.uploadImage(e);
-//                if(size>1048576){
-//                    console.log("图片太大了")
-//                }else {
-//                    this.imageRight = true;
-//                    console.log('开始上传')
-////                    this.uploadImage(e);
-//                }
             },
         }
     }
@@ -141,6 +128,7 @@
 	.local_upload{height: 45px;line-height: 45px;font-size: 16px;}
 	.local_upload:after{content: "或";margin: 0 15px;}
 	.inputfile{z-index: -11111;width: 0px;height:1px;opacity: 0;position: absolute;}
+	.is_check{display:inline-block;height: 43px;line-height: 43px;font-size: 16px;background-color: #f5f5f5;color:#666666;border: 1px solid #dddddd;padding: 0 15px;text-align: center;}
 	.local_upload label{display:inline-block;height: 43px;line-height: 43px;font-size: 16px;background-color: #316DFF;color:white;border: 1px solid #316DFF;padding: 0 15px;text-align: center;cursor: pointer;}
 	.local_upload label:hover{background-color: white;color: #316DFF}
 	.show_input_outer{display: flex;flex: 1;}

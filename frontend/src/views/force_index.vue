@@ -168,44 +168,44 @@
 		watch:{
 
 		},
-		mounted:function () {
-            var self = this;
-            var jdata = JSON.stringify(JSON.parse(this.jsonDemo), null, 4);
-            $("#show_json").html("<pre>"+jdata+"</pre>");//这时数据展示正确
-            $('form').submit(function(e) {
-                self.loading = self.$loading(self.options);
-                self.imageRight = false;
-                var formData = new FormData($(this));
-                formData.append('datafile', $('#datafile')[0].files[0]);
-                $.ajax({
-                    url: $(this).attr('action'),
-                    type: $(this).attr('method'),
-                    data: formData,
-//                    headers: {'Authorization': 'Token mytoken'},
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-					success:(response)=>{
-                        self.$loading().close();
-//                        this.uploadInfo(response);
-                        console.log(this)
-                        var result = response.result;
-                        console.log( result.data.tag_list[1].probability,"hhhhhhhhhhhh") ;
-                        var jdata = JSON.stringify(result, null, 4);
-                        $("#show_json").html("<pre>"+jdata+"</pre>");//这时数据展示正确
-                        var forcePercent = result.data.tag_list[1].probability.toString();
-                        forcePercent = forcePercent.substring(0,forcePercent.indexOf(".")+5)*100;
-                        console.log(forcePercent);
-                        self.showPercent =`概率：${forcePercent}%`;
-
-                        if(forcePercent>80){
-                            self.isForce = true;
-                        }
-                    },
-                });
-                e.preventDefault();
-            });
-        },
+//		mounted:function () {
+//            var self = this;
+//            var jdata = JSON.stringify(JSON.parse(this.jsonDemo), null, 4);
+//            $("#show_json").html("<pre>"+jdata+"</pre>");//这时数据展示正确
+//            $('form').submit(function(e) {
+//                self.loading = self.$loading(self.options);
+//                self.imageRight = false;
+//                var formData = new FormData($(this));
+//                formData.append('datafile', $('#datafile')[0].files[0]);
+//                $.ajax({
+//                    url: $(this).attr('action'),
+//                    type: $(this).attr('method'),
+//                    data: formData,
+////                    headers: {'Authorization': 'Token mytoken'},
+//                    cache: false,
+//                    contentType: false,
+//                    processData: false,
+//					success:(response)=>{
+//                        self.$loading().close();
+////                        this.uploadInfo(response);
+//                        console.log(this)
+//                        var result = response.result;
+//                        console.log( result.data.tag_list[1].probability,"hhhhhhhhhhhh") ;
+//                        var jdata = JSON.stringify(result, null, 4);
+//                        $("#show_json").html("<pre>"+jdata+"</pre>");//这时数据展示正确
+//                        var forcePercent = result.data.tag_list[1].probability.toString();
+//                        forcePercent = forcePercent.substring(0,forcePercent.indexOf(".")+5)*100;
+//                        console.log(forcePercent);
+//                        self.showPercent =`概率：${forcePercent}%`;
+//
+//                        if(forcePercent>80){
+//                            self.isForce = true;
+//                        }
+//                    },
+//                });
+//                e.preventDefault();
+//            });
+//        },
         methods: {
             uploadInfo(response){
                 var result = response.result;

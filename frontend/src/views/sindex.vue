@@ -12,19 +12,19 @@
 		</div>
 		<div class="functional_experience">
 			<p class="title">功能体验</p>
-
 			<el-row style="min-width: 800px;">
 				<el-col :xs={span:14} :sm={span:16} :md={span:14,offset:2} :lg={span:13,offset:2} :xl={span:11,offset:4}>
 					<div class="show_input_outer">
-						<input type="text" class="init_url_style">
-						<p class="check_style">检测</p>
+						<input type="text" class="init_url_style" id="contentUrl">
+						<p class="check_style" @click="showInputValue">检测</p>
 					</div>
 				</el-col>
 				<el-col :xs="10" :sm="8" :md="6" :lg="6" :xl="5">
 					<div class="local_upload">
 						<!--<p>本地上传</p>-->
 						<input id="datafile" name="datafile" type="file" class="inputfile" @change="changeImage($event)">
-						<label for="datafile">本地上传</label>
+						<label for="datafile" v-if="!isUploading" class="btn_upload">本地上传</label>
+						<label v-else class="btn_uploading">本地上传</label>
 					</div>
 				</el-col>
 			</el-row>
@@ -35,13 +35,14 @@
 			</el-row>
 
 			<!--图片评审-->
-			<ImageCheck v-show="checkType ===1"></ImageCheck>
+			<ImageCheck v-show="checkType ===1" :file="imageFile" ref="imageCheck"></ImageCheck>
 
 			<!--视频评审-->
-			<VideoCheck :stopVideo="stopVideo" v-show="checkType ===2"></VideoCheck>
+			<VideoCheck :stopVideo="stopVideo" v-show="checkType ===2" ref="videoCheck"></VideoCheck>
 
 			<!--音频评审-->
-			<AudioCheck :stopAudio="stopAudio" v-show="checkType ===3"></AudioCheck>
+			<AudioCheck :stopAudio="stopAudio" v-show="checkType ===3" ref="audioCheck"></AudioCheck>
+			<TextCheck v-show="checkType ===4" ref="textCheck"></TextCheck>
 
 		</div>
 		<div class="functional_experience">
@@ -162,8 +163,6 @@
 												<p class="red_style_number">90.16%</p>
 											</div>
 										</div>
-
-
 									</td>
 								</tr>
 								<tr class="pre_item">
@@ -188,6 +187,7 @@
 	import ImageCheck from '../views/AICheck/imageCheck.vue'
 	import AudioCheck from '../views/AICheck/AudioCheck.vue'
 	import VideoCheck from '../views/AICheck/videoCheck.vue'
+	import TextCheck from '../views/AICheck/textCheck.vue'
     export default {
         data() {
             return {
@@ -207,7 +207,9 @@
 				checkType:1,
                 stopVideo:false,
                 stopAudio:false,
-                centerDialogVisible: false
+                centerDialogVisible: false,
+				imageFile:'',
+				isUploading:false
             };
         },
 		components:{
@@ -215,61 +217,31 @@
             FooterIndex,
             ImageCheck,
             AudioCheck,
-            VideoCheck
+            VideoCheck,
+			TextCheck
+
 		},
 		watch:{
 
 		},
 		mounted:function () {
-
         },
         methods: {
-            uploadImage(e){
-                this.loading = this.$loading(this.options);
-                this.imageRight = false;
-                var formData = new FormData($(this));
-                formData.append('datafile1', $('#datafile')[0].files[0]);
-                $.ajax({
-//                    url: "http://172.31.11.171:8000/api/uploads/",
-                    url: "http://172.31.4.7:8000/api/violence_object/",
-                    type: "post",
-                    data: formData,
-//                    headers: {'Authorization': 'Token mytoken'},
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    success:(response)=>{
-                        this.$loading().close();
-//                        this.uploadInfo(response);
-                        console.log(this)
-                        var result = response.result;
-                        console.log( result.data.tag_list[1].probability,"hhhhhhhhhhhh") ;
-                        var jdata = JSON.stringify(result, null, 4);
-                        $("#show_json").html("<pre>"+jdata+"</pre>");//这时数据展示正确
-                        var forcePercent = result.data.tag_list[1].probability.toString();
-                        forcePercent = forcePercent.substring(0,forcePercent.indexOf(".")+5)*100;
-                        console.log(forcePercent);
-                        this.showPercent =`概率：${forcePercent}%`;
-
-                        if(forcePercent>80){
-                            this.isForce = true;
-                        }
-                    },
-                });
-                e.preventDefault();
+            showInputValue(){
+                console.log(document.getElementById('contentUrl').value);
 			},
-            uploadInfo(response){
-                var result = response.result;
-                var jdata = JSON.stringify(result, null, 4);
-                $("#show_json").html("<pre>"+jdata+"</pre>");//这时数据展示正确
-                var forcePercent = result.data.tag_list[1].probability.toString();
-                forcePercent = forcePercent.substring(0,forcePercent.indexOf(".")+5)*100;
-                console.log(forcePercent);
-                this.showPercent =`概率：${forcePercent}%`;
-                if(forcePercent>80){
-                    this.isForce = true;
-                }
+			submitImageCallback(e,file){
+                this.$refs.imageCheck.submitImage(e,file);
 			},
+            submitAudioCallback(e,file){
+                this.$refs.audioCheck.submitAudio(e,file);
+            },
+            submitVideoCallback(e,file){
+                this.$refs.videoCheck.submitVideo(e,file);
+            },
+            submitTextCallback(e,file){
+                this.$refs.textCheck.submitText(e,file);
+            },
             changeImage(e){
                 this.imageIsBig = false;
                 this.imageRight = false;
@@ -277,32 +249,43 @@
                 const reader = new FileReader();
                 const that = this;
                 reader.readAsDataURL(file);
-                reader.onload = function() {
+                reader.onload = ()=> {
                     that.dialogImageUrl = this.result;
                     const fileType = file.type;
+                    console.log(fileType)
                     if(fileType.substr(0, 5) === "image"){
                         that.checkType = 1;
                         that.stopVideo = true;
                         that.stopAudio = true;
+                        this.submitImageCallback(e,file);
+                        this.isUploading = true;
                     }else if(fileType.substr(0, 5) === "audio"){
                         that.checkType = 3;
                         that.stopVideo = true;
                         that.stopAudio = false;
+                        this.submitAudioCallback(e,file);
+                        this.isUploading = true;
 					}else if(fileType.substr(0, 5) === "video"){
                         that.checkType = 2;
                         that.stopVideo = false;
                         that.stopAudio = true;
+                        this.submitVideoCallback(e,file);
+                        this.isUploading = true;
+					}else if(fileType.substr(0, 4) === "text"){
+                        that.checkType = 4;
+                        that.stopVideo = true;
+                        that.stopAudio = true;
+                        this.submitTextCallback(e,file);
+                        this.isUploading = true;
+                    }else{
+                        this.$message.error('您选择的文件格式错误！');
 					}
 
                 };
-                let size=file.size;//文件的大小，判断图片的大小
-                if(size>1048576){
-                    this.imageIsBig = true;
-                }else {
-                    this.imageRight = true;
-                    this.uploadImage(e);
-				}
 			},
+			changeUploadState(isUploading){
+                this.isUploading = isUploading;
+			}
         }
     }
 
@@ -314,8 +297,6 @@
 	.functional_experience{margin: 50px 0;}
 	.functional_experience .title{text-align: center;color: #333333;margin: 40px 0;font-size: 36px;}
 
-
-
 	.top_suggest{color: #999999;font-size: 14px;line-height: 40px;height: 30px;}
 	.init_url_style{flex: 1;height: 35px;line-height: 35px;border: 1px solid #E2ECFC;font-size: 15px;padding-left: 10px;}
 	.init_url_style:hover{border: 1px solid #C0C4CC;border-right: none;}
@@ -325,8 +306,9 @@
 	.local_upload{height: 33px;line-height: 33px;font-size: 16px;}
 	.local_upload:before{content: "或";margin: 0 25px;}
 	.inputfile{z-index: -11111;width: 0px;height:1px;opacity: 0;position: absolute;}
-	.local_upload label{display:inline-block;height: 33px;line-height: 33px;font-size: 16px;background-color: #316DFF;color:white;border: 2px solid #316DFF;width: 100px;text-align: center;cursor: pointer;}
-	.local_upload label:hover{background-color: white;color: #316DFF}
+	.local_upload .btn_upload{display:inline-block;height: 33px;line-height: 33px;font-size: 16px;background-color: #316DFF;color:white;border: 2px solid #316DFF;width: 100px;text-align: center;cursor: pointer;}
+	.local_upload .btn_uploading{display:inline-block;height: 33px;line-height: 33px;font-size: 16px;background-color: white;color:#999999;border: 2px solid #dddddd;width: 100px;text-align: center;cursor: pointer;}
+	.local_upload .btn_upload:hover{background-color: white;color: #316DFF}
 	.show_input_outer{display: flex;}
 
 

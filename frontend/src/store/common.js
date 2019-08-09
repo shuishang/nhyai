@@ -8,7 +8,7 @@ export default {
         // Vue.prototype.api = "http://220.174.232.142:9016";	//测试环境
 
 		// Vue.prototype.api = "http://www.ischoolhn.com";	//试运行环境
-		Vue.prototype.api = "http://172.31.4.7:8000";	//卫俊
+		Vue.prototype.api = "http://172.31.4.33:8000";	//卫俊
 
 		//Vue.prototype.api = "http://www.hn-ssc.com";	//正式环境
         // Vue.prototype.api = "";	//打包环境

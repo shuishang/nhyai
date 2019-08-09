@@ -89,16 +89,12 @@
 							 v-loading="isLoading">
 							<div class="show_video">
 								<!--<video id="video" :src="videoUrl" controls style="height: 100%;width: 100%;background-color: #333333"></video>-->
-								<video id="example_video" class="video-js vjs-defalut-skin" controls preload="metadata" :src="videoUrl.url">
+								<video id="myVideo" class="video-js vjs-defalut-skin" controls preload="metadata" :src="videoUrl.url">
 									<source :src="videoUrl.url" type="video/mp4">
 									<!--<source src="" type="video/mp4">-->
 									您的浏览器不支持视频
 								</video>
 							</div>
-							<div>
-
-							</div>
-
 						</div>
 					</el-col>
 					<el-col :md="8" :lg="6" :xl="4">
@@ -241,28 +237,31 @@
                 recordWord:'开始录音',
                 intervalId:null,
                 isChose:false,
-//                videoUrl:require('../assets/video/dragen_wind.mp4'),
-                videoUrl:{},
+                videoUrl:{url:require('../assets/video/dragen_wind.mp4')},
                 imageIsBig:false,
 				imageUrl:[],
 				markerInfo:[],
 				sexInfo:5,
 				forceInfo:5,
-                player:null,
+                player:{},
                 first:true
 			}
         },
         mounted:function () {
+
         },
         methods: {
-
             resetMarker(marker){
-                this.player = videojs('example_video');
+//                this.player = null;
+                this.player = videojs('myVideo');
                 var player = this.player;
+				console.log(this.player);
                 player.markers.reset(marker)
 			},
             initVideo(item){
-                this.player = videojs('example_video');
+//                this.player = null;
+                this.player = videojs('myVideo');
+                console.log(this.player);
                 var player = this.player;
                 player.markers({
                     markerStyle:{  //标记样式
@@ -300,102 +299,6 @@
 						*/
                     },
                     markers:item,
-                    /*markers:[
-                        {
-                            time:9.5,
-                            text:"this",
-                            class:"orange_style"
-                        },
-                        {
-                            time:30.5,
-                            text:"is",
-                            class:"red_style"
-                        },
-                        {
-                            time:60.5,
-                            text:"demo",
-                            class:"red_style"
-                        },
-                        {
-                            time:90.5,
-                            text:"markers",
-                            class:"orange_style"
-                        },
-                        {
-                            time:120.5,
-                            text:":)",
-                            class:"red_style"
-                        },
-                        {
-                            time:130.5,
-                            text:"疑似违规",
-                            class:"orange_style"
-                        },
-                        {
-                            time:150.5,
-                            text:"违规",
-                            class:"red_style"
-                        },
-                    ],*/
-                });
-                /****** 返回插件中当前标记的数组，按升序时间排序 ******/
-                var getMarkers = player.markers.getMarkers()
-
-                /****** 从视频中的当前时间转到下一个标记。 如果没有下一个标记，那么什么都不做 ******/
-
-                $("#btn-next").click(function(){
-                    player.markers.next();
-                })
-
-                /****** 从视频中的当前时间转到上一个标记。 如果没有上一个标记，那么什么都不做 ******/
-
-                $("#btn-prev").click(function(){
-                    player.markers.prev();
-                })
-
-                /****** 允许动态修改标记时间（传入原始标记对象） ******/
-                $("#btn-confirm").click(function(){
-                    var markers = player.markers.getMarkers();
-                    var add_time = parseInt( $("#add-time").val() );
-                    console.log(add_time);
-                    for (var i = 0; i < markers.length; i++) {
-                        markers[i].time += add_time;
-                    }
-                    //调用updateTime以立即反应UI中的更改
-                    player.markers.updateTime();
-                })
-
-                /****** 删除给定索引数组中的标记（从0开始） ******/
-                $("#btn-del").click(function(){
-                    //player.markers.remove([1,3]);
-
-                    //删除所有标记
-                    player.markers.removeAll();
-                })
-
-                /****** 动态添加新标记 ******/
-                $("#btn-add").click(function(){
-                    player.markers.add([{
-                        time: 40,
-                        text: "I'm added dynamically"
-                    }]);
-                })
-
-                /****** 重置视频中的所有标记（相当于removeAll后再设置） ******/
-                $("#btn-reset").click(function(){
-                    player.markers.reset([{
-                        time: 4,
-                        text: "I'm new"
-                    },
-                        {
-                            time:2,
-                            text: "I'm new too"
-                        }]);
-                })
-
-                /*验证描点*/
-                $('label.click').removeAttr('for').on('click', function() {
-                    $('.box').scrollTop(200); //'xxx'表示滚动数值
                 });
 			},
 
@@ -417,9 +320,11 @@
                     processData: false,
                     success:(response)=>{
 //                        this.$loading().close();
+                        this.sexInfo= 5;
+                        this.forceInfo= 5;
+                        this.imageUrl= [];
+                        this.markerInfo= [];
                         this.isLoading= false;
-//                        this.uploadInfo(response);
-//                        this.videoUrl={url:response.data.video_url} ;
                         this.videoUrl={url:response.data.video} ;
 //						this.video_url= response.data.video_url;
                         response.data.video_evidence_information.forEach((item,index)=>{
@@ -485,15 +390,11 @@
 						});
                         if(this.first){
                             this.initVideo(this.markerInfo);
+//                            this.resetMarker(this.markerInfo);
                             this.first = false;
 						}else {
                             this.resetMarker(this.markerInfo);
 						}
-
-
-                        console.log( this.imageUrl,this.markerTime);
-                        console.log( response);
-                        console.log( this.markerInfo);
                     },
                 });
                 e.preventDefault();
@@ -510,10 +411,7 @@
                 console.log(url);
                 this.videoUrl={url:url} ;
                 console.log(this.videoUrl);
-				/*document.getElementById('example_video').src =url ;
-                document.getElementById('example_video').load(url);*/
                 this.isChose=true;
-                let size=file.size;//文件的大小，判断图片的大小
                 this.uploadImage(e,file,url);
             },
         },
@@ -552,7 +450,7 @@
 	.functional_experience .title{text-align: center;color: #000;margin: 40px 0 15px;font-size: 36px;}
 	.show_video_outer{}
 	.show_video{height:440px;position: relative;overflow: hidden;}
-	.show_video #example_video{width: 100%;height: 440px;}
+	.show_video #myVideo{width: 100%;height: 440px;}
 	/*初始化页面begin*/
 	.video_original{height: 410px;border: 2px dashed #acc3ff;background-color: #fbfcff;padding: 20px;}
 	.video_original>div{height: 100%;background-color: #ffffff;text-align: center;}
@@ -563,7 +461,6 @@
 	.local_upload{height: 45px;line-height: 45px;font-size: 16px;margin: 40px auto;text-align: center;}
 	.local_upload label{display:inline-block;color: #ffffff;font-size: 16px;height: 42px;width: 120px;line-height: 42px;border: 1px solid #e1e3e7;text-align: center;background-color: #316dff;cursor: pointer;}
 	.local_upload p{display:inline-block;color: #666666;font-size: 16px;height: 42px;width: 120px;line-height: 42px;border: 1px solid #e1e3e7;text-align: center;background-color: #dddddd;cursor: pointer;}
-
 	/*初始化页面end*/
 
 	.video_result_outer{height: 440px;z-index: 99;background-color: white;box-shadow:5px 0 20px #c5cff1}

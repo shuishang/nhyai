@@ -81,17 +81,20 @@
 							</div>
 							<div class="voice_content">
 								<p class="voice_title">识别结果</p>
-								<textarea class="result_text" readonly="readonly">点击开始录音，即可边说话边识别</textarea>
+								<textarea class="result_text" readonly="readonly">{{showResult}}</textarea>
 							</div>
 						</div>
 						<p class="begin_record" @click="beginRecord">{{recordWord}}</p>
 					</div>
+
 				</el-col>
 			</el-row>
 
 		</div>
+
 		<div class="recommended_scenario">
 			<p class="title">应用场景</p>
+
 			<el-row>
 				<el-col :xs={span:24} :sm={span:22,offset:1} :md={span:20,offset:2} :lg={span:18,offset:3} :xl={span:16,offset:4}>
 					<ul>
@@ -167,7 +170,9 @@
                 recordWord:'开始录音',
                 intervalId:null,
                 record:null,
-                recordSrc:require("../assets/audio/1.mp3")
+                recordSrc:require("../assets/audio/1.mp3"),
+				showResult:"点击开始录音，即可边说话边识别"
+
 			}
         },
         mounted:function () {
@@ -212,13 +217,14 @@
                 this.record.pause();
                 var wav = this.record.getRecord({
                     encodeTo: ENCODE_TYPE.WAV,
-                    compressible: true
                 });
                 console.log(wav);
                 this.recordSrc =URL.createObjectURL(wav) ;
-                console.log(this.recordSrc)
+                let files = new window.File([wav], '1.wav', {type: 'audio/wav'});
+//                this.recordSrc =wav ;
+                console.log(this.recordSrc);
 				this.record.clear();
-                this.submitVoice(wav);
+                this.submitVoice(files);
 //                document.getElementsByTagName('audio')[0].load();
 
             },
@@ -231,6 +237,7 @@
                 this.isCheck = 2;
                 var formData = new FormData($(this));
                 formData.append('speech', wav);
+
                 $.ajax({
                     url: this.api+"/api/v1/audio/get_chinese_speech/",
                     type: "post",
@@ -242,9 +249,12 @@
                     success:(response)=>{
                         loading.close();
                         console.log(response);
-//                        document.getElementsByClassName('write_content')[0].innerHTML=response.data.web_text;
+                        if(response.data.text==''){
+                            this.showResult =  "请右键点击扬声器->录音设备->录制->查看扬声器";
+						}else {
+                            this.showResult =  response.data.text;
+						}
 
-//                        this.recWord =response.data.web_text;
 
                     },
                     error:()=>{
@@ -297,7 +307,7 @@
 	.voice_time_outer>span{display:inline-block;height: 40px;line-height: 40px;font-size: 14px;vertical-align: middle;margin-left: 20px;}
 	.voice_time_outer>img{height: 40px;line-height: 40px;vertical-align: middle}
 	.result_text{margin: 10px 0;padding: 0 20px;;width: 100%;height: 80%;box-sizing: border-box;line-height: 25px;font-size: 14px;}
-	.begin_record{height: 45px;width: 160px;line-height: 45px;background-color: #316dff;color: #fff;margin: 40px auto;font-size: 16px;text-align: center;}
+	.begin_record{height: 45px;width: 160px;line-height: 45px;background-color: #316dff;color: #fff;margin: 40px auto;font-size: 16px;text-align: center;cursor: pointer;}
 
 	.voice_introduce_outer{margin-bottom: 15px;text-align: center;min-width: 800px;}
 	.voice_introduce_outer ul{width: 100%;line-height: 0;font-size: 0;}

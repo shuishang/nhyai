@@ -158,38 +158,7 @@
 			}
         },
         mounted:function () {
-            var that = this;
-            this.loadDate();
-            var jdata = JSON.stringify(JSON.parse(this.jsonDemo), null, 4);
-            $("#show_json").html("<pre>"+jdata+"</pre>");//这时数据展示正确
-            $('form').submit(function(e) {
-                that.imageRight = false;
-                var formData = new FormData($(this));
-                formData.append('datafile', $('#datafile')[0].files[0]);
-                $.ajax({
-                    url: $(this).attr('action'),
-                    type: $(this).attr('method'),
-                    data: formData,
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    success:(response)=>{
-                        var result = response.result;
-                        console.log( result.data.tag_list[1].probability,"hhhhhhhhhhhh") ;
-                        var jdata = JSON.stringify(result, null, 4);
-                        $("#show_json").html("<pre>"+jdata+"</pre>");//这时数据展示正确
-                        var forcePercent = result.data.tag_list[1].probability.toString();
-                        forcePercent = forcePercent.substring(0,forcePercent.indexOf(".")+5)*100;
-                        console.log(forcePercent);
-                        that.showPercent =`概率：${forcePercent}%`;
-                        if(forcePercent>80){
-                            that.isForce = true;
-                        }
-                    },
-                });
-                e.preventDefault();
-            });
-            console.log(this.recommendedList)
+
         },
         methods: {
             uploadInfo(response){

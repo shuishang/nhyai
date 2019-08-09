@@ -12,7 +12,7 @@
 							</div>
 							<div class="show_result" v-else>
 								<!--<i class="show_word normal_result_back"></i>-->
-								<i class="show_word danger_result_back"></i>
+								<i class="show_word normal_result_back"></i>
 							</div>
 						</div>
 					</div>
@@ -24,15 +24,23 @@
 					<p class="result_title">审查结果</p>
 					<div class="result_outer">
 						<p>暴恐识别</p>
-						<p class="green_style_name">合规</p>
-						<p class="green_style_number">12.35%</p>
+						<p class="red_style_name" v-if="forceLevel>90">违规</p>
+						<p class="orange_style_name" v-else-if="forceLevel>50">疑似违规</p>
+						<p class="green_style_name" v-else>合规</p>
+						<p class="red_style_number" v-if="forceLevel>90">{{forceLevel}}</p>
+						<p class="orange_style_number" v-else-if="forceLevel>50">{{forceLevel}}</p>
+						<p class="green_style_number" v-else>{{forceLevel}}</p>
 					</div>
 					<div class="result_outer">
 						<p>色情识别</p>
-						<p class="green_style_name">合规</p>
-						<p class="green_style_number">12.56%</p>
+						<p class="red_style_name" v-if="sexLevel>90">违规</p>
+						<p class="orange_style_name" v-else-if="sexLevel>50">疑似违规</p>
+						<p class="green_style_name" v-else>合规</p>
+						<p class="red_style_number" v-if="sexLevel>90">{{sexLevel}}</p>
+						<p class="orange_style_number" v-else-if="sexLevel>50">{{sexLevel}}</p>
+						<p class="green_style_number" v-else>{{sexLevel}}</p>
 					</div>
-					<div class="result_outer">
+					<!--<div class="result_outer">
 						<p class="ell">政治敏感识别</p>
 						<p class="orange_style_name">疑似违规</p>
 						<p class="orange_style_number">60.35%</p>
@@ -46,7 +54,7 @@
 						<p>广告检测</p>
 						<p class="red_style_name">违规</p>
 						<p class="red_style_number">90.16%</p>
-					</div>
+					</div>-->
 				</div>
 			</el-col>
 		</el-row>
@@ -56,13 +64,54 @@
 <script>
 
 	export default {
+        props:["file"],
 	    data(){
 	        return{
                 dialogImageUrl: require("../../assets/image/sample_image.png"),
                 isForce:false,
                 imageRight:false,
                 imageIsBig:false,
+				sexLevel:'12.99',
+                forceLevel:'5.74'
+
 			}
+		},
+		methods:{
+	      submitImage(e,file){
+	          console.log(file);
+              var loading = this.$loading({fullscreen:false,target:document.querySelector(".show_result_outer")});
+	          console.log("图片提交中。。。")
+              var formData = new FormData($(this));
+              formData.append('image', file);
+              $.ajax({
+                  url: this.api+"/api/v1/image/get_image_inspection/",
+                  type: "post",
+                  data: formData,
+//                    headers: {'Authorization': 'Token mytoken'},
+                  cache: false,
+                  contentType: false,
+                  processData: false,
+                  success:(response)=>{
+                      loading.close();
+                      console.log(response);
+                      this.dialogImageUrl = response.image;
+                      this.sexLevel = response.data.porn_percent;
+                      this.forceLevel = response.data.violence_percent;
+                      if(this.sexLevel>50|this.forceLevel>50){
+                          this.isForce = true;
+					  }else {
+                          this.isForce = false;
+					  }
+                      this.$parent.changeUploadState(false);
+                  },
+				  error:err=>{
+                      loading.close();
+                      console.log(err)
+                      this.$parent.changeUploadState(false);
+				  }
+              });
+              e.preventDefault();
+		  }
 		}
 	}
 </script>
@@ -71,7 +120,7 @@
 	.show_add_image_outer{min-height: 400px}
 	.show_input_outer{display: flex;}
 	.show_word{width: 180px;height: 200px;  display: inline-block;  text-align: center;  font-size: 22px;  font-style: normal;  color: #fff;  box-sizing: border-box;  padding-top: 58px;}
-	.normal_result_back{background-image: url("../../assets/image/2.png");background-repeat: no-repeat;position: absolute;top: 50%;left: 50%;margin-left: -90px;margin-top: -100px;}
+	.normal_result_back{background-image: url("../../assets/image/normal_image_sample.png");background-repeat: no-repeat;position: absolute;top: 50%;left: 50%;margin-left: -90px;margin-top: -100px;}
 	.danger_result_back{background-image: url("../../assets/image/2.png");}
 	.show_json_outer{height: 430px;z-index: 99;background-color: white;position: relative;left: -20px;top: 35px;box-shadow:5px 0 20px #c5cff1}
 	.show_json_outer .result_title{font-size: 24px;color: #000000;text-align: center;height: 100px;padding-top: 30px;}
