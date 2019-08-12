@@ -35,7 +35,11 @@ class sensitiveClass:
             print("33333333333=",keyword)
             for index, row in df.iterrows():
                 sensitiveCms = row['内容'].split('、')
+                #if (keyword == ' ')
+                # if keyword.strip()=='':
+                #     break;
                 if keyword in sensitiveCms:
+                    
                     result = {}
                     result["firstType"] = row['大类']
                     result["secondType"] = row['次类']
@@ -89,6 +93,8 @@ class sensitiveClass:
         for keyword in keywords:
             for index, row in settings.DF.iterrows():                
                 sensitiveCms = row['内容'].split('、')
+                if keyword.strip()=='':
+                    break;
                 if keyword in sensitiveCms:
                     result = {}
                     result["firstType"] = row['大类']
@@ -130,5 +136,6 @@ class sensitiveClass:
 if __name__ == '__main__':
     df = pd.read_csv(os.path.join(os.getcwd(),"backend","api","sensitives","sensitiveWords.csv"),encoding='gbk')
     #sensitiveClass().check_sensitiveWords_test(df, "sssss 十八摸 十八摸 强奸")
-    sensitiveClass().check_sensitiveWords_test(df, "heheh ")
+    #sensitiveClass().check_sensitiveWords_test(df, "  heheh ")
+    sensitiveClass().check_sensitiveWords_test(df, "  sssssssssss")
     #sensitiveClass().check_sensitiveWords_test(df, "你 不是 跟 我 讲的 笑话 吗 欲死欲仙 十八摸")
