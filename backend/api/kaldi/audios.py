@@ -95,7 +95,8 @@ class audio:
             if 'IOR' in line:
                 break
             index += 1
-            if (index == 8):
+            # if (index == 8):
+            if 'T0055G0036S0002' in line:
                 output = line.split("T0055G0036S0002")[1].strip()
                 #替换无法识别语音 <UNK>
                 output = output.replace("<UNK>", "")
