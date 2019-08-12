@@ -74,7 +74,7 @@
 </script>
 
 <style>
-	#navigation{height:80px;position:absolute;top:0;width: 100%;z-index: 99;background-color: transparent;}
+	#navigation{height:60px;position:absolute;top:0;width: 100%;z-index: 99;background-color: transparent;}
 	#navigation :hover{background-color: #060606;}
 	#navigation :hover .header_nav span{color: #fff;}
 	/*#navigation :hover .header_logo img{!*display: inline-block;width: 133px;height: 58px;*!}*/
@@ -82,7 +82,7 @@
 
 	/*头部样式*/
 	.header_con{ min-width:800px; /*height:110px;position:absolute;top:0;left:50%;margin-left:-640px;z-index:99;*/}
-	.header_logo{ margin-top:26px;}
+	.header_logo{ margin-top:20px;}
 	.header_nav{ margin-left:88px;margin-right:30px;}
 	.header_nav li{height:80px;line-height:80px;display:inline-block; /* display:table-cell;vertical-align:middle; */padding: 0 20px;position:relative;}
 	.header_nav li a{display:block; /* display: table-cell;vertical-align: middle; */font-size:16px; color:#fff;}
