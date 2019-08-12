@@ -28,11 +28,13 @@ from .kaldi.audios import audio
 from .sensitives.sensitives import sensitiveClass
 import wave
 import contextlib
+
 def get_two_float(f_str, n):
     f_str = str(f_str)      # f_str = '{}'.format(f_str) 也可以转换为字符串
     a, b, c = f_str.partition('.')
     c = (c+"0"*n)[:n]       # 如论传入的函数有几位小数，在字符串后面都添加n为小数0
     return ".".join([a, c])
+
 class UserViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
@@ -160,7 +162,7 @@ class WordRecognitionViewSet(viewsets.ModelViewSet):
             msg = "匹配到记录"
 
         data = sensitive_list
-        serializer.save(ret=ret,msg=msg,data=data)
+        serializer.save(ret=ret,msg=msg,data=data,text=iserializer.text)
 
         return Response(status=status.HTTP_201_CREATED)
 
@@ -192,7 +194,7 @@ class WordRecognitionInspectionViewSet(viewsets.ModelViewSet):
         sensitive_map["text_content"] = text_content
         sensitive_map["sensitive_info"] = result
         data = sensitive_map
-        serializer.save(ret=ret,msg=msg,data=result)
+        serializer.save(ret=ret,msg=msg,data=result,text=iserializer.text)
 
         return Response(status=status.HTTP_201_CREATED)        
 
@@ -217,7 +219,7 @@ class OcrGeneralViewSet(viewsets.ModelViewSet):
         for each in arr:
             dataArr.append(each["text"])
         #result = check_result
-        serializer.save(data=dataArr,ret=ret,msg=msg)
+        serializer.save(data=dataArr,ret=ret,msg=msg,image=iserializer.image)
 
         return Response(status=status.HTTP_201_CREATED)
 
@@ -256,7 +258,7 @@ class OcrIDCardViewSet(viewsets.ModelViewSet):
             dataMap[name] = each['text']
             #dataMap[each['name']] = each['text']
         #result = check_result
-        serializer.save(data=dataMap,ret=ret,msg=msg)
+        serializer.save(data=dataMap,ret=ret,msg=msg,image=iserializer.image)
 
         return Response(status=status.HTTP_201_CREATED)
 
@@ -278,7 +280,7 @@ class FileImageTerrorismUploadViewSet(viewsets.ModelViewSet):
         violence = check_result['violence']
         resultMap = {}
         resultMap['violence'] = get_two_float(float(violence) * 100,2)
-        serializer.save(data=resultMap,ret=ret,msg=msg)
+        serializer.save(data=resultMap,ret=ret,msg=msg,image=iserializer.image)
         return Response(status=status.HTTP_201_CREATED)
 
 
@@ -299,7 +301,7 @@ class FileVisionPornUploadViewSet(viewsets.ModelViewSet):
             resultMap = {}
             resultMap['normal_hot_porn'] = get_two_float(float(scores[1]) * 100,2)
             # print (check_result)
-            serializer.save(data=resultMap,ret=ret,msg=msg)
+            serializer.save(data=resultMap,ret=ret,msg=msg,image=iserializer.image)
             return Response(status=status.HTTP_201_CREATED)
 
 class VideoFileUploadViewSet(viewsets.ModelViewSet):
@@ -316,7 +318,7 @@ class VideoFileUploadViewSet(viewsets.ModelViewSet):
         ret = 0
         msg = "成功"
         #serializer.save(result=contentList,video=file_path,duration=totalFrameNumber/fps,width=cap.get(3),height=cap.get(4),count=totalCount)
-        serializer.save(data=resultMap,ret=ret,msg=msg)
+        serializer.save(data=resultMap,ret=ret,msg=msg,video=iserializer.video)
         
         
         # print (check_result)
@@ -338,7 +340,7 @@ class AudioFileUploadViewSet(viewsets.ModelViewSet):
         # print (check_result)
         resultMap ={}
         resultMap['text'] = check_result
-        serializer.save(data=resultMap,ret=ret,msg=msg)
+        serializer.save(data=resultMap,ret=ret,msg=msg,speech=iserializer.speech)
         return Response(status=status.HTTP_201_CREATED)
 
 class AudioFileInspectionViewSet(viewsets.ModelViewSet):
@@ -365,6 +367,7 @@ class AudioFileInspectionViewSet(viewsets.ModelViewSet):
         resultMap["speech_contents"]=check_result
         serializer.save(data=resultMap,ret=ret,msg=msg,speech=iserializer.speech)
         return Response(status=status.HTTP_201_CREATED)
+
 class ImageFileUploadViewSet(viewsets.ModelViewSet):
     queryset = ImageFileUpload.objects.all()
     serializer_class = ImageFileUploadSerializer
@@ -408,5 +411,5 @@ class ImageFileUploadViewSet(viewsets.ModelViewSet):
         resultMap['public_percent'] = ""
         
         
-        serializer.save(data=resultMap,ret=ret,msg=msg)
+        serializer.save(data=resultMap,ret=ret,msg=msg,image=iserializer.image)
         return Response(status=status.HTTP_201_CREATED)        
