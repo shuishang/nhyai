@@ -138,7 +138,7 @@
 										<span class="video_result_red_title" v-if="item.state=='违规'">{{item.state}}</span>
 										<span class="video_result_orange_title" v-else>{{item.state}}</span>
 										<span class="video_result_red_number" v-if="item.state=='违规'">{{item.number}}</span>
-										<span class="video_result_orange_number" v-else>{{item.number}}</span>
+										<span class="video_result_orange_number" v-else>{{item.number}}%</span>
 									</div>
 									<img :src="item.image" alt="">
 									<p>视频时间：{{item.time}}</p>

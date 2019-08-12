@@ -288,6 +288,7 @@
                 $.ajax({
                     url: this.api+"/api/v1/audio/get_chinese_speech_inspection/",
                     type: "post",
+                    timeout : 600000,
                     data: formData,
 //                    headers: {'Authorization': 'Token mytoken'},
                     cache: false,

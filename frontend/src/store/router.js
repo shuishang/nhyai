@@ -47,7 +47,7 @@ const router = new VueRouter({
                 {path:'/',redirect:'idCard'},
         ]},
         {path:'/yellow',meta:{title:'色情识别'},component:yellow},  //名片
-        {path:'/force',meta:{title:'色情识别'},component:force},  //名片
+        {path:'/force',meta:{title:'暴恐识别'},component:force},  //名片
         {path:'/wordRecognition',meta:{title:'文本检测'},component:wordRecognition,
             children:[
                 {path:'idCard',meta:{title:'文本检测'},component:idCard},

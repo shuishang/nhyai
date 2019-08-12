@@ -79,7 +79,7 @@
             uploadImage(e){
                 this.isCheck= true;
                 var loading = this.$loading({fullscreen:false,target:document.querySelector(".outer_add")});
-                var formData = new FormData($(this));
+                var formData = new FormData();
                 formData.append('image', $('#datafile')[0].files[0]);
                 $.ajax({
                     url: this.api+"/api/v1/ocr/get_general_ocr/",
