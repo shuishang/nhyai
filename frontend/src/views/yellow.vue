@@ -68,6 +68,7 @@
 							:on-preview="handlePictureCardPreview"
 							:file-list="fileList"
 							:limit="10"
+							:multiple="true"
 							:on-change="onListChange"
 							:http-request="uploadImage"
 							:on-exceed="outSuggest"
@@ -368,6 +369,7 @@
 	.choose_suggest{text-align: center;font-size: 14px;color: #333;}
 	.begin_check{width: 160px;height: 45px;line-height: 45px;background-color: #316DFF;color: white;font-size: 16px;margin: 50px auto 0;text-align: center;cursor: pointer;}
 	.again_check{width: 160px;height: 45px;line-height: 45px;border:1px solid #E2E5E8;background-color: #ffffff;color: #333333;font-size: 16px;margin: 40px auto 0;text-align: center;cursor: pointer;}
+	.begin_check:hover{background-color: #6087F7;color: white;}
 	.yellow_result_outer{margin-top: 15px;}
 	.yellow_result_outer>div{width: 160px;overflow: hidden;text-align: center;margin-right: 30px;}
 	.yellow_result_outer>div>img{width: 160px;height: 160px;}
