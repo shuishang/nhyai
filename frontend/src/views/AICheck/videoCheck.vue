@@ -119,7 +119,7 @@
                 console.log(file);
                 var loading = this.$loading({fullscreen:false,target:document.querySelector(".show_video")});
                 console.log("视频提交中。。。")
-                var formData = new FormData($(this));
+                var formData = new FormData();
                 formData.append('video', file);
                 $.ajax({
                     url: this.api+"/api/v1/video/get_video_inspection/",

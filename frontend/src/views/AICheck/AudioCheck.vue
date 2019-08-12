@@ -283,7 +283,7 @@
                 this.audioName = file.name;
                 var loading = this.$loading({fullscreen:false,target:document.querySelector(".outer_voice")});
                 console.log("音频提交中。。。")
-                var formData = new FormData($(this));
+                var formData = new FormData();
                 formData.append('speech', file);
                 $.ajax({
                     url: this.api+"/api/v1/audio/get_chinese_speech_inspection/",

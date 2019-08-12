@@ -52,7 +52,7 @@
                 this.audioName = file.name;
                 var loading = this.$loading({fullscreen:false,target:document.querySelector(".outer_text")});
                 console.log("文本提交中。。。")
-                var formData = new FormData($(this));
+                var formData = new FormData();
                 formData.append('text', file);
                 $.ajax({
                     url: this.api+"/api/v1/text/get_text_recognition_inspection/",

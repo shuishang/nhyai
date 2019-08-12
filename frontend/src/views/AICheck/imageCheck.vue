@@ -81,7 +81,7 @@
 	          console.log(file);
               var loading = this.$loading({fullscreen:false,target:document.querySelector(".show_result_outer")});
 	          console.log("图片提交中。。。")
-              var formData = new FormData($(this));
+              var formData = new FormData();
               formData.append('image', file);
               $.ajax({
                   url: this.api+"/api/v1/image/get_image_inspection/",
