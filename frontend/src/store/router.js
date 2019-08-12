@@ -63,7 +63,7 @@ const router = new VueRouter({
             ]},
         {path:'/voiceRecognition',meta:{title:'语音识别'},component:voiceRecognition},  //语音识别
         {path:'/writeRecognition',meta:{title:'文本检测'},component:writeRecognition},  //语音识别
-        {path:'/videoRecognition',meta:{title:'视频识别'},component:videoRecognition},  //视频识别
+        {path:'/videoRecognition',meta:{title:'视频识别',keepAlive:true},component:videoRecognition},  //视频识别
 
 
         {path:'/',redirect:'/sindex'}
