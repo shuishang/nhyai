@@ -275,7 +275,7 @@
                     var loading = this.$loading({fullscreen:false,target:document.querySelector(".choose_result")});
                 }
 //                this.loading = this.$loading(this.options);
-                var formData = new FormData($(this));
+                var formData = new FormData();
                 formData.append('image', file);
                 $.ajax({
                     url: this.api+"/api/v1/image/get_violence_identify/",

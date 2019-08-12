@@ -198,7 +198,7 @@
                     return;
 				}
 				this.isCheck = 2;
-                var formData = new FormData($(this));
+                var formData = new FormData();
                 formData.append('text', this.recWord);
                 $.ajax({
                     url: this.api+"/api/v1/text/get_text_recognition/",

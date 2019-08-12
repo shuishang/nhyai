@@ -88,15 +88,15 @@
 									<img :src="item.image" alt="">
 									<div class="result_outer" v-if="item.number>90">
 										<p class="red_style_name">违规</p>
-										<p class="red_style_number">{{item.number}}</p>
+										<p class="red_style_number">{{item.number}}%</p>
 									</div>
 									<div class="result_outer" v-else-if="item.number>50">
 										<p class="orange_style_name">疑似违规</p>
-										<p class="orange_style_number">{{item.number}}</p>
+										<p class="orange_style_number">{{item.number}}%</p>
 									</div>
 									<div class="result_outer" v-else>
 										<p class="green_style_name">合规</p>
-										<p class="green_style_number">{{item.number}}</p>
+										<p class="green_style_number">{{item.number}}%</p>
 									</div>
 								</div>
 							</div>
@@ -251,7 +251,7 @@
                 this.imageRight = false;
 //                this.loading = this.$loading(this.options);
                 this.isLoading= true;
-                var formData = new FormData($(this));
+                var formData = new FormData();
                 formData.append('image', file);
                 $.ajax({
                     url: this.api+"/api/v1/image/get_vision_porn/",
@@ -287,7 +287,7 @@
                 }else {
                     var loading = this.$loading({fullscreen:false,target:document.querySelector(".choose_result")});
                 }
-                var formData = new FormData($(this));
+                var formData = new FormData();
                 formData.append('image', file);
                 $.ajax({
                     url: this.api+"/api/v1/image/get_vision_porn/",

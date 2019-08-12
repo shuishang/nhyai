@@ -306,7 +306,7 @@
                 this.imageRight = false;
 //                this.loading = this.$loading(this.options);
                 this.isLoading= true;
-                var formData = new FormData($(this));
+                var formData = new FormData();
                 formData.append('video', file);
                 formData.append('video_url', url);
                 console.log(file,url)

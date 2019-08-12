@@ -235,7 +235,7 @@
                     return;
                 }
                 this.isCheck = 2;
-                var formData = new FormData($(this));
+                var formData = new FormData();
                 formData.append('speech', wav);
 
                 $.ajax({

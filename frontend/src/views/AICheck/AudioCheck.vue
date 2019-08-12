@@ -63,7 +63,7 @@
 	    data(){
             return{
                 imageIsBig:false,
-				recordSrc:require("../../assets/audio/1.mp3"),
+				recordSrc:"",
 				resultType:[],
                 audioName:'',
 				isNone:true
