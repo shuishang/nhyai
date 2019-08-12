@@ -363,7 +363,7 @@ class AudioFileInspectionViewSet(viewsets.ModelViewSet):
         resultMap = {}
         resultMap["speech_time"]=duration
         resultMap["speech_contents"]=check_result
-        serializer.save(data=resultMap,ret=ret,msg=msg)
+        serializer.save(data=resultMap,ret=ret,msg=msg,speech=iserializer.speech)
         return Response(status=status.HTTP_201_CREATED)
 class ImageFileUploadViewSet(viewsets.ModelViewSet):
     queryset = ImageFileUpload.objects.all()
