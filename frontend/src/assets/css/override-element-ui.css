@@ -39,12 +39,8 @@
     height: 100%;
 }*/
 .el-icon-plus:before {
-    content: "\E62B";
     font-size: 60px;
-    /* margin-top: 20px; */
-    vertical-align: middle;
     color: #acc3ff;
-
 }
 .el-upload--picture-card{
     border: 2px dashed #acc3ff;
