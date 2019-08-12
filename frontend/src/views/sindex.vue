@@ -308,7 +308,7 @@
 	.inputfile{z-index: -11111;width: 0px;height:1px;opacity: 0;position: absolute;}
 	.local_upload .btn_upload{display:inline-block;height: 33px;line-height: 33px;font-size: 16px;background-color: #316DFF;color:white;border: 2px solid #316DFF;width: 100px;text-align: center;cursor: pointer;}
 	.local_upload .btn_uploading{display:inline-block;height: 33px;line-height: 33px;font-size: 16px;background-color: white;color:#999999;border: 2px solid #dddddd;width: 100px;text-align: center;cursor: pointer;}
-	.local_upload .btn_upload:hover{background-color: white;color: #316DFF}
+	.local_upload .btn_upload:hover{background-color: #6087F7;color: white;border: 2px solid #6087F7;}
 	.show_input_outer{display: flex;}
 
 
@@ -319,7 +319,7 @@
 	.search_input:hover{border: 1px solid #C0C4CC;}
 	.search_input:focus{border: 1px solid #409EFF;}
 	.search_btn{display:inline-block;height: 32px;line-height: 32px;font-size: 14px;background-color: #316DFF;color:white;border: 1px solid #316DFF;width: 80px;text-align: center;cursor: pointer;}
-	.search_btn:hover{background-color: white;color: #316DFF}
+	.search_btn:hover{background-color: #6087F7;color: white;border: 1px solid #6087F7;}
 
 	.show_history_title{height: 50px;line-height: 50px;color: #333333;font-size: 16px;background-color: #ebeff8;width: 100%;display: flex;font-weight: 100;border: 1px solid #ebeff8;}
 	.show_history_title th{flex: 1;text-align: left;padding-left: 10px;font-weight: 100;}
