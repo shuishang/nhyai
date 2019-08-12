@@ -179,7 +179,6 @@ class WordRecognitionInspectionViewSet(viewsets.ModelViewSet):
         
         txtfile = iserializer.text.path
         print(txtfile)
-        text = "";
         f=open(txtfile,"r")
         lines = f.readlines()
         sensitive_map = {}
