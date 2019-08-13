@@ -54,6 +54,12 @@ def check_video(file_path):
     violenceScoreArr = [0]*int(totalFrameNumber)
     pornScoreArr = [0]*int(totalFrameNumber)
     FPS_FLAG = settings.FPS_FLAG  #为True时，按帧读取；False时，按秒读取
+    #暴恐级别比例
+    VIOLENCESCORE_MIN = settings.VIOLENCESCORE_MIN  
+    VIOLENCESCORE_MAX = settings.VIOLENCESCORE_MAX
+    #色情级别比例
+    PORNSCORE_MIN = settings.PORNSCORE_MIN
+    PORNSCORE_MAX = settings.PORNSCORE_MAX
     if FPS_FLAG:
         # 若小于总帧数则读一帧图像
         while COUNT < totalFrameNumber:
@@ -77,7 +83,7 @@ def check_video(file_path):
             pornScoreArr[COUNT] = pornScore
 
             infoMap = {}
-            if (violenceScore >= settings.VIOLENCESCORE or pornScore >= settings.PORNSCORE):
+            if (violenceScore >= settings.VIOLENCESCORE_MIN or pornScore >= settings.PORNSCORE_MIN):
                 infoMap['violence_sensitivity_level'] = get_two_float(violenceScore * 100,2)
                 infoMap['porn_sensitivity_level'] = get_two_float(float(pornPercent[1]) * 100,2)
                 infoMap['image_url'] =  settings.VIDEO_URL + settings.TEMP_PATH + uuidStr + '/' + imageName
@@ -93,19 +99,19 @@ def check_video(file_path):
         pornScoreArr = sorted(pornScoreArr)
         violenceScoreArr = sorted(violenceScoreArr)
         violence_sensitivity_level = 0
-        if (violenceScoreArr[int(totalFrameNumber)-1] < 0.5):
+        if (violenceScoreArr[int(totalFrameNumber)-1] < VIOLENCESCORE_MIN):
             violence_sensitivity_level = 0
-        if (violenceScoreArr[int(totalFrameNumber)-1] >= 0.5 and violenceScoreArr[int(totalFrameNumber)-1]<=0.9):
+        if (violenceScoreArr[int(totalFrameNumber)-1] >= VIOLENCESCORE_MIN and violenceScoreArr[int(totalFrameNumber)-1]<=VIOLENCESCORE_MAX):
             violence_sensitivity_level = 1
-        if (violenceScoreArr[int(totalFrameNumber)-1] > 0.9):
+        if (violenceScoreArr[int(totalFrameNumber)-1] > VIOLENCESCORE_MAX):
             violence_sensitivity_level = 2
         
         porn_sensitivity_level = 0
-        if (pornScoreArr[int(totalFrameNumber)-1] < 0.5):
+        if (pornScoreArr[int(totalFrameNumber)-1] < PORNSCORE_MIN):
             porn_sensitivity_level = 0
-        if (pornScoreArr[int(totalFrameNumber)-1] >= 0.5 and pornScoreArr[int(totalFrameNumber)-1]<=0.9):
+        if (pornScoreArr[int(totalFrameNumber)-1] >= PORNSCORE_MIN and pornScoreArr[int(totalFrameNumber)-1]<=PORNSCORE_MAX):
             porn_sensitivity_level = 1
-        if (pornScoreArr[int(totalFrameNumber)-1] > 0.9):
+        if (pornScoreArr[int(totalFrameNumber)-1] > PORNSCORE_MAX):
             porn_sensitivity_level = 2
         resultMap = {}
 
@@ -146,7 +152,7 @@ def check_video(file_path):
                 violenceScoreArr[COUNT] = violenceScore
                 pornScoreArr[COUNT] = pornScore
                 infoMap = {}
-                if (violenceScore >= settings.VIOLENCESCORE or pornScore >= settings.PORNSCORE):
+                if (violenceScore >= settings.VIOLENCESCORE_MIN or pornScore >= settings.PORNSCORE_MIN):
                     infoMap['violence_sensitivity_level'] = get_two_float(violenceScore * 100,2)
                     infoMap['porn_sensitivity_level'] = get_two_float(float(pornPercent[1]) * 100,2)
                     infoMap['image_url'] =  settings.VIDEO_URL + settings.TEMP_PATH + uuidStr + '/' + imageName
@@ -161,21 +167,21 @@ def check_video(file_path):
         cap.release()
         #判断暴恐图片
         violence_sensitivity_level = 0
-        if (violenceScoreArr[int(totalFrameNumber)-1] < 0.5):
+        if (violenceScoreArr[int(totalFrameNumber)-1] < VIOLENCESCORE_MIN):
             violence_sensitivity_level = 0
-        if (violenceScoreArr[int(totalFrameNumber)-1] >= 0.5 and violenceScoreArr[int(totalFrameNumber)-1]<=0.9):
+        if (violenceScoreArr[int(totalFrameNumber)-1] >= VIOLENCESCORE_MIN and violenceScoreArr[int(totalFrameNumber)-1]<=VIOLENCESCORE_MAX):
             violence_sensitivity_level = 1
-        if (violenceScoreArr[int(totalFrameNumber)-1] > 0.9):
+        if (violenceScoreArr[int(totalFrameNumber)-1] > VIOLENCESCORE_MAX):
             violence_sensitivity_level = 2
         
 
         #判断色情图片
         porn_sensitivity_level = 0
-        if (pornScoreArr[int(totalFrameNumber)-1] < 0.5):
+        if (pornScoreArr[int(totalFrameNumber)-1] < PORNSCORE_MIN):
             porn_sensitivity_level = 0
-        if (pornScoreArr[int(totalFrameNumber)-1] >= 0.5 and pornScoreArr[int(totalFrameNumber)-1]<=0.9):
+        if (pornScoreArr[int(totalFrameNumber)-1] >= PORNSCORE_MIN and pornScoreArr[int(totalFrameNumber)-1]<=PORNSCORE_MAX):
             porn_sensitivity_level = 1
-        if (pornScoreArr[int(totalFrameNumber)-1] > 0.9):
+        if (pornScoreArr[int(totalFrameNumber)-1] > PORNSCORE_MAX):
             porn_sensitivity_level = 2
         resultMap = {}
         resultMap['video_url'] = settings.VIDEO_URL + f
