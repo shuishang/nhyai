@@ -31,7 +31,7 @@
 						</li>
 						<!--<li><router-link to=""><span>图像检测</span></router-link></li>-->
 						<!--<li><router-link to="/wordRecognition"><span>文本检测</span></router-link></li>-->
-						<li><router-link to="/voiceRecognition"><span>语音检测</span></router-link></li>
+						<li><router-link to="/voiceRecognition"><span>语音识别</span></router-link></li>
 						<li><router-link to="/videoRecognition"><span>视频检测</span></router-link></li>
 					</ul>
 				</div>
