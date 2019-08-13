@@ -276,6 +276,7 @@
 	.voice_experience_outer .against{text-align: center;color: #FE0808;font-size: 15px;margin-top: 10px;}
 	.word_more{position: absolute;right: 40px;margin-top: -35px;font-size: 14px;color: #666666;}
 	.begin_record{height: 45px;width: 160px;line-height: 45px;background-color: #316dff;color: #fff;margin: 20px auto;font-size: 16px;text-align: center;cursor:pointer;}
+	.begin_record:hover{background-color: #6087F7;color: white;}
 	.again_record{height: 45px;width: 160px;line-height: 45px;background-color: #FFFFFF;color: #333;margin: 20px auto;font-size: 16px;text-align: center;border: 1px solid #E7E9EC;cursor:pointer;}
 
 	.advantage_product{padding: 65px 0 80px ;overflow: hidden;background-color: #f2f2f5;}

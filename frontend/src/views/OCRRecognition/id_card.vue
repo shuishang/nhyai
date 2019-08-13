@@ -130,7 +130,7 @@
 	.inputfile{z-index: -11111;width: 0px;height:1px;opacity: 0;position: absolute;}
 	.is_check{display:inline-block;height: 43px;line-height: 43px;font-size: 16px;background-color: #f5f5f5;color:#666666;border: 1px solid #dddddd;padding: 0 15px;text-align: center;}
 	.local_upload label{display:inline-block;height: 43px;line-height: 43px;font-size: 16px;background-color: #316DFF;color:white;border: 1px solid #316DFF;padding: 0 15px;text-align: center;cursor: pointer;}
-	.local_upload label:hover{background-color: white;color: #316DFF}
+	.local_upload label:hover{background-color: #6087F7;color: white;}
 	.show_input_outer{display: flex;flex: 1;}
 	#show_json{margin: 50px auto;padding: 10px 30px;}
 	#show_json p{height: 30px;line-height: 30px;}

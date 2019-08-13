@@ -137,7 +137,7 @@
 										<div></div>
 										<span class="video_result_red_title" v-if="item.state=='违规'">{{item.state}}</span>
 										<span class="video_result_orange_title" v-else>{{item.state}}</span>
-										<span class="video_result_red_number" v-if="item.state=='违规'">{{item.number}}</span>
+										<span class="video_result_red_number" v-if="item.state=='违规'">{{item.number}}%</span>
 										<span class="video_result_orange_number" v-else>{{item.number}}%</span>
 									</div>
 									<img :src="item.image" alt="">
@@ -460,6 +460,7 @@
 	.inputfile{z-index: -11111;width: 0px;height:1px;opacity: 0;}
 	.local_upload{height: 45px;line-height: 45px;font-size: 16px;margin: 40px auto;text-align: center;}
 	.local_upload label{display:inline-block;color: #ffffff;font-size: 16px;height: 42px;width: 120px;line-height: 42px;border: 1px solid #e1e3e7;text-align: center;background-color: #316dff;cursor: pointer;}
+	.local_upload label:hover{background-color: #6087F7;color: white;}
 	.local_upload p{display:inline-block;color: #666666;font-size: 16px;height: 42px;width: 120px;line-height: 42px;border: 1px solid #e1e3e7;text-align: center;background-color: #dddddd;cursor: pointer;}
 	/*初始化页面end*/
 

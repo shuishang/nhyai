@@ -347,7 +347,7 @@
 	.inputfile{z-index: -11111;width: 0px;height:1px;opacity: 0;position: absolute;}
 	.is_check{display:inline-block;height: 35px;line-height: 35px;font-size: 16px;background-color: #f5f5f5;color:#666666;border: 1px solid #dddddd;padding: 0 15px;text-align: center;}
 	.local_upload label{display:inline-block;height: 33px;line-height: 33px;font-size: 16px;background-color: #316DFF;color:white;border: 2px solid #316DFF;width: 100px;text-align: center;cursor: pointer;}
-	.local_upload label:hover{background-color: white;color: #316DFF}
+	.local_upload label:hover{background-color: #6087F7;color: white;border: 2px solid #6087F7;}
 	.show_input_outer{display: flex;}
 	.choose_image{border: 2px dashed #acc3ff;padding: 40px 0 40px 40px;position: relative;margin-top: 15px;min-height: 330px;}
 	.choose_image_list{border: 2px dashed #acc3ff;padding: 40px 0 40px 40px;position: relative;margin-top: 15px;min-height: 330px;}
@@ -355,6 +355,7 @@
 	.add_before{width: 160px;height: 160px;margin: 50px auto 15px;}
 	.choose_suggest{text-align: center;font-size: 14px;color: #333;}
 	.begin_check{width: 160px;height: 45px;line-height: 45px;background-color: #316DFF;color: white;font-size: 16px;margin: 50px auto 0;text-align: center;cursor: pointer;}
+	.begin_check:hover{background-color: #6087F7;color: white;}
 	.again_check{width: 160px;height: 45px;line-height: 45px;border:1px solid #E2E5E8;background-color: #ffffff;color: #333333;font-size: 16px;margin: 40px auto 0;text-align: center;cursor: pointer;}
 	.yellow_result_outer{margin-top: 15px;}
 	.yellow_result_outer>div{width: 160px;overflow: hidden;text-align: center;margin-right: 30px;}

@@ -77,7 +77,6 @@
 									<img src="../assets/image/voice/voice.gif" alt="">
 									<span>00:{{voiceSecond}}/01:00</span>
 								</div>
-
 							</div>
 							<div class="voice_content">
 								<p class="voice_title">识别结果</p>
@@ -308,6 +307,7 @@
 	.voice_time_outer>img{height: 40px;line-height: 40px;vertical-align: middle}
 	.result_text{margin: 10px 0;padding: 0 20px;;width: 100%;height: 80%;box-sizing: border-box;line-height: 25px;font-size: 14px;}
 	.begin_record{height: 45px;width: 160px;line-height: 45px;background-color: #316dff;color: #fff;margin: 40px auto;font-size: 16px;text-align: center;cursor: pointer;}
+	.begin_record:hover{background-color: #6087F7;}
 
 	.voice_introduce_outer{margin-bottom: 15px;text-align: center;min-width: 800px;}
 	.voice_introduce_outer ul{width: 100%;line-height: 0;font-size: 0;}

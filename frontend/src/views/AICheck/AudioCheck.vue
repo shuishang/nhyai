@@ -279,6 +279,7 @@
                 return time;
             },
             submitAudio(e,file){
+                this.recordSrc = URL.createObjectURL(file)
                 console.log(file);
                 this.audioName = file.name;
                 var loading = this.$loading({fullscreen:false,target:document.querySelector(".outer_voice")});
@@ -296,7 +297,7 @@
                     processData: false,
                     success:(response)=>{
                         console.log(response);
-                        this.recordSrc = response.speech;
+
                         var audio = document.getElementById('audio').load();
                         window.setTimeout(()=>{
                             var audio = document.getElementById('audio');
