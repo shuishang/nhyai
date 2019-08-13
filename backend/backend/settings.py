@@ -167,13 +167,15 @@ DF = pd.read_csv(os.path.join(os.getcwd(),"backend","api","sensitives","sensitiv
 TEMP_PATH = 'capture_out_images/'
 SAVE_PATH = '/var/www/gallery/media/videos/capture_out_images/'
 #按秒或者帧读取视屏（True：按帧  False：按秒）
-FPS_FLAG = True
+FPS_FLAG = False
 VIDEO_URL = 'http://172.31.4.7:8000/media/videos/'
 
 #色情模型预加载
 NSFW = nsfw()
 
 #暴恐级别比例
-VIOLENCESCORE = 0.5
+VIOLENCESCORE_MIN = 0.5
+VIOLENCESCORE_MAX = 0.8
 #色情级别比例
-PORNSCORE = 0.5
+PORNSCORE_MIN = 0.5
+PORNSCORE_MAX = 0.8
