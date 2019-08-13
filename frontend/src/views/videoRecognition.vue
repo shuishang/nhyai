@@ -89,7 +89,7 @@
 							 v-loading="isLoading">
 							<div class="show_video">
 								<!--<video id="video" :src="videoUrl" controls style="height: 100%;width: 100%;background-color: #333333"></video>-->
-								<video id="myVideo" class="video-js vjs-defalut-skin" controls preload="metadata" autoplay :src="videoUrl.url">
+								<video id="myVideo" class="video-js vjs-defalut-skin" controls preload="metadata" :src="videoUrl.url">
 									<source :src="videoUrl.url" type="video/mp4">
 									<!--<source src="" type="video/mp4">-->
 									您的浏览器不支持视频

@@ -18,13 +18,15 @@
 					<p class="result_title">审查结果</p>
 					<div class="result_outer">
 						<p>暴恐识别</p>
-						<p class="red_style_name" v-if="this.forceInfo>=90">违规</p>
+						<p class="green_style_name" v-if="this.forceInfo==200">识别中...</p>
+						<p class="red_style_name" v-else-if="this.forceInfo>=90">违规</p>
 						<p class="orange_style_name" v-else-if="50<this.forceInfo">疑似违规</p>
 						<p class="green_style_name" v-else>合规</p>
 					</div>
 					<div class="result_outer">
 						<p>色情识别</p>
-						<p class="red_style_name" v-if="this.sexInfo>=90">违规</p>
+						<p class="green_style_name" v-if="this.sexInfo==200">识别中...</p>
+						<p class="red_style_name" v-else-if="this.sexInfo>=90">违规</p>
 						<p class="orange_style_name" v-else-if="50<this.sexInfo">疑似违规</p>
 						<p class="green_style_name" v-else>合规</p>
 					</div>
@@ -62,12 +64,12 @@
 					</div>
 					<div class="local_upload_video" v-if="!isLoading">
 						<!--<p>本地上传</p>-->
-						<input id="videofile" name="inputVideo" type="file"  class="inputfile" @change="onChangeFile($event)">
+						<input id="inputVideo" name="inputVideo" type="file"  class="inputfile" @change="onChangeFile($event)">
 						<label for="inputVideo">重新选择</label>
 					</div>
 					<p class="choose_again" v-else>重新选择</p>
 				</div>
-				<p class="suggest"><span style="color: red">*</span> 提示: 敏感系数<50%为合规，50%～90%为疑似违规，>90%为违规<span v-show="imageIsBig" style="color: red;margin-left: 10px;display: inline-block;">！该图片大小超过1M</span></p>
+				<p class="suggest"><span style="color: red">*</span> 提示: 敏感系数<50%为合规，50%～80%为疑似违规，>80%为违规<span v-show="imageIsBig" style="color: red;margin-left: 10px;display: inline-block;">！该图片大小超过1M</span></p>
 
 			</el-col>
 		</el-row>
@@ -75,6 +77,7 @@
 </template>
 
 <script>
+    import {secondToTime} from '../../store/common'
 	export default {
         props:['stopVideo'],
 	    data(){
@@ -113,6 +116,8 @@
 			},
             submitVideo(e,file){
                 this.isLoading = true;
+                this.sexInfo = 200;
+                this.forceInfo = 200;
                 var url = URL.createObjectURL(file);
                 console.log(url);
                 this.videoUrl={url:url} ;
@@ -148,8 +153,8 @@
                             if(parseFloat(item.violence_sensitivity_level)>this.forceInfo){
                                 this.forceInfo = parseFloat(item.violence_sensitivity_level);
                             }
-                            if(item.porn_sensitivity_level>item.violence_sensitivity_level){
-                                if(parseFloat(item.porn_sensitivity_level)>90){
+                            if(parseFloat(item.porn_sensitivity_level)>parseFloat(item.violence_sensitivity_level)){
+                                if(parseFloat(item.porn_sensitivity_level)>80){//(item.sensitivity_time-response.data.interval/2).toFixed(2),
                                     this.markerInfo.push({
                                         time:item.sensitivity_time-response.data.interval/2,
                                         text:"违规",
@@ -157,25 +162,27 @@
                                     });
                                     this.imageUrl.push({
                                         image:item.image_url,
-                                        time:(item.sensitivity_time-response.data.interval/2).toFixed(2),
+                                        time:secondToTime(parseFloat(item.sensitivity_time)),
                                         number:item.porn_sensitivity_level,
                                         state:"违规"
                                     });
-                                }else if(50<=parseFloat(item.porn_sensitivity_level)<90) {
+                                }else if(50<=parseFloat(item.porn_sensitivity_level)<80) {
                                     this.markerInfo.push({
-                                        time:item.sensitivity_time,
+                                        time:item.sensitivity_time-response.data.interval/2,
                                         text:"疑似违规",
                                         class:"orange_style"
                                     });
                                     this.imageUrl.push({
                                         image:item.image_url,
-                                        time:(item.sensitivity_time-response.data.interval/2).toFixed(2),
+                                        time:secondToTime(parseFloat(item.sensitivity_time)),
                                         number:item.porn_sensitivity_level,
                                         state:"疑似违规"
                                     });
-                                }
+                                }else {
+
+								}
                             }else {
-                                if(parseFloat(item.violence_sensitivity_level)>90){
+                                if(parseFloat(item.violence_sensitivity_level)>80){
                                     this.markerInfo.push({
                                         time:item.sensitivity_time-response.data.interval/2,
                                         text:"违规",
@@ -183,11 +190,11 @@
                                     });
                                     this.imageUrl.push({
                                         image:item.image_url,
-                                        time:(item.sensitivity_time-response.data.interval/2).toFixed(2),
+                                        time:secondToTime(parseFloat(item.sensitivity_time)),
                                         number:item.violence_sensitivity_level,
-                                        state:"疑似违规"
+                                        state:"违规"
                                     });
-                                }else if(50<=parseFloat(item.violence_sensitivity_level)<90){
+                                }else if(50<=parseFloat(item.violence_sensitivity_level)<80){
                                     this.markerInfo.push({
                                         time:item.sensitivity_time-response.data.interval/2,
                                         text:"疑似违规",
@@ -195,7 +202,7 @@
                                     });
                                     this.imageUrl.push({
                                         image:item.image_url,
-                                        time:(item.sensitivity_time-response.data.interval/2).toFixed(2),
+                                        time:secondToTime(parseFloat(item.sensitivity_time)),
                                         number:item.violence_sensitivity_level,
                                         state:"疑似违规"
                                     });
