@@ -14,7 +14,6 @@ import cv2
 from PIL import Image
 from io import BytesIO
 import json
-from .violence import check_violence
 from PIL import Image
 from tqdm import tqdm
 import torch
@@ -69,7 +68,7 @@ def check_video(file_path):
             # 把每一帧图像保存成jpg格式（这一行可以根据需要选择保留）
             imageName = str(COUNT) + '.jpg'
             cv2.imwrite(temp_path+imageName, frame)
-            jsonResultInfo  = check_violence(temp_path + '/' +imageName)
+            jsonResultInfo  = settings.VIOLENCE.check_violence(temp_path + '/' +imageName)
             print(jsonResultInfo)
             violencePercent = jsonResultInfo.get('violence')
             violenceScore = float(violencePercent)
@@ -142,7 +141,7 @@ def check_video(file_path):
             if (c % timeF == 0):  # 每隔timeF帧进行存储操作
                 imageName = str(COUNT) + '.jpg'
                 cv2.imwrite(temp_path + '/' + imageName, frame)#存储图像 
-                jsonResultInfo  = check_violence(temp_path + '/' +imageName)
+                jsonResultInfo  = settings.VIOLENCE.check_violence(temp_path + '/' +imageName)
                 print(jsonResultInfo)
                 violencePercent = jsonResultInfo.get('violence')
                 violenceScore = float(violencePercent)

@@ -27,6 +27,7 @@ class sensitiveClass:
         sensitive_hit_flag = 0 #0-五敏感词  1-有敏感词
         sensitive_list = [] #敏感词列表
         sensitive_size = 0    #敏感词数量
+        list_index = 0
         web_text = "<div>"
         if input_word != None:
             keywords = input_word.split(' ')
@@ -35,6 +36,8 @@ class sensitiveClass:
             print("33333333333=",keyword)
             for index, row in df.iterrows():
                 sensitiveCms = row['内容'].split('、')
+                if keyword.strip()=='':
+                    break;
                 #if (keyword == ' ')
                 # if keyword.strip()=='':
                 #     break;
@@ -48,6 +51,7 @@ class sensitiveClass:
                     sensitive_hit_flag = 1
                     sensitive_size = sensitive_size + 1
                     sensitive_list.append(result)
+
                     
             if (temp_flag == 1):
                 web_text = web_text + "<a style='color:red'>" +keyword +"&nbsp;</a>"
@@ -63,19 +67,31 @@ class sensitiveClass:
         resultMap["sensitive_size"] = sensitive_size
         sensitive_list_result = []
         temp_map = {}
-        tmp_map = {}
+        #tmp_map = {}
+        aList = []
         for each in sensitive_list:
             temp_map = each
-            temp_flag = 0
-            for i in sensitive_list:
-                tmp_map = i              
-                if (temp_map["firstType"] == tmp_map["firstType"] and temp_map["secondType"] == tmp_map["secondType"]):
-                    temp_flag = 1
-                    break
-            if (temp_flag == 1):
-                sensitive_list_result.append(temp_map)
-                sensitive_list.remove(temp_map)
+            aList.append(temp_map["firstType"])
+            # temp_flag = 0
+            # j = j + 1
+            # for i in sensitive_list:
+            #     tmp_map = i              
+            #     if (temp_map["firstType"] == tmp_map["firstType"] and temp_map["secondType"] == tmp_map["secondType"]):
+            #         temp_flag = 1
+            #         break
+            # if (temp_flag == 1):
+            #     sensitive_list.remove(temp_map)
+            #     sensitive_result_list.remove(tmp_map)
+
+            # if (temp_flag == 1):
+            #     sensitive_list_result.remove(tmp_map)
+            #     list_len1 = list_len1 - 1
+            #     list_len = list_len - 1
+        aList = list(set(aList)) 
         resultMap["sensitive_list"] = sensitive_list
+        resultMap["final_list"] = aList
+        print("aList=",aList)
+        print("sensitive_list=",sensitive_list)
         resultMap["web_text"] = web_text
         return resultMap
 
@@ -119,23 +135,36 @@ class sensitiveClass:
         resultMap["sensitive_size"] = sensitive_size
         temp_map = {}
         tmp_map = {}
+        sensitive_result_list = sensitive_list
+        aList = []
         for each in sensitive_list:
             temp_map = each
-            temp_flag = 0
-            for i in sensitive_list:
-                tmp_map = i              
-                if (temp_map["firstType"] == tmp_map["firstType"] and temp_map["secondType"] == tmp_map["secondType"]):
-                    temp_flag = 1
-                    break
-            if (temp_flag == 1):
-                sensitive_list.remove(temp_map)
+            aList.append(temp_map["firstType"])
+            # temp_flag = 0
+            # j = j + 1
+            # for i in sensitive_list:
+            #     tmp_map = i              
+            #     if (temp_map["firstType"] == tmp_map["firstType"] and temp_map["secondType"] == tmp_map["secondType"]):
+            #         temp_flag = 1
+            #         break
+            # if (temp_flag == 1):
+            #     sensitive_list.remove(temp_map)
+            #     sensitive_result_list.remove(tmp_map)
+
+            # if (temp_flag == 1):
+            #     sensitive_list_result.remove(tmp_map)
+            #     list_len1 = list_len1 - 1
+            #     list_len = list_len - 1
+        aList = list(set(aList)) 
         resultMap["sensitive_list"] = sensitive_list
+        resultMap["final_list"] = aList
+        print("aList=",aList)
+        #resultMap["sensitive_list"] = sensitive_list
         resultMap["web_text"] = web_text
         return resultMap
 
 if __name__ == '__main__':
     df = pd.read_csv(os.path.join(os.getcwd(),"backend","api","sensitives","sensitiveWords.csv"),encoding='gbk')
-    #sensitiveClass().check_sensitiveWords_test(df, "sssss 十八摸 十八摸 强奸")
+    sensitiveClass().check_sensitiveWords_test(df, "十八摸 十八摸 十八摸 十八摸 十八摸 十八摸")
     #sensitiveClass().check_sensitiveWords_test(df, "  heheh ")
-    sensitiveClass().check_sensitiveWords_test(df, "  sssssssssss")
     #sensitiveClass().check_sensitiveWords_test(df, "你 不是 跟 我 讲的 笑话 吗 欲死欲仙 十八摸")

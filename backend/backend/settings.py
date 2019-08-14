@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 import os
 import pandas as pd
 from  api.yahoo.open_nsfw.classify_nsfw import nsfw
+from api.violence import violence
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -167,11 +168,12 @@ DF = pd.read_csv(os.path.join(os.getcwd(),"backend","api","sensitives","sensitiv
 TEMP_PATH = 'capture_out_images/'
 SAVE_PATH = '/var/www/gallery/media/videos/capture_out_images/'
 #按秒或者帧读取视屏（True：按帧  False：按秒）
-FPS_FLAG = False
+FPS_FLAG = True
 VIDEO_URL = 'http://172.31.4.7:8000/media/videos/'
 
 #色情模型预加载
 NSFW = nsfw()
+VIOLENCE = violence()
 
 #暴恐级别比例
 VIOLENCESCORE_MIN = 0.5

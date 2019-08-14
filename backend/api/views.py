@@ -12,7 +12,6 @@ from .models import FileUpload,WordRecognition,FileImageTerrorismUpload, FileVis
 from PIL import Image
 from io import BytesIO
 import json
-from .violence import check_violence
 from .video import check_video
 from .ocr.chineseocr import OCR
 from violentsurveillance.image_terrorism import image_terrorism
@@ -77,7 +76,7 @@ class FileUploadViewSet(viewsets.ModelViewSet):
 
         file_path = iserializer.datafile.path
         print(file_path)
-        check_result = check_violence(file_path)
+        check_result = settings.VIOLENCE.check_violence(file_path)
         # print (check_result)
 
         result = {
@@ -274,7 +273,7 @@ class FileImageTerrorismUploadViewSet(viewsets.ModelViewSet):
         msg = "成功"
         file_path = iserializer.image.path
         print(file_path)
-        check_result = check_violence(file_path)
+        check_result = settings.VIOLENCE.check_violence(file_path)
         # print (check_result)
         violence = check_result['violence']
         resultMap = {}
@@ -392,7 +391,7 @@ class ImageFileUploadViewSet(viewsets.ModelViewSet):
         resultMap['porn_sensitivity_level'] = porn_sensitivity_level
         resultMap['porn_percent'] = get_two_float(float(scores[1]) * 100,2)
 
-        check_result = check_violence(file_path)        
+        check_result = settings.VIOLENCE.check_violence(file_path)        
         violence = check_result['violence']
         violence_sensitivity_level = "0"
         if (float(violence) < 0.5):
