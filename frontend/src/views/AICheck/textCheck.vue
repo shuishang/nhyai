@@ -23,9 +23,15 @@
 						<p>{{item.firstType}}</p>
 						<p class="red_style_name">违规</p>
 					</div>
-					<div class="result_outer" v-show="resultType.length==0">
-						<p class="green_style_name">合规</p>
+					<div class="result_outer" v-if="isUploadText">
+						<p class="green_style_name">识别中...</p>
 					</div>
+					<div v-else>
+						<div class="result_outer" v-show="resultType.length==0">
+							<p class="green_style_name">合规</p>
+						</div>
+					</div>
+
 				</div>
 			</el-col>
 		</el-row>
@@ -38,6 +44,7 @@
 	    data(){
             return{
 				resultType:[],
+                isUploadText:false
 			}
         },
 		mounted(){
@@ -49,6 +56,7 @@
 
             submitText(e,file){
                 console.log(file);
+                this.isUploadText = true;
                 this.audioName = file.name;
                 var loading = this.$loading({fullscreen:false,target:document.querySelector(".outer_text")});
                 console.log("文本提交中。。。")
@@ -68,15 +76,16 @@
                             console.log(document.getElementsByClassName('show_text_word')[0]);
                             document.getElementsByClassName('show_text_word')[0].innerHTML= response.data.web_text;
                             loading.close();
+                            this.isUploadText = false;
                         },1000);
                         if(response.data.sensitive_list.length!=0){
                             this.resultType = response.data.sensitive_list;
                             this.isNone = false;
-
                             this.$parent.changeUploadState(false);
                         }else {
                             this.resultType=[];
                             this.isNone = true;
+                            this.$parent.changeUploadState(false);
                             loading.close();
                         }
                     },

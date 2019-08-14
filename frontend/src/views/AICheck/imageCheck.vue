@@ -6,14 +6,17 @@
 				<div class="show_add_image_outer">
 					<div class="outer_add">
 						<img class="show_add_image" :src="dialogImageUrl">
-						<div class="show_result_outer">
-							<div class="show_result" v-if="isForce">
-								<i class="show_word danger_result_back"></i>
+						<div class="show_result_outer" >
+							<div v-show="forceLevel!=200">
+								<div class="show_result" v-if="isForce">
+									<i class="show_word danger_result_back"></i>
+								</div>
+								<div class="show_result" v-else>
+									<!--<i class="show_word normal_result_back"></i>-->
+									<i class="show_word normal_result_back"></i>
+								</div>
 							</div>
-							<div class="show_result" v-else>
-								<!--<i class="show_word normal_result_back"></i>-->
-								<i class="show_word normal_result_back"></i>
-							</div>
+
 						</div>
 					</div>
 					<p class="suggest"><span style="color: red">*</span> 提示: 敏感系数<50%为合规，50%～90%为疑似违规，>90%为违规<span v-show="imageIsBig" style="color: red;margin-left: 10px;display: inline-block;">！该图片大小超过1M</span></p>
@@ -24,19 +27,23 @@
 					<p class="result_title">审查结果</p>
 					<div class="result_outer">
 						<p>暴恐识别</p>
-						<p class="red_style_name" v-if="forceLevel>90">违规</p>
+						<p class="green_style_name" v-if="forceLevel==200">识别中...</p>
+						<p class="red_style_name" v-else-if="forceLevel>90">违规</p>
 						<p class="orange_style_name" v-else-if="forceLevel>50">疑似违规</p>
 						<p class="green_style_name" v-else>合规</p>
-						<p class="red_style_number" v-if="forceLevel>90">{{forceLevel}}%</p>
+						<p class="green_style_number" v-if="forceLevel==200"></p>
+						<p class="red_style_number" v-else-if="forceLevel>90">{{forceLevel}}%</p>
 						<p class="orange_style_number" v-else-if="forceLevel>50">{{forceLevel}}%</p>
 						<p class="green_style_number" v-else>{{forceLevel}}%</p>
 					</div>
 					<div class="result_outer">
 						<p>色情识别</p>
-						<p class="red_style_name" v-if="sexLevel>90">违规</p>
+						<p class="green_style_name" v-if="sexLevel==200">识别中...</p>
+						<p class="red_style_name" v-else-if="sexLevel>90">违规</p>
 						<p class="orange_style_name" v-else-if="sexLevel>50">疑似违规</p>
 						<p class="green_style_name" v-else>合规</p>
-						<p class="red_style_number" v-if="sexLevel>90">{{sexLevel}}%</p>
+						<p class="green_style_number" v-if="sexLevel==200"></p>
+						<p class="red_style_number" v-else-if="sexLevel>90">{{sexLevel}}%</p>
 						<p class="orange_style_number" v-else-if="sexLevel>50">{{sexLevel}}%</p>
 						<p class="green_style_number" v-else>{{sexLevel}}%</p>
 					</div>
@@ -79,6 +86,8 @@
 		methods:{
 	      submitImage(e,file){
 	          console.log(file);
+	          this.sexLevel=200;
+	          this.forceLevel=200;
               var loading = this.$loading({fullscreen:false,target:document.querySelector(".show_result_outer")});
 	          console.log("图片提交中。。。")
               var formData = new FormData();

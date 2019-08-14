@@ -38,7 +38,7 @@
 							</div>
 						</div>
 					</div>
-					<p class="suggest"><span class="red_color">*</span> 提示: 敏感系数<50%为合规，50%～90%为疑似违规，>90%为违规<span v-show="imageIsBig" style="color: red;margin-left: 10px;display: inline-block;">！该图片大小超过1M</span></p>
+					<p class="suggest"><span class="red_color">*</span> 提示: 敏感系数<50%为合规，50%～80%为疑似违规，>80%为违规<span v-show="imageIsBig" style="color: red;margin-left: 10px;display: inline-block;">！该图片大小超过1M</span></p>
 				</div>
 			</el-col>
 			<el-col :md="6" :lg="7" :xl="5">
@@ -48,9 +48,15 @@
 						<p>{{item.firstType}}</p>
 						<p class="red_style_name">违规</p>
 					</div>
-					<div class="result_outer" v-show="isNone">
-						<p class="green_style_name">合规</p>
+					<div class="result_outer" v-if="isUploading">
+						<p class="green_style_name">识别中...</p>
 					</div>
+					<div v-else>
+						<div class="result_outer" v-show="isNone">
+							<p class="green_style_name">合规</p>
+						</div>
+					</div>
+
 				</div>
 			</el-col>
 		</el-row>
@@ -66,7 +72,8 @@
 				recordSrc:"",
 				resultType:[],
                 audioName:'',
-				isNone:true
+				isNone:true,
+                isUploading:false
 
 			}
         },
@@ -279,6 +286,7 @@
                 return time;
             },
             submitAudio(e,file){
+                this.isUploading = true;
                 this.recordSrc = URL.createObjectURL(file)
                 console.log(file);
                 this.audioName = file.name;
@@ -297,7 +305,7 @@
                     processData: false,
                     success:(response)=>{
                         console.log(response);
-
+                        this.isUploading = false;
                         var audio = document.getElementById('audio').load();
                         window.setTimeout(()=>{
                             var audio = document.getElementById('audio');

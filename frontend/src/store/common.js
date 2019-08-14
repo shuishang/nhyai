@@ -70,6 +70,12 @@ export function formatDate(date, fmt) {//2018-03-21 18:08:48
 function padLeftZero(str) {
 	return('00' + str).substr(str.length);
 };
+export function secondToTime(second) {
+	const hour = second>3600?Math.floor(second/3600)+":":"00:";
+	const minute = second>60?Math.floor(second/60)>10?Math.floor(second/60):"0"+Math.floor(second/60)+":":"00:";
+	const sec = second%60<10?"0"+second%60:second%60;
+	return hour  + minute + sec;
+}
 
 //    封装禁止页面滚动方法（该方法兼容PC端和移动端）
 export function stopBodyScroll (isFixed,top) {

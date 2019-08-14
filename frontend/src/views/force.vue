@@ -331,7 +331,7 @@
 	.functional_experience .title{text-align: center;color: #000;margin: 40px 0 15px;font-size: 36px;}
 	.functional_experience .title_describe{text-align: center;color: #000;font-size: 14px;width: 70%;margin: 0 auto 30px;}
 
-	.top_nav_image_outer{margin-bottom: 15px;text-align: center;;}
+	.top_nav_image_outer{margin-bottom: 15px;text-align: center;}
 	.top_nav_image_outer a{flex: 1;float: left;}
 	.top_nav_image_outer a img{width: 100%;opacity: 0.6;cursor:pointer;}
 	.top_nav_image_outer a .active{opacity: 1}
