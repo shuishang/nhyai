@@ -41,8 +41,8 @@
 					<div class="show_nav">
 						<ul class="clearfix">
 							<li ><router-link to="/wordRecognition/idCard" >身份证识别</router-link></li>
-							<li ><router-link to="/wordRecognition/drivingLicence" >驾驶证识别</router-link></li>
 							<li ><router-link to="/wordRecognition/runningLicence" >行驶证识别</router-link></li>
+							<li ><router-link to="/wordRecognition/drivingLicence" >驾驶证识别</router-link></li>
 							<li ><router-link to="/wordRecognition/commonUse" >通用识别</router-link></li>
 							<li ><router-link to="/wordRecognition/businessLicence" >营业执照识别</router-link></li>
 							<li ><router-link to="/wordRecognition/bankCard" >银行卡识别</router-link></li>
@@ -58,7 +58,7 @@
 		<div class="recommended_scenario">
 			<p class="title">应用场景</p>
 			<el-row>
-				<el-col :xs={span:24} :sm={span:22,offset:1} :md={span:20,offset:2} :lg={span:18,offset:3} :xl={span:16,offset:4}>
+				<el-col :xs={span:24} :sm={span:22,offset:1} :md={span:20,offset:2} :lg={span:16,offset:4} :xl={span:14,offset:5}>
 					<ul>
 						<li>
 							<p>远程身份认证</p>
@@ -95,7 +95,7 @@
 							<div class="show_advantage_describe">
 								<span>及时高效</span>
 								<div class="describe_outer">
-									<p class="good_describe">能够对用户上传的图片自动审核，主动发现潜在的暴恐图片，打击精度高，覆盖广，响应快。</p>
+									<p class="good_describe">不仅支持证照类图片，还支持多种复杂场景的文字识别，如街景门店、印刷图文等</p>
 								</div>
 							</div>
 						</el-col>
@@ -104,7 +104,7 @@
 							<div class="show_advantage_describe">
 								<span>灵活性定制</span>
 								<div class="describe_outer">
-									<p class="good_describe">根据用户审核平台需求，深度定制产品策略与解决方案。</p>
+									<p class="good_describe">适应各种实际应用中的异常情况，如光照不均、倾斜、模糊等，具备非常高的复杂环境可用性</p>
 								</div>
 							</div>
 						</el-col>
@@ -145,15 +145,15 @@
                 imgUrl3:require('../../static/imgs/usage_image03.png'),
                 recommendedList:[{'imgUrl':"../../static/imgs/usage_image1.png"},{'imgUrl':'../../static/imgs/usage_image2.png'},{'imgUrl':'../../static/imgs/usage_image03.png'}],
             	introduceList:[
-            	    {'src':'../../static/imgs/word1.png','title':'身份证识别','des':'对二代居民身份证正反两面全部字段的结构化识别， 能够满足身份证使用场景中对任意字段的识别需求'},
-            	    {'src':'../../static/imgs/word2.png','title':'行驶证识别','des':'对机动车行驶证主页及副页所有21个字段进行结构化 识别'},
-            	    {'src':'../../static/imgs/word3.png','title':'驾驶证识别','des':'支持对机动车驾驶证正本所有9个字段进行结构化识别， 包括证号、姓名、性别、国籍、住址、出生日期等 '},
+            	    {'src':'../../static/imgs/word1.png','title':'身份证识别','des':'对二代居民身份证正反两面全部字段的结构化识别，能够满足身份证使用场景中对任意字段的识别需求'},
+            	    {'src':'../../static/imgs/word2.png','title':'行驶证识别','des':'对机动车行驶证主页及副页所有21个字段进行结构化识别'},
+            	    {'src':'../../static/imgs/word3.png','title':'驾驶证识别','des':'支持对机动车驾驶证正本所有9个字段进行结构化识别，包括证号、姓名、性别、国籍、住址、出生日期等 '},
             	    {'src':'../../static/imgs/word4.png','title':'通用识别','des':'能够快速准确识别各种网络图片中的文字，在复杂字体 和复杂背景的情况下仍能保持非常高的识别准确率'},
-            	    {'src':'../../static/imgs/word5.png','title':'营业执照识别','des':'对营业执照的注册号、社会信用代码、单位名称、 法人、住址、有效期进行结构化识别'},
-            	    {'src':'../../static/imgs/word6.png','title':'银行卡识别','des':'对银行卡的卡号、有效期、发卡行、卡片类型进行 结构化识别'},
-            	    {'src':'../../static/imgs/word7.png','title':'手写体识别','des':'支持对图片中的手写中文、手写数字进行检测和识别， 针对不规则的手写字体进行专项优化，识别准确率高'},
-            	    {'src':'../../static/imgs/word8.png','title':'车牌识别','des':'支持对中国大陆机动车车牌的识别，包括地域编号和 车牌号'},
-            	    {'src':'../../static/imgs/word9.png','title':'名片识别','des':'对各类名片的姓名、公司、职位、邮编、邮箱、电话、 网址、地址、手机号进行结构化识别 '},
+            	    {'src':'../../static/imgs/word5.png','title':'营业执照识别','des':'对营业执照的注册号、社会信用代码、单位名称、法人、住址、有效期进行结构化识别'},
+            	    {'src':'../../static/imgs/word6.png','title':'银行卡识别','des':'对银行卡的卡号、有效期、发卡行、卡片类型进行结构化识别'},
+            	    {'src':'../../static/imgs/word7.png','title':'手写体识别','des':'支持对图片中的手写中文、手写数字进行检测和识别，针对不规则的手写字体进行专项优化，识别准确率高'},
+            	    {'src':'../../static/imgs/word8.png','title':'车牌识别','des':'支持对中国大陆机动车车牌的识别，包括地域编号和车牌号'},
+            	    {'src':'../../static/imgs/word9.png','title':'名片识别','des':'对各类名片的姓名、公司、职位、邮编、邮箱、电话、网址、地址、手机号进行结构化识别 '},
 				]
 			}
         },
@@ -263,7 +263,7 @@
 
 	.word_introduce_outer{margin-bottom: 15px;text-align: center;min-width: 800px;}
 	.word_introduce_outer ul{width: 100%;line-height: 0;font-size: 0;}
-	.word_introduce_outer ul li{width: 32%;margin-right: 2%;margin-bottom: 20px;}
+	.word_introduce_outer ul li{width: 31.7%;margin-right: 2.45%;margin-bottom: 2.45%;}
 	.word_introduce_outer ul li:nth-of-type(3n){margin-right: 0;}
 	.word_introduce_outer .describe_image_outer{height: 220px;overflow: hidden;}
 	.word_introduce_outer li img{width: 100%;min-height: 220px;}
@@ -288,9 +288,9 @@
 	.recommended_scenario{padding: 50px 0 200px;overflow: hidden;background-color: #fff;}
 	.recommended_scenario .title{text-align: center;color: #000000;margin: 50px 0;font-size: 36px;}
 	.recommended_scenario ul{display: flex;}
-	.recommended_scenario ul li{flex: 1;height: 300px;margin-right: 20px;padding: 0 20px;color: #ffffff;text-align: justify;background-size: 100% 100%;}
+	.recommended_scenario ul li{flex: 1;height: 300px;margin-right: 30px;padding: 0 20px;color: #ffffff;text-align: justify;background-size: 100% 100%;}
 	.recommended_scenario ul li p{margin-top: 30px;height: 60px;line-height: 60px;font-size: 18px;text-align: center;}
-	.recommended_scenario ul li span{display: inline-block;line-height: 40px;height: 400px;font-size: 14px;}
+	.recommended_scenario ul li span{display: inline-block;line-height: 40px;font-size: 14px;}
 	.recommended_scenario ul li:nth-of-type(1){background-image: url("../assets/image/ocr/word_scene_image1.png");}
 	.recommended_scenario ul li:nth-of-type(2){background-image: url("../assets/image/ocr/word_scene_image2.png");}
 	.recommended_scenario ul li:nth-of-type(3){background-image: url("../assets/image/ocr/word_scene_image3.png");margin-right: 0;}

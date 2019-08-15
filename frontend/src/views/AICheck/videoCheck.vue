@@ -48,7 +48,7 @@
 		<el-row style="min-width: 800px;">
 			<el-col :md={span:17,offset:2} :lg={span:17,offset:2} :xl={span:14,offset:4}>
 				<div class="video_image_outer">
-					<p>证据信息</p>
+					<p v-show="imageUrl.length">证据信息</p>
 					<div class="video_image_con clearfix">
 						<div class="video_image_item fl" v-for="(item,index) in imageUrl">
 							<div class="show_result_title">
@@ -224,6 +224,7 @@
 					error:err=>{
                         loading.close();
                         console.log(err);
+                        this.isLoading = false;
                         this.$parent.changeUploadState(false);
 					}
                 });
@@ -250,7 +251,7 @@
 						  只需返回一个字符串，参数标记是传递给插件的标记对象
 						 */
                         text: function(marker) {
-                            return "This is a break: " + marker.text;
+                            return marker.text;
                         }
                     },
                     breakOverlay:{  //每个标记的中断覆盖选项
@@ -260,7 +261,7 @@
                             color:"red"
                         },
                         text: function(marker) {  //回调函数动态构建叠加文本
-                            return "This is an break overlay: " + marker.text;
+                            return  marker.text;
                         }
                     },
                     onMarkerReached:function(marker, index){  //只要播放到标记的时间间隔，就会出发此回调函数
@@ -361,7 +362,7 @@
 	.video_result_red_title{background-color: #ff524a;color: white;}
 	.video_result_orange_number{color: #ffac09;border: 1px solid #ffac09;}
 	.video_result_orange_title{background-color: #ffac09;color: white;}
-	.choose_again{color: #333333;font-size: 16px;height: 42px;width: 120px;line-height: 42px;margin: 40px auto;border: 1px solid #e1e3e7;text-align: center;background-color: #fafcfe;cursor: pointer;}
+	.choose_again{color: #333333;font-size: 16px;height: 42px;width: 120px;line-height: 42px;margin: 40px auto;border: 1px solid #e1e3e7;text-align: center;cursor: pointer;}
 	.inputfile{z-index: -11111;width: 0px;height:1px;opacity: 0;}
 	.local_upload_video{height: 45px;line-height: 45px;font-size: 16px;margin: 40px auto;text-align: center;}
 	.local_upload_video label{display:inline-block;color: #ffffff;font-size: 16px;height: 42px;width: 120px;line-height: 42px;border: 1px solid #e1e3e7;text-align: center;background-color: #316dff;cursor: pointer;}

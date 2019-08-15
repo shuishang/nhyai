@@ -15,7 +15,7 @@
 							<label for="datafile">本地上传</label>
 						</div>
 						<div class="show_input_outer">
-							<input type="text" class="init_url_style">
+							<input type="text" class="init_url_style" placeholder="请输入网络图片URL">
 							<p class="check_style">检测</p>
 						</div>
 					</div>

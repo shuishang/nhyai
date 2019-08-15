@@ -68,7 +68,7 @@
 						<div class="video_original">
 							<div>
 								<img src="../assets/image/video/video_play_logo.png" alt="">
-								<p>支持视频格式：flv、mkv 、mp4 、rmvb 、avi 、wmv、3gp、ts、mov，大小限制<100M，视频时长<3</p>
+								<p>支持视频格式：flv、mkv 、mp4 、rmvb 、avi 、wmv、3gp、ts、mov，大小限制<100M，视频时长<3分钟</p>
 								<div class="local_upload">
 									<!--<p>本地上传</p>-->
 									<input id="datafile" name="datafile" type="file" accept="video/*" class="inputfile" @change="changeImage($event)">
@@ -102,13 +102,15 @@
 							<p class="result_title">审查结果</p>
 							<div class="result_outer">
 								<p>暴恐识别</p>
-								<p class="red_style_name" v-if="this.forceInfo>=90">违规</p>
+								<p class="green_style_name" v-if="forceInfo==200">识别中...</p>
+								<p class="red_style_name" v-else-if="this.forceInfo>=90">违规</p>
 								<p class="orange_style_name" v-else-if="50<this.forceInfo">疑似违规</p>
 								<p class="green_style_name" v-else>合规</p>
 							</div>
 							<div class="result_outer">
 								<p>色情识别</p>
-								<p class="red_style_name" v-if="this.sexInfo>=90">违规</p>
+								<p class="green_style_name" v-if="sexInfo==200">识别中...</p>
+								<p class="red_style_name" v-else-if="this.sexInfo>=90">违规</p>
 								<p class="orange_style_name" v-else-if="50<this.sexInfo">疑似违规</p>
 								<p class="green_style_name" v-else>合规</p>
 							</div>
@@ -130,7 +132,7 @@
 				<el-row style="min-width: 800px;">
 					<el-col :md={span:18,offset:3} :lg={span:18,offset:3} :xl={span:14,offset:5}>
 						<div class="video_image_outer">
-							<p>证据信息</p>
+							<p v-show="imageUrl.length">证据信息</p>
 							<div class="video_image_con clearfix">
 								<div class="video_image_item fl" v-for="(item,index) in imageUrl">
 									<div class="show_result_title">
@@ -164,7 +166,7 @@
 		<div class="recommended_scenario">
 			<p class="title">应用场景</p>
 			<el-row>
-				<el-col :xs={span:24} :sm={span:22,offset:1} :md={span:20,offset:2} :lg={span:18,offset:3} :xl={span:16,offset:4}>
+				<el-col :xs={span:24} :sm={span:22,offset:1} :md={span:20,offset:2} :lg={span:18,offset:3} :xl={span:14,offset:5}>
 					<ul>
 						<li>
 							<p>UGC短视频审核</p>
@@ -192,7 +194,7 @@
 							<div class="show_advantage_describe">
 								<span>准确率高</span>
 								<div class="describe_outer">
-									<p class="good_describe">目前准确率可达90%以上，基于智能的深度学习算法，准确度还将不断提高。</p>
+									<p class="good_describe">视频内容进行分析，提取特征，对色情、暴恐、政敏等识别准确率高</p>
 								</div>
 							</div>
 						</el-col>
@@ -201,7 +203,7 @@
 							<div class="show_advantage_describe">
 								<span>及时高效</span>
 								<div class="describe_outer">
-									<p class="good_describe">能够对用户上传的图片自动审核，主动发现潜在的暴恐图片，打击精度高，覆盖广，响应快。</p>
+									<p class="good_describe">24小时不间断服务，日审核图片过千万，可有效降低90%以上的人工审核成本。</p>
 								</div>
 							</div>
 						</el-col>
@@ -210,7 +212,7 @@
 							<div class="show_advantage_describe">
 								<span>灵活性定制</span>
 								<div class="describe_outer">
-									<p class="good_describe">根据用户审核平台需求，深度定制产品策略与解决方案。</p>
+									<p class="good_describe">根据用户审核平台需求，深度定制产品策略与解决方案</p>
 								</div>
 							</div>
 						</el-col>
@@ -226,6 +228,7 @@
 <script>
 	import Navigation from "../components/navigation.vue"
     import FooterIndex from "../components/footerIndex.vue"
+    import {secondToTime} from '../store/common'
     export default {
         data() {
 			return{
@@ -304,6 +307,9 @@
 
             uploadImage(e,file,url){
                 this.imageRight = false;
+                this.sexInfo = 200;
+                this.forceInfo = 200;
+                this.imageUrl= [];
 //                this.loading = this.$loading(this.options);
                 this.isLoading= true;
                 var formData = new FormData();
@@ -334,8 +340,8 @@
                             if(parseFloat(item.violence_sensitivity_level)>this.forceInfo){
                                 this.forceInfo = parseFloat(item.violence_sensitivity_level);
                             }
-                            if(item.porn_sensitivity_level>item.violence_sensitivity_level){
-                                if(parseFloat(item.porn_sensitivity_level)>90){
+                            if(parseFloat(item.porn_sensitivity_level)>parseFloat(item.violence_sensitivity_level)){
+                                if(parseFloat(item.porn_sensitivity_level)>80){
                                     this.markerInfo.push({
                                         time:item.sensitivity_time-response.data.interval/2,
                                         text:"违规",
@@ -343,11 +349,11 @@
                                     });
                                     this.imageUrl.push({
                                         image:item.image_url,
-                                        time:(item.sensitivity_time-response.data.interval/2).toFixed(2),
+                                        time:secondToTime(item.sensitivity_time),
                                         number:item.porn_sensitivity_level,
                                         state:"违规"
                                     });
-								}else if(50<=parseFloat(item.porn_sensitivity_level)<90) {
+								}else if(50<=parseFloat(item.porn_sensitivity_level)<80) {
                                     this.markerInfo.push({
                                         time:item.sensitivity_time,
                                         text:"疑似违规",
@@ -355,13 +361,13 @@
                                     });
                                     this.imageUrl.push({
                                         image:item.image_url,
-                                        time:(item.sensitivity_time-response.data.interval/2).toFixed(2),
+                                        time:secondToTime(item.sensitivity_time),
                                         number:item.porn_sensitivity_level,
                                         state:"疑似违规"
                                     });
 								}
 							}else {
-                                if(parseFloat(item.violence_sensitivity_level)>90){
+                                if(parseFloat(item.violence_sensitivity_level)>80){
                                     this.markerInfo.push({
                                         time:item.sensitivity_time-response.data.interval/2,
                                         text:"违规",
@@ -369,11 +375,11 @@
                                     });
                                     this.imageUrl.push({
                                         image:item.image_url,
-                                        time:(item.sensitivity_time-response.data.interval/2).toFixed(2),
+                                        time:secondToTime(item.sensitivity_time),
                                         number:item.violence_sensitivity_level,
-                                        state:"疑似违规"
+                                        state:"违规"
                                     });
-                                }else if(50<=parseFloat(item.violence_sensitivity_level)<90){
+                                }else if(50<=parseFloat(item.violence_sensitivity_level)<80){
                                     this.markerInfo.push({
                                         time:item.sensitivity_time-response.data.interval/2,
                                         text:"疑似违规",
@@ -381,7 +387,7 @@
                                     });
                                     this.imageUrl.push({
                                         image:item.image_url,
-                                        time:(item.sensitivity_time-response.data.interval/2).toFixed(2),
+                                        time:secondToTime(item.sensitivity_time),
                                         number:item.violence_sensitivity_level,
                                         state:"疑似违规"
                                     });

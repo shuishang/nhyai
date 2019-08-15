@@ -28,7 +28,7 @@
 			<el-row style="min-width: 800px;margin-top: 40px;">
 				<el-col :xs={span:14} :sm={span:16} :md={span:14,offset:2} :lg={span:13,offset:2} :xl={span:11,offset:4}>
 					<div class="show_input_outer">
-						<input type="text" class="init_url_style">
+						<input type="text" class="init_url_style" placeholder="请输入网络图片URL">
 						<p class="check_style">检测</p>
 					</div>
 				</el-col>
@@ -353,7 +353,8 @@
 	.init_url_style{flex: 1;height: 35px;line-height: 35px;border: 1px solid #E2ECFC;font-size: 15px;padding-left: 10px;}
 	.init_url_style:hover{border: 1px solid #C0C4CC;border-right: none;}
 	.init_url_style:focus{border: 1px solid #409EFF;border-right: none;}
-	.check_style{display:inline-block;height: 33px;line-height: 33px;font-size: 16px;color: #316DFF;border: 2px solid #316DFF;width: 100px;text-align: center;cursor:pointer;}
+	.check_style{display:inline-block;height: 33px;line-height: 33px;font-size: 16px;color: #316DFF;border: 2px solid #316DFF;background-color: #FAFCFE;
+		width: 100px;text-align: center;cursor:pointer;}
 	.check_style:hover{background-color: #316DFF;color: white;}
 	.local_upload{height: 33px;line-height: 33px;font-size: 16px;}
 	.local_upload:before{content: "或";margin: 0 25px;}

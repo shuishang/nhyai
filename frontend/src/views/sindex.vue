@@ -15,7 +15,7 @@
 			<el-row style="min-width: 800px;">
 				<el-col :xs={span:14} :sm={span:16} :md={span:14,offset:2} :lg={span:13,offset:2} :xl={span:11,offset:4}>
 					<div class="show_input_outer">
-						<input type="text" class="init_url_style" id="contentUrl">
+						<input type="text" class="init_url_style" id="contentUrl" placeholder="请输入网络图片URL">
 						<p class="check_style" @click="showInputValue">检测</p>
 					</div>
 				</el-col>
@@ -298,7 +298,7 @@
 	.functional_experience .title{text-align: center;color: #333333;margin: 40px 0;font-size: 36px;}
 
 	.top_suggest{color: #999999;font-size: 14px;line-height: 40px;height: 30px;}
-	.init_url_style{flex: 1;height: 35px;line-height: 35px;border: 1px solid #E2ECFC;font-size: 15px;padding-left: 10px;}
+	.init_url_style{flex: 1;height: 35px;line-height: 35px;border: 1px solid #E2ECFC;font-size: 15px;padding-left: 10px;background-color: #FAFCFE;}
 	.init_url_style:hover{border: 1px solid #C0C4CC;border-right: none;}
 	.init_url_style:focus{border: 1px solid #409EFF;border-right: none;}
 	.check_style{display:inline-block;height: 33px;line-height: 33px;font-size: 16px;color: #316DFF;border: 2px solid #316DFF;width: 100px;text-align: center;cursor:pointer;}
@@ -307,7 +307,7 @@
 	.local_upload:before{content: "或";margin: 0 25px;}
 	.inputfile{z-index: -11111;width: 0px;height:1px;opacity: 0;position: absolute;}
 	.local_upload .btn_upload{display:inline-block;height: 33px;line-height: 33px;font-size: 16px;background-color: #316DFF;color:white;border: 2px solid #316DFF;width: 100px;text-align: center;cursor: pointer;}
-	.local_upload .btn_uploading{display:inline-block;height: 33px;line-height: 33px;font-size: 16px;background-color: white;color:#999999;border: 2px solid #dddddd;width: 100px;text-align: center;cursor: pointer;}
+	.local_upload .btn_uploading{display:inline-block;height: 33px;line-height: 33px;font-size: 16px;background-color: white;color:#666666;border: 2px solid #e1e3e7;width: 100px;text-align: center;cursor: pointer;}
 	.local_upload .btn_upload:hover{background-color: #6087F7;color: white;border: 2px solid #6087F7;}
 	.show_input_outer{display: flex;}
 
@@ -322,14 +322,14 @@
 	.search_btn:hover{background-color: #6087F7;color: white;border: 1px solid #6087F7;}
 
 	.show_history_title{height: 50px;line-height: 50px;color: #333333;font-size: 16px;background-color: #ebeff8;width: 100%;display: flex;font-weight: 100;border: 1px solid #ebeff8;}
-	.show_history_title th{flex: 1;text-align: left;padding-left: 10px;font-weight: 100;}
+	.show_history_title th{flex: 1;text-align: center;padding-left: 10px;font-weight: 100;}
 	.show_history_title th:last-child{flex: 1;text-align: center}
 	.show_history_title th:first-child{padding-left: 20px;flex: 2;}
 	.show_history_title th:nth-of-type(3){flex: 2.5;}
 	.show_history_title th:nth-of-type(6){flex: 2;}
 	.show_history_title th:nth-of-type(5){flex: 2.5;}
 	.show_history_con{height: 50px;line-height: 50px;color: #333333;font-size: 14px;background-color: #fff;width: 100%;display: flex;border: 1px solid #e3e8f3;border-top: none;}
-	.show_history_con td{flex: 1;text-align: left;padding-left: 10px;}
+	.show_history_con td{flex: 1;text-align: left;padding-left: 10px;text-align: center;}
 	.show_history_con td:last-child{flex: 1;text-align: center;color: #85afff;cursor: pointer;}
 	.show_history_con td:first-child{padding-left: 20px;flex: 2;}
 	.show_history_con td:nth-of-type(3){flex: 2.5;}

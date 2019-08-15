@@ -21,7 +21,7 @@
 								<div class="right_word_con fl">
 									<span>准确识别语音</span>
 									<div class="scenario_describe_outer">
-										<span class="good_describe">采用领先国际的方法，结合中文语义理解智能纠错，近场 中文普通话识别准确率达98%</span>
+										<span class="good_describe">采用领先国际的方法，结合中文语义理解智能纠错，近场中文普通话识别准确率达98%</span>
 									</div>
 								</div>
 							</div>
@@ -30,7 +30,7 @@
 								<div class="right_word_con fl">
 									<span>快速高效识别 </span>
 									<div class="scenario_describe_outer">
-										<span class="good_describe">采用最新解码技术，API接口识别速度提升5倍以上，耗时 仅音频时长十分之一，提升语音交互体验 </span>
+										<span class="good_describe">采用最新解码技术，API接口识别速度提升5倍以上，耗时仅音频时长十分之一，提升语音交互体验 </span>
 									</div>
 								</div>
 							</div>
@@ -41,7 +41,7 @@
 								<div class="right_word_con fl">
 									<span>支持自定义优化 </span>
 									<div class="scenario_describe_outer">
-										<span class="good_describe">可通过上传自定义词条进行训练，持续优化特定词条的 识别效果，提升特定行业或业务场景的准确率 </span>
+										<span class="good_describe">可通过上传自定义词条进行训练，持续优化特定词条的识别效果，提升特定行业或业务场景的准确率 </span>
 									</div>
 								</div>
 							</div>
@@ -50,7 +50,7 @@
 								<div class="right_word_con fl">
 									<span>智能中文标点 </span>
 									<div class="scenario_describe_outer">
-										<span class="good_describe"> 根据语音的内容理解和停顿匹配标点符号（，。！？）， 使识别结果的表现方式贴合表述，更加可懂 </span>
+										<span class="good_describe"> 根据语音的内容理解和停顿匹配标点符号（，。！？），使识别结果的表现方式贴合表述，更加可懂 </span>
 									</div>
 								</div>
 							</div>
@@ -72,7 +72,9 @@
 										<option value="中文普通话">中文普通话</option>
 										<!--<option value="英文">英文</option>-->
 									</select>
+
 								</div>
+								<p class="suggest_record" v-show="recordWord =='开始录音'">点击"开始录音"，即可边说话边识别</p>
 								<div class="voice_time_outer" v-show="recordWord =='停止录音'">
 									<img src="../assets/image/voice/voice.gif" alt="">
 									<span>00:{{voiceSecond}}/01:00</span>
@@ -123,7 +125,7 @@
 							<div class="show_advantage_describe">
 								<span>准确率高</span>
 								<div class="describe_outer">
-									<p class="good_describe">目前准确率可达90%以上，基于智能的深度学习算法，准确度还将不断提高。</p>
+									<p class="good_describe">领先的中文语音识别转写技术，普通话转写准确率可达95%以上</p>
 								</div>
 							</div>
 						</el-col>
@@ -132,7 +134,7 @@
 							<div class="show_advantage_describe">
 								<span>及时高效</span>
 								<div class="describe_outer">
-									<p class="good_describe">能够对用户上传的图片自动审核，主动发现潜在的暴恐图片，打击精度高，覆盖广，响应快。</p>
+									<p class="good_describe">基于用户语音特征，建立个性化的词条语言模 型，调整识别参数，持续优化识别效果。</p>
 								</div>
 							</div>
 						</el-col>
@@ -141,7 +143,7 @@
 							<div class="show_advantage_describe">
 								<span>灵活性定制</span>
 								<div class="describe_outer">
-									<p class="good_describe">根据用户审核平台需求，深度定制产品策略与解决方案。</p>
+									<p class="good_describe">根据用户审核平台需求，深度定制产品策略与解决方案</p>
 								</div>
 							</div>
 						</el-col>
@@ -170,7 +172,7 @@
                 intervalId:null,
                 record:null,
                 recordSrc:require("../assets/audio/1.mp3"),
-				showResult:"点击开始录音，即可边说话边识别"
+				showResult:""
 
 			}
         },
@@ -299,8 +301,9 @@
 	.functional_experience .voice_experience_outer .item_outer .voice_content:nth-of-type(2){margin-right: 0;}
 	.functional_experience  .voice_title{height: 30px;line-height:25px;width: 140px;background: url("../assets/image/voice/voice_title_back.png") no-repeat center;
 		font-size: 14px;text-align: center;margin: -1px auto 0;color: #316dff;}
-	.functional_experience .language_select_outer{width: 162px;margin: 30px auto;}
+	.functional_experience .language_select_outer{width: 170px;margin: 30px auto;}
 	.functional_experience .language_select_outer >span{font-size: 14px;color: #000000;}
+	.suggest_record{text-align: center;font-size: 14px;color: #000;margin-top: 40px;}
 	.language_select_outer #language{width:90px;height: 30px ;font-size: 12px;text-align: center;padding-left: 7px;  line-height: 30px;border: 1px solid #b6b6b6;border-radius: 5px;background:url("../assets/image/voice/select_back.png") no-repeat 72px center;}
 	.voice_time_outer{height: 40px;line-height: 0;font-size: 0;text-align: center;margin-top: 75px;}
 	.voice_time_outer>span{display:inline-block;height: 40px;line-height: 40px;font-size: 14px;vertical-align: middle;margin-left: 20px;}
@@ -333,12 +336,12 @@
 	.show_advantage_describe span{font-size: 24px;color: #333333;}
 
 
-	.recommended_scenario{padding: 50px 0 200px;overflow: hidden;background-color: #fff;}
+	.recommended_scenario{padding: 50px 0 200px;overflow: hidden;background-color: #fff;min-width: 1200px;}
 	.recommended_scenario .title{text-align: center;color: #000000;margin: 50px 0;font-size: 36px;}
 	.recommended_scenario ul{display: flex;}
-	.recommended_scenario ul li{flex: 1;height: 300px;margin-right: 20px;padding: 0 20px;color: #ffffff;text-align: justify;background-size: 100% 100%;}
+	.recommended_scenario ul li{width: 380px;height: 340px;margin-right: 30px;padding: 0 20px;color: #ffffff;text-align: justify;background-size: 100% 100%;}
 	.recommended_scenario ul li p{margin-top: 30px;height: 60px;line-height: 60px;font-size: 18px;text-align: center;}
-	.recommended_scenario ul li span{display: inline-block;line-height: 40px;height: 400px;font-size: 14px;}
+	.recommended_scenario ul li span{display: inline-block;line-height: 40px;font-size: 14px;}
 	.recommended_scenario ul li:nth-of-type(1){background-image: url("../assets/image/voice/voice_scence1.png");}
 	.recommended_scenario ul li:nth-of-type(2){background-image: url("../assets/image/voice/voice_scence2.png");}
 	.recommended_scenario ul li:nth-of-type(3){background-image: url("../assets/image/voice/voice_scence3.png");margin-right: 0;}
