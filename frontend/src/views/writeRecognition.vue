@@ -14,7 +14,7 @@
 			<p class="title">功能介绍</p>
 				<el-row>
 					<el-col :xs={span:24} :sm={span:22,offset:1} :md={span:20,offset:2} :lg={span:18,offset:3} :xl={span:16,offset:4}>
-						<p class="title_describe">业内领先的语音识别技术，结合敏感词检测过滤规则体系，精准、高效分析识别违规音频</p>
+						<p class="title_describe">基于多年行业经验积累，针对文本垃圾特点，提供个性化匹配的模型，支持专属文本过滤方案定制</p>
 						<div class="introduce_outer">
 							<div class="clearfix show_scenario_outer">
 								<span class="fl left_image_con_one left_image_con"></span>
@@ -41,7 +41,7 @@
 								<div class="right_word_con fl">
 									<span>敏感文字识别 </span>
 									<div class="scenario_describe_outer">
-										<span class="good_describe">深度定制模型，建立多维度用户画像，高效识别宗教、 枪支、血腥等敏感文本</span>
+										<span class="good_describe">深度定制模型，建立多维度用户画像，高效识别宗教、枪支、血腥等敏感文本</span>
 									</div>
 								</div>
 							</div>
@@ -50,7 +50,7 @@
 								<div class="right_word_con fl">
 									<span>涉政文字识别 </span>
 									<div class="scenario_describe_outer">
-										<span class="good_describe"> 实时共享违禁公库，支持自定义关键词，高效识别 涉政文本 </span>
+										<span class="good_describe"> 实时共享违禁公库，支持自定义关键词，高效识别涉政文本 </span>
 									</div>
 								</div>
 							</div>
@@ -69,10 +69,11 @@
 						</div>
 						<div id="show_result" v-else></div>
 						<p class="word_more" id="text-count" v-show="isCheck==1">您还可输入600个字</p>
-						<p v-show="isAgainst" class="against">违规（检测文本含有涉黄、涉政、涉爆、广告等违规信息）</p>
-						<p class="begin_record" @click="submitWord" v-if="isCheck==1">开始识别</p>
+						<p v-show="isAgainst" class="against">{{againstWord}}</p>
+						<p v-show="isPass" class="check_pass">通过（检测文本正常）</p>
+						<p class="begin_record" @click="submitWord" v-if="isCheck==1">开始检测</p>
 						<p class="again_record" v-if="isCheck==2">正在识别</p>
-						<p class="again_record" @click="againWord" v-if="isCheck==3">再次识别</p>
+						<p class="again_record" @click="againWord" v-if="isCheck==3">再次检测</p>
 					</div>
 				</el-col>
 			</el-row>
@@ -81,7 +82,7 @@
 		<div class="recommended_scenario">
 			<p class="title">应用场景</p>
 			<el-row>
-				<el-col :xs={span:24} :sm={span:22,offset:1} :md={span:20,offset:2} :lg={span:18,offset:3} :xl={span:16,offset:4}>
+				<el-col :xs={span:24} :sm={span:22,offset:1} :md={span:20,offset:2} :lg={span:18,offset:3} :xl={span:14,offset:5}>
 					<ul>
 						<li>
 							<p>视频、直播弹幕审核</p>
@@ -114,7 +115,7 @@
 							<div class="show_advantage_describe">
 								<span>及时高效</span>
 								<div class="describe_outer">
-									<p class="good_describe">能够对用户上传的图片自动审核，主动发现潜在的暴恐图片，打击精度高，覆盖广，响应快。</p>
+									<p class="good_describe">能够主动发现潜在的涉黄图片，打击精度高，覆盖广，响应快，第一时间遏制涉黄图片的传播</p>
 								</div>
 							</div>
 						</el-col>
@@ -123,7 +124,7 @@
 							<div class="show_advantage_describe">
 								<span>灵活性定制</span>
 								<div class="describe_outer">
-									<p class="good_describe">根据用户审核平台需求，深度定制产品策略与解决方案。</p>
+									<p class="good_describe">根据用户审核平台需求，深度定制产品策略与解决方案</p>
 								</div>
 							</div>
 						</el-col>
@@ -151,7 +152,9 @@
                 recWord:'',
                 isAgainst:false,
                 isCheck:1,
-                isLoading:false
+                isLoading:false,
+                isPass:false,
+				againstWord:"违规（检测文本含有涉黄、涉政、涉爆、广告等违规信息）"
 			}
         },
         mounted:function () {
@@ -212,11 +215,16 @@
                         console.log(response);
                         this.isCheck = 3;
                         window.setTimeout(()=>{
-                            document.getElementById('show_result').innerHTML= response.data.web_text;
+                            document.getElementById('show_result').innerHTML= response.data.web_text;//msgsnew.join(',')
+							const final = response.data.final_list.join('、');
+							this.againstWord = `违规（检测文本含有${final}等违规信息）`;
+                            if(response.ret==0){
+                                this.isAgainst = true;
+                            }else {
+                                this.isPass = true
+                            }
 						},200);
-                        if(response.ret==0){
-                            this.isAgainst = true;
-						}
+
 //                        document.getElementsByClassName('write_content')[0].innerHTML=response.data.web_text;
 
 //                        this.recWord =response.data.web_text;
@@ -232,6 +240,7 @@
                 this.isCheck = 1;
                 this.recWord ="";
                 this.isAgainst = false;
+                this.isPass = false;
                 window.setTimeout(()=>{
                     document.getElementById("orgAuditDesc").value="";
                     $('#text-count').html('剩余可输入600字');
@@ -274,6 +283,7 @@
 	.write_content{background-color: #ffffff;height: 305px;border: 1px solid #e2ecfc;width: 100%;color: #666666;font-size: 14px;padding: 10px;box-sizing: border-box;line-height: 26px;}
 	#show_result{height: 300px;background-color: #ffffff;border: 1px solid #e2ecfc;padding: 10px;}
 	.voice_experience_outer .against{text-align: center;color: #FE0808;font-size: 15px;margin-top: 10px;}
+	.voice_experience_outer .check_pass{text-align: center;color: #333;font-size: 15px;margin-top: 10px;}
 	.word_more{position: absolute;right: 40px;margin-top: -35px;font-size: 14px;color: #666666;}
 	.begin_record{height: 45px;width: 160px;line-height: 45px;background-color: #316dff;color: #fff;margin: 20px auto;font-size: 16px;text-align: center;cursor:pointer;}
 	.begin_record:hover{background-color: #6087F7;color: white;}
@@ -294,7 +304,7 @@
 	.recommended_scenario{padding: 50px 0 200px;overflow: hidden;background-color: #fff;}
 	.recommended_scenario .title{text-align: center;color: #000000;margin: 50px 0;font-size: 36px;}
 	.recommended_scenario ul{display: flex;}
-	.recommended_scenario ul li{flex: 1;height: 340px;margin-right: 20px;padding: 0 20px;color: #ffffff;text-align: justify;background-size: 100% 100%;}
+	.recommended_scenario ul li{flex: 1;height: 340px;margin-right: 40px;padding: 0 20px;color: #ffffff;text-align: justify;background-size: 100% 100%;}
 	.recommended_scenario ul li p{margin-top: 140px;height: 60px;line-height: 60px;font-size: 18px;text-align: center;}
 	.recommended_scenario ul li span{display: inline-block;line-height: 40px;font-size: 14px;}
 	.recommended_scenario ul li:nth-of-type(1){background-image: url("../assets/image/write/write_usage1.png");}
