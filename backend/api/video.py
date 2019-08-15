@@ -67,33 +67,36 @@ def check_video(file_path):
             ret, frame = cap.read()
             # 把每一帧图像保存成jpg格式（这一行可以根据需要选择保留）
             imageName = str(COUNT) + '.jpg'
-            cv2.imwrite(temp_path+imageName, frame)
-            jsonResultInfo  = settings.VIOLENCE.check_violence(temp_path + '/' +imageName)
-            print(jsonResultInfo)
-            violencePercent = jsonResultInfo.get('violence')
-            violenceScore = float(violencePercent)
-            pornPercent  = settings.NSFW.caffe_preprocess_and_compute_api(temp_path+imageName)
-            violenceScoreArr[COUNT] = violenceScore
-            pornScore = "%.2f" % float(pornPercent[1])
-            pornScore = float(pornScore)
-            #pornScore = "%.2f" % float(pornPercent[1])
-            contentMap={}
-            
-            pornScoreArr[COUNT] = pornScore
+            try:
+                cv2.imwrite(temp_path+imageName, frame)
+                jsonResultInfo  = settings.VIOLENCE.check_violence(temp_path + '/' +imageName)
+                print(jsonResultInfo)
+                violencePercent = jsonResultInfo.get('violence')
+                violenceScore = float(violencePercent)
+                pornPercent  = settings.NSFW.caffe_preprocess_and_compute_api(temp_path+imageName)
+                violenceScoreArr[COUNT] = violenceScore
+                pornScore = "%.2f" % float(pornPercent[1])
+                pornScore = float(pornScore)
+                #pornScore = "%.2f" % float(pornPercent[1])
+                contentMap={}
+                
+                pornScoreArr[COUNT] = pornScore
 
-            infoMap = {}
-            if (violenceScore >= settings.VIOLENCESCORE_MIN or pornScore >= settings.PORNSCORE_MIN):
-                infoMap['violence_sensitivity_level'] = get_two_float(violenceScore * 100,2)
-                infoMap['porn_sensitivity_level'] = get_two_float(float(pornPercent[1]) * 100,2)
-                infoMap['image_url'] =  settings.VIDEO_URL + settings.TEMP_PATH + uuidStr + '/' + imageName
-                infoMap['sensitivity_time'] = get_two_float((COUNT+1) / fps,2)
-                infoMap['current_fps'] = COUNT
-                contentList.append(infoMap)
-            COUNT = COUNT + 1
-            #if COUNT>3:
-            #    violencePercent=0
-            # 延时一段33ms（1s?30帧）再读取下一帧，如果没有这一句便无法正常显示视频
-            cv2.waitKey(33)
+                infoMap = {}
+                if (violenceScore >= settings.VIOLENCESCORE_MIN or pornScore >= settings.PORNSCORE_MIN):
+                    infoMap['violence_sensitivity_level'] = get_two_float(violenceScore * 100,2)
+                    infoMap['porn_sensitivity_level'] = get_two_float(float(pornPercent[1]) * 100,2)
+                    infoMap['image_url'] =  settings.VIDEO_URL + settings.TEMP_PATH + uuidStr + '/' + imageName
+                    infoMap['sensitivity_time'] = get_two_float((COUNT+1) / fps,2)
+                    infoMap['current_fps'] = COUNT
+                    contentList.append(infoMap)
+                COUNT = COUNT + 1
+                #if COUNT>3:
+                #    violencePercent=0
+                # 延时一段33ms（1s?30帧）再读取下一帧，如果没有这一句便无法正常显示视频
+                cv2.waitKey(33)
+            except:
+                continue
         cap.release()
         pornScoreArr = sorted(pornScoreArr)
         violenceScoreArr = sorted(violenceScoreArr)
