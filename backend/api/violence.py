@@ -13,6 +13,7 @@ from PIL import Image
 from tqdm import tqdm
 
 import torch
+import cv2
 from torch.utils.data import Dataset, DataLoader
 from torch.autograd import Variable
 import torchvision.models as models
@@ -42,47 +43,51 @@ class violence:
             workers = 0
             cuda = False
             # make dataloader
-            dataset = ProtestDatasetEvalFile(img_path = img_path)
-            data_loader = DataLoader(dataset,
-                                    num_workers = workers,
-                                    batch_size = batch_size)
-            # load model
+            try:
 
-            outputs = []
-            imgpaths = []
+                dataset = ProtestDatasetEvalFile(img_path = img_path)
+                data_loader = DataLoader(dataset,
+                                        num_workers = workers,
+                                        batch_size = batch_size)
+                # load model
 
-            n_imgs = 1
-            with tqdm(total=n_imgs) as pbar:
-                for i, sample in enumerate(data_loader):
-                    imgpath, input = sample['imgpath'], sample['image']
-                    if cuda:
-                        input = input.cuda()
+                outputs = []
+                imgpaths = []
 
-                    input_var = Variable(input)
-                    output = model(input_var)
-                    outputs.append(output.cpu().data.numpy())
-                    imgpaths = imgpath
-                    if i < n_imgs / batch_size:
-                        pbar.update(batch_size)
-                    else:
-                        pbar.update(n_imgs%batch_size)
+                n_imgs = 1
+                with tqdm(total=n_imgs) as pbar:
+                    for i, sample in enumerate(data_loader):
+                        imgpath, input = sample['imgpath'], sample['image']
+                        if cuda:
+                            input = input.cuda()
 
-            array = np.concatenate(outputs)
-            return {
-                'protest': array[0][0],
-                'violence': array[0][1], 
-                'sign': array[0][2], 
-                'photo': array[0][3], 
-                'fire': array[0][4],
-                'police': array[0][5], 
-                'children': array[0][6], 
-                'group_20': array[0][7], 
-                'group_100': array[0][8], 
-                'flag': array[0][9],
-                'night': array[0][10], 
-                'shouting': array[0][11]
-            }
+                        input_var = Variable(input)
+                        output = model(input_var)
+                        outputs.append(output.cpu().data.numpy())
+                        imgpaths = imgpath
+                        if i < n_imgs / batch_size:
+                            pbar.update(batch_size)
+                        else:
+                            pbar.update(n_imgs%batch_size)
 
+                array = np.concatenate(outputs)
+                return {
+                    'protest': array[0][0],
+                    'violence': array[0][1], 
+                    'sign': array[0][2], 
+                    'photo': array[0][3], 
+                    'fire': array[0][4],
+                    'police': array[0][5], 
+                    'children': array[0][6], 
+                    'group_20': array[0][7], 
+                    'group_100': array[0][8], 
+                    'flag': array[0][9],
+                    'night': array[0][10], 
+                    'shouting': array[0][11]
+                }
+            except:
+                return {'protest': 0,'violence': 0}
+                
     def check_violence(self,img_file):
     # load trained model
         # path = os.getcwd()

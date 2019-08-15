@@ -108,26 +108,30 @@ class nsfw:
         :return:
             Returns the requested outputs from the Caffe net.
         """
-        image_data = open(img, 'rb').read()
+        try:
+            image_data = open(img, 'rb').read()
 
-        # Classify.
-        img_bytes = self.resize_image(image_data, sz=(256, 256))
-        image = caffe.io.load_image(img_bytes)
+            # Classify.
+            img_bytes = self.resize_image(image_data, sz=(256, 256))
+            image = caffe.io.load_image(img_bytes)
 
-        H, W, _ = image.shape
-        _, _, h, w = self.nsfw_net.blobs['data'].data.shape
-        h_off = max((H - h) / 2, 0)
-        w_off = max((W - w) / 2, 0)
-        crop = image[int(h_off):int(h_off + h), int(w_off):int(w_off + w), :]
-        transformed_image = self.caffe_transformer.preprocess('data', crop)
-        transformed_image.shape = (1,) + transformed_image.shape
+            H, W, _ = image.shape
+            _, _, h, w = self.nsfw_net.blobs['data'].data.shape
+            h_off = max((H - h) / 2, 0)
+            w_off = max((W - w) / 2, 0)
+            crop = image[int(h_off):int(h_off + h), int(w_off):int(w_off + w), :]
+            transformed_image = self.caffe_transformer.preprocess('data', crop)
+            transformed_image.shape = (1,) + transformed_image.shape
 
-        input_name = self.nsfw_net.inputs[0]
-        all_outputs = self.nsfw_net.forward_all(blobs=self.output_layers,
-                    **{input_name: transformed_image})
+            input_name = self.nsfw_net.inputs[0]
+            all_outputs = self.nsfw_net.forward_all(blobs=self.output_layers,
+                        **{input_name: transformed_image})
 
-        outputs = all_outputs[self.output_layers[0]][0].astype(float)
-        return outputs
+            outputs = all_outputs[self.output_layers[0]][0].astype(float)
+            return outputs
+        except:
+            outs = [0,0]
+            return outs
 
     def main(argv):
         pycaffe_dir = os.path.dirname(__file__)
