@@ -83,7 +83,7 @@
 	    data(){
 	        return{
                 imageIsBig:false,
-                videoUrl:[],
+                videoUrl:{},
                 imageUrl:[],
                 markerInfo:[],
                 sexInfo:5,
@@ -128,6 +128,7 @@
                 formData.append('video', file);
                 $.ajax({
                     url: this.api+"/api/v1/video/get_video_inspection/",
+                    timeout:3600000,
                     type: "post",
                     data: formData,
 //                    headers: {'Authorization': 'Token mytoken'},
@@ -144,7 +145,7 @@
                         this.isLoading = false;
 //                        this.uploadInfo(response);
 //                        this.videoUrl={url:response.data.video_url} ;
-                        this.videoUrl={url:response.data.video};
+//                        this.videoUrl={url:response.data.video};
 //						this.video_url= response.data.video_url;
                         response.data.video_evidence_information.forEach((item,index)=>{
                             if(parseFloat(item.porn_sensitivity_level)>this.sexInfo){

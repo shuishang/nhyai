@@ -41,6 +41,7 @@
 .el-icon-plus:before {
     font-size: 60px;
     color: #acc3ff;
+    vertical-align: middle;
 }
 .el-upload--picture-card{
     border: 2px dashed #acc3ff;

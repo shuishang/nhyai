@@ -240,7 +240,7 @@
                 recordWord:'开始录音',
                 intervalId:null,
                 isChose:false,
-                videoUrl:{url:require('../assets/video/dragen_wind.mp4')},
+                videoUrl:{},
                 imageIsBig:false,
 				imageUrl:[],
 				markerInfo:[],
@@ -322,6 +322,7 @@
                     data: formData,
 //                    headers: {'Authorization': 'Token mytoken'},
                     cache: false,
+                    timeout:3600000,
                     contentType: false,
                     processData: false,
                     success:(response)=>{
@@ -331,7 +332,7 @@
                         this.imageUrl= [];
                         this.markerInfo= [];
                         this.isLoading= false;
-                        this.videoUrl={url:response.data.video} ;
+//                        this.videoUrl={url:response.data.video} ;
 //						this.video_url= response.data.video_url;
                         response.data.video_evidence_information.forEach((item,index)=>{
                             if(parseFloat(item.porn_sensitivity_level)>this.sexInfo){

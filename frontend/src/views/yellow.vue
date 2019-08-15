@@ -53,6 +53,7 @@
 								class="avatar-uploader"
 								action="http://172.31.4.7:8000/api/v1/image/get_vision_porn/"
 								:auto-upload="false"
+								:multiple="true"
 								:on-change="onImageChange">
 								<i class="el-icon-plus avatar-uploader-icon"></i>
 							</el-upload>

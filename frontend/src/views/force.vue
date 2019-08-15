@@ -5,8 +5,16 @@
 			<el-row>
 				<el-row>
 					<el-col :xl={span:24}>
-						<img src="../assets/image/force/force_banner.png" alt="">
-						<p class="practice_online">在线体验</p>
+						<div class="banner_outer">
+							<img src="../assets/image/force/force_banner.png" alt="">
+							<div class="describe_outer_banner">
+								<p class="ell">暴恐检测</p>
+								<p class="ell-rows-4 ">南海云暴恐图片识别基于领先的深度学习引擎，对用户上传的图片进行自动审核，暴恐识别算法会返回“疑似暴恐”的字段，对血腥、暴力等图片进行自动打击，用AI捍卫互联网安全，助力建立安全、健康的互联网环境。</p>
+								<p class="practice_online" @click="toPractice">在线体验</p>
+							</div>
+
+						</div>
+
 					</el-col>
 				</el-row>
 			</el-row>
@@ -24,8 +32,8 @@
 				</el-row>
 			</div>
 		</div>
-		<div class="functional_experience">
-			<h2 class="title">功能体验</h2>
+		<div class="functional_experience" id="practice_title">
+			<h2 class="title" >功能体验</h2>
 			<el-row style="min-width: 800px;margin-top: 40px;">
 				<el-col :xs={span:14} :sm={span:16} :md={span:14,offset:2} :lg={span:13,offset:2} :xl={span:11,offset:4}>
 					<div class="show_input_outer">
@@ -54,6 +62,7 @@
 								class="avatar-uploader"
 								action="http://172.31.4.7:8000/api/v1/image/get_vision_porn/"
 								:auto-upload="false"
+								:multiple="true"
 								:on-change="onImageChange">
 								<i class="el-icon-plus avatar-uploader-icon"></i>
 							</el-upload>
@@ -121,7 +130,7 @@
 							</el-carousel-item>
 						</el-carousel>
 					</div>
-
+					<p class="practice_online" @click="toPractice">在线体验</p>
 				</el-col>
 			</el-row>
 		</div>
@@ -313,7 +322,10 @@
             handlePictureCardPreview(file) {
                 this.dialogImageUrl = file.url;
                 this.dialogVisible = true;
-            }
+            },
+            toPractice(){
+                window.scrollBy(0,document.getElementById('practice_title').offsetTop-100)
+			}
         },
 		components:{
             Navigation,
@@ -326,10 +338,13 @@
 
 <style scoped>
 	.force_top_contain{font-size: 0;line-height: 0;}
+	.banner_outer{position: relative;}
+	.describe_outer_banner{position: absolute;top:25%;left: 20%;font-size: 16px;color: white;width: 28%;height: 85%;}
+	.describe_outer_banner p{}
+	.describe_outer_banner p:nth-of-type(1){font-size: 48px;height: 60px;line-height: 60px;margin-bottom: 15px;min-width: 400px;}
+	.describe_outer_banner p:nth-of-type(2){height: 105px;text-align: justify;overflow: hidden;min-width: 550px;line-height: 30px;}
 	.force_top_contain img{width: 100%;min-width: 1200px;}
-	.practice_online{height: 30px;line-height:30px;width: 120px;font-size: 15px;position: absolute;margin-top: -100px;text-align: center;
-		margin-left: 20%;color: #BEBEBE;border: 1px solid #BEBEBE;}
-	.show_title_outer h1{}
+	.practice_online{height: 40px;line-height:40px;width: 135px;font-size: 15px;text-align: center;color: #BEBEBE;border: 1px solid #BEBEBE;cursor:pointer}
 
 	.functional_experience{margin: 50px 0;}
 	.functional_experience .title{text-align: center;color: #000;margin: 40px 0 15px;font-size: 36px;}

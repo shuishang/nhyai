@@ -44,6 +44,11 @@ table{border-collapse:collapse;}
     -webkit-box-orient: vertical;
     -webkit-line-clamp:2;
 }
+.ell-rows-4 {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp:4;
+}
 ::-webkit-scrollbar
 {
     width: 10px;  /*滚动条宽度*/
