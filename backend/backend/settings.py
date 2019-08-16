@@ -164,6 +164,9 @@ CORS_ORIGIN_REGEX_WHITELIST = (
 
 DF = pd.read_csv(os.path.join(os.getcwd(),"backend","api","sensitives","sensitiveWords.csv"),encoding='gbk')
 
+#是否支持GPU
+IS_GPU = True
+
 #视屏检测图片存放路径
 TEMP_PATH = 'capture_out_images/'
 SAVE_PATH = '/var/www/gallery/media/videos/capture_out_images/'
