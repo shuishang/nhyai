@@ -257,7 +257,7 @@
                         that.checkType = 1;
                         that.stopVideo = true;
                         that.stopAudio = true;
-                        this.submitImageCallback(e,file,that.dialogImageUrl);
+                        this.submitImageCallback(e,file,e.target.result);
                         this.isUploading = true;
                     }else if(fileType.substr(0, 5) === "audio"){
                         that.checkType = 3;

@@ -24,8 +24,19 @@
 				<el-row>
 					<el-col :xs={span:24} :sm={span:22,offset:1} :md={span:20,offset:2} :lg={span:18,offset:3} :xl={span:16,offset:4}>
 						<p class="title_describe">智能识别含有宣扬恐怖主义、极端主义、血腥、政治游行等画面的暴恐及反动内容。暴恐识别模型更为严格，对涉嫌暴恐信息零容忍，为您的产品保驾护航，远离涉暴涉恐风险。</p>
-						<div class="top_nav_image_outer">
-							<img src="../assets/image/force/force_sample.png" alt="">
+						<div class="top_nav_image_outer clearfix">
+							<div class="sample_item fl" v-for="(item,index) in sampleList">
+								<img :src="item.src" alt="">
+								<div class="sample_result_outer">
+									<p class="red_style_name" v-if="item.number>90">违规</p>
+									<p class="orange_style_name" v-else-if="item.number>50">疑似违规</p>
+									<p class="green_style_name" v-else>合规</p>
+									<p class="red_style_number" v-if="item.number>90">{{item.number}}%</p>
+									<p class="orange_style_number" v-else-if="item.number>50">{{item.number}}%</p>
+									<p class="green_style_number" v-else>{{item.number}}%</p>
+								</div>
+							</div>
+							<!--<img src="../assets/image/force/force_sample.png" alt="">-->
 						</div>
 					</el-col>
 				</el-row>
@@ -80,6 +91,7 @@
 							:multiple="true"
 							:on-change="onListChange"
 							:http-request="uploadImage"
+							:before-upload="beforeUpLoad"
 							:on-exceed="outSuggest"
 							:on-remove="handleRemove">
 							<i class="el-icon-plus"></i>
@@ -174,6 +186,7 @@
 </template>
 
 <script>
+	import fileUtil from '../store/fileUtil'
 	import {scrollBy} from '../store/common'
 	import Navigation from "../components/navigation.vue"
     import FooterIndex from "../components/footerIndex.vue"
@@ -193,6 +206,8 @@
                 url: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
                 completeNumber:0,
                 resultList:[],
+				sampleList:[{src:require("../assets/image/force/sample_image1.png"),number:93.18},{src:require("../assets/image/force/sample_image2.png"),number:38.52},{src:require("../assets/image/force/sample_image3.png"),number:20.01},
+                    {src:require("../assets/image/force/sample_image4.png"),number:61.78},{src:require("../assets/image/force/sample_image5.png"),number:51.21},{src:require("../assets/image/force/sample_image6.png"),number:22.86}],
 				isCheck:false
 			}
         },
@@ -207,8 +222,51 @@
                 this.fileList.push(file);
                 this.isImage = 2;
             },
+            beforeUpLoad(file){
+                console.log("beforeUpLoad执行了")
+			},
             onListChange(file, fileList){
-                this.fileList=fileList;
+
+                /*EXIF.getData(file.raw, ()=> {
+                    const orient = EXIF.getTag(this, 'Orientation');
+                    if (orient && orient === 6) {
+                        debugger
+                        let reader = new FileReader();
+                        let img = new Image();
+                        reader.onload = (e) => {
+                            img.src = e.target.result;
+                            img.onload =  ()=>{
+                                const data = fileUtil.rotateImage(img, img.width, img.height)
+                                const newFile = fileUtil.dataURLtoFile(data, file.raw.name)
+//                                resolve(newFile)
+                                file.raw= newFile;
+                                this.fileList.push(file);
+                            }
+                        }
+                    }else {
+                        debugger;
+                        this.fileList.push(file);
+                    }
+                })*/
+                fileUtil.getOrientation(file.raw).then((orient) => {
+                    if(orient && orient === 6) {
+                        const reader = new FileReader();
+                        reader.onload = ($event)=> {
+                            let img = new Image();
+                            img.src = $event.target.result;
+                            img.onload = ()=> {
+                                debugger;
+                                const data = fileUtil.rotateImage(img, img.width, img.height)
+                                const newFile = fileUtil.dataURLtoFile(data, file.raw.name);
+                                file.raw = newFile;
+                                this.fileList.push(file);
+                            }
+						}
+                        reader.readAsDataURL(file.raw);
+                    } else {
+                        this.fileList.push(file);
+                    }
+                })
                 if(this.fileList.length==10){
                     this.$message.error('一次最多选择10张图片！');
                 }
@@ -323,6 +381,7 @@
                 this.dialogVisible = true;
             },
             toPractice(){
+
                 scrollBy(document.getElementById('practice_title').offsetTop-100);
 //                window.scrollBy(0,document.getElementById('practice_title').offsetTop-100)
 			}
@@ -351,10 +410,21 @@
 	.functional_experience .title{text-align: center;color: #000;margin: 40px 0 15px;font-size: 30px;}
 	.functional_experience .title_describe{text-align: center;color: #000;font-size: 14px;width: 70%;margin: 0 auto 30px;}
 
-	.top_nav_image_outer{margin-bottom: 15px;text-align: center;}
-	.top_nav_image_outer a{flex: 1;float: left;}
-	.top_nav_image_outer a img{width: 100%;opacity: 0.6;cursor:pointer;}
-	.top_nav_image_outer a .active{opacity: 1}
+	.top_nav_image_outer{text-align: center;width: 860px;margin: 15px auto;}
+	.top_nav_image_outer a img{width: 100%;}
+	.top_nav_image_outer .sample_item{width: 260px;margin-bottom: 35px;margin-right: 40px;}
+	.top_nav_image_outer .sample_item:nth-of-type(3n){margin-right: 0}
+	.top_nav_image_outer .sample_item img{width: 260px;height: 200px;}
+	.sample_result_outer{margin: -20px auto 0;display: flex;color: #000000;height: 28px;line-height: 28px;width: 60%;}
+	.sample_result_outer p:nth-of-type(1){font-size: 14px;flex: 5;}
+	.sample_result_outer p:nth-of-type(2){font-size: 14px;flex: 4;text-align: center;background-color:white}
+	.green_style_name{background-color: #54cd62;border: 1px solid #54cd62;color: #fff}
+	.green_style_number{border: 1px solid #54cd62;color: #54cd62}
+	.orange_style_name{background-color: #ffac09;border: 1px solid #ffac09;color: #fff}
+	.orange_style_number{border: 1px solid #ffac09;color: #ffac09}
+	.red_style_name{background-color: #ff524a;border: 1px solid #ff524a;color: #fff}
+	.red_style_number{border: 1px solid #ff524a;color: #ff524a}
+
 
 	.top_suggest{color: #999999;font-size: 14px;line-height: 40px;height: 30px;}
 	.init_url_style{flex: 1;height: 35px;line-height: 35px;border: 1px solid #E2ECFC;font-size: 15px;padding-left: 10px;}
@@ -387,14 +457,6 @@
 	.result_outer{margin: 10px 2px;display: flex;color: #000000;height: 28px;line-height: 28px;}
 	.result_outer p:nth-of-type(1){font-size: 16px;flex: 5;}
 	.result_outer p:nth-of-type(2){font-size: 16px;flex: 4;text-align: center}
-	.result_outer .green_style_name{background-color: #54cd62;border: 1px solid #54cd62;color: #fff}
-	.result_outer .green_style_number{border: 1px solid #54cd62;color: #54cd62}
-	.result_outer .orange_style_name{background-color: #ffac09;border: 1px solid #ffac09;color: #fff}
-	.result_outer .orange_style_number{border: 1px solid #ffac09;color: #ffac09}
-	.result_outer .red_style_name{background-color: #ff524a;border: 1px solid #ff524a;color: #fff}
-	.result_outer .red_style_number{border: 1px solid #ff524a;color: #ff524a}
-	.yellow_result_suggest{text-align: center;font-size: 15px;color: #999999;margin-top: 10px;}
-	.yellow_result_suggest span{color: #ff4949;}
 
 	.advantage_product{padding: 65px 0 30px ;overflow: hidden;background-color: #f2f2f5;}
 	.advantage_product .title{text-align: center;color: #000000;margin: 10px 0;font-size: 30px;}

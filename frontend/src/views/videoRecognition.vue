@@ -29,7 +29,7 @@
 								<div class="right_word_con fl">
 									<span>色情视频识别</span>
 									<div class="scenario_describe_outer ell-rows-2">
-										<span class="good_describe">基于海量大数据样本库，领先机器学习算法，高效识别 涉黄视频</span>
+										<span class="good_describe">基于海量大数据样本库，领先机器学习算法，高效识别涉黄视频</span>
 									</div>
 								</div>
 							</div>
@@ -38,7 +38,7 @@
 								<div class="right_word_con fl">
 									<span>暴恐视频识别 </span>
 									<div class="scenario_describe_outer ell-rows-2">
-										<span class="good_describe">海量大数据样本库，辅助业务安全数据监控，高效识别 暴恐视频 </span>
+										<span class="good_describe">海量大数据样本库，辅助业务安全数据监控，高效识别暴恐视频 </span>
 									</div>
 								</div>
 							</div>
@@ -49,7 +49,7 @@
 								<div class="right_word_con fl">
 									<span>政治敏感识别 </span>
 									<div class="scenario_describe_outer ell-rows-2">
-										<span class="good_describe">共享大数据样本库，政策法规权威同步，高效过滤涉政 视频 </span>
+										<span class="good_describe">共享大数据样本库，政策法规权威同步，高效过滤涉政视频 </span>
 									</div>
 								</div>
 							</div>
@@ -58,7 +58,7 @@
 								<div class="right_word_con fl">
 									<span>自定义视频黑库 </span>
 									<div class="scenario_describe_outer ell-rows-2">
-										<span class="good_describe"> 共享违禁MD5视频公库，实时拦截违规视频，支持自定 义添加私库  </span>
+										<span class="good_describe"> 共享违禁MD5视频公库，实时拦截违规视频，支持自定义添加私库  </span>
 									</div>
 								</div>
 							</div>
@@ -121,10 +121,10 @@
 								<p class="orange_style_name" v-else-if="50<this.sexInfo">疑似违规</p>
 								<p class="green_style_name" v-else>合规</p>
 							</div>
-							<div class="result_outer">
+							<!--<div class="result_outer">
 								<p class="ell">政治敏感识别</p>
 								<p class="green_style_name">合规</p>
-							</div>
+							</div>-->
 							<!--<div class="result_outer">
 								<p>公众人物识别</p>
 								<p class="red_style_name">违规</p>

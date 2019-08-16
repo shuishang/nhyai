@@ -88,7 +88,13 @@
 	          console.log(file);
 	          this.sexLevel=200;
 	          this.forceLevel=200;
-	          this.dialogImageUrl = url;
+//	          this.dialogImageUrl = url;
+              const reader = new FileReader();
+              const that = this;
+              reader.readAsDataURL(file);
+              reader.onload  = (e)=> {
+                  this.dialogImageUrl = e.target.result;
+              };
               var loading = this.$loading({fullscreen:false,target:document.querySelector(".show_result_outer")});
 	          console.log("图片提交中。。。")
               var formData = new FormData();

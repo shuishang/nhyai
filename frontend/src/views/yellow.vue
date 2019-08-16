@@ -23,8 +23,19 @@
 			<div class="handwrite">
 				<el-row>
 					<el-col :xs={span:24} :sm={span:22,offset:1} :md={span:20,offset:2} :lg={span:18,offset:3} :xl={span:16,offset:4}>
-						<div class="top_nav_image_outer">
-							<img src="../assets/image/yellow/yellow_sample.png" alt="">
+						<div class="top_nav_image_outer clearfix">
+							<div class="sample_item fl" v-for="(item,index) in sampleList">
+								<img :src="item.src" alt="">
+								<div class="sample_result_outer">
+									<p class="red_style_name" v-if="item.number>90">违规</p>
+									<p class="orange_style_name" v-else-if="item.number>50">疑似违规</p>
+									<p class="green_style_name" v-else>合规</p>
+									<p class="red_style_number" v-if="item.number>90">{{item.number}}%</p>
+									<p class="orange_style_number" v-else-if="item.number>50">{{item.number}}%</p>
+									<p class="green_style_number" v-else>{{item.number}}%</p>
+								</div>
+							</div>
+							<!--<img src="../assets/image/force/force_sample.png" alt="">-->
 						</div>
 					</el-col>
 				</el-row>
@@ -205,6 +216,8 @@
                 url: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
 				completeNumber:0,
 				resultList:[],
+                sampleList:[{src:require("../assets/image/yellow/sample_image1.png"),number:79.90},{src:require("../assets/image/yellow/sample_image2.png"),number:11.42},{src:require("../assets/image/yellow/sample_image3.png"),number: 29.83},
+                    {src:require("../assets/image/yellow/sample_image4.png"),number:1.63},{src:require("../assets/image/yellow/sample_image5.png"),number:20.61},{src:require("../assets/image/yellow/sample_image6.png"),number:0.04}],
                 isCheck:false
 			}
         },
@@ -364,10 +377,20 @@
 	.functional_experience .title{text-align: center;color: #000;margin: 40px 0 15px;font-size: 30px;}
 	.functional_experience .title_describe{text-align: center;color: #000;font-size: 14px;margin-bottom: 50px;}
 
-	.top_nav_image_outer{text-align: center;margin-bottom: 50px;}
-	.top_nav_image_outer a{flex: 1;float: left;}
-	.top_nav_image_outer a img{width: 100%;opacity: 0.6;cursor:pointer;}
-	.top_nav_image_outer a .active{opacity: 1}
+	.top_nav_image_outer{text-align: center;width: 860px;margin: 15px auto;}
+	.top_nav_image_outer a img{width: 100%;}
+	.top_nav_image_outer .sample_item{width: 260px;margin-bottom: 35px;margin-right: 40px;}
+	.top_nav_image_outer .sample_item:nth-of-type(3n){margin-right: 0}
+	.top_nav_image_outer .sample_item img{width: 260px;height: 200px;}
+	.sample_result_outer{margin: -20px auto 0;display: flex;color: #000000;height: 28px;line-height: 28px;width: 60%;}
+	.sample_result_outer p:nth-of-type(1){font-size: 14px;flex: 5;}
+	.sample_result_outer p:nth-of-type(2){font-size: 14px;flex: 4;text-align: center;background-color:white}
+	.green_style_name{background-color: #54cd62;border: 1px solid #54cd62;color: #fff}
+	.green_style_number{border: 1px solid #54cd62;color: #54cd62}
+	.orange_style_name{background-color: #ffac09;border: 1px solid #ffac09;color: #fff}
+	.orange_style_number{border: 1px solid #ffac09;color: #ffac09}
+	.red_style_name{background-color: #ff524a;border: 1px solid #ff524a;color: #fff}
+	.red_style_number{border: 1px solid #ff524a;color: #ff524a}
 
 	.top_suggest{color: #999999;font-size: 14px;line-height: 40px;height: 30px;}
 	.init_url_style{flex: 1;height: 35px;line-height: 35px;border: 1px solid #E2ECFC;font-size: 15px;padding-left: 10px;}

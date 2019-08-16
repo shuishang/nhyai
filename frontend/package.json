@@ -12,6 +12,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "element-ui": "^2.6.3",
+    "exif-js": "^2.3.0",
     "recorderx": "^2.0.2",
     "vue": "^2.5.2",
     "vue-audio-recorder": "^3.0.1",
