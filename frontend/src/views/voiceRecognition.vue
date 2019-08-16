@@ -290,12 +290,13 @@
 	.banner_outer{position: relative;}
 	.describe_outer_banner{position: absolute;top:25%;left: 18%;font-size: 16px;color: white;width: 28%;height: 85%;}
 	.describe_outer_banner p{}
-	.describe_outer_banner p:nth-of-type(1){font-size: 48px;height: 60px;line-height: 60px;margin-bottom: 15px;min-width: 400px;}
+	.describe_outer_banner p:nth-of-type(1){font-size: 30px;height: 60px;line-height: 60px;margin-bottom: 15px;min-width: 400px;}
 	.describe_outer_banner p:nth-of-type(2){height: 120px;text-align: justify;overflow: hidden;min-width: 550px;line-height: 30px;}
 	.voice_top_contain img{width: 100%;min-width: 1300px;}
 	.practice_online{height: 40px;line-height:40px;width: 135px;font-size: 15px;text-align: center;color: #fff;border: 1px solid #fff;cursor:pointer}
+	.practice_online:hover{background-color: white;color: #000;}
 
-	.functional_introduce .title{text-align: center;color: #000;font-size: 36px;margin: 10px 0 30px;}
+	.functional_introduce .title{text-align: center;color: #000;font-size: 30px;margin: 10px 0 30px;}
 	.functional_introduce{padding: 50px 0;background-color: #ffffff;min-width: 800px;}
 	.functional_introduce .title_describe{text-align: center;color: #000;font-size: 14px;width: 70%;margin: 0 auto 30px;}
 	.functional_introduce .introduce_outer{display: flex;}
@@ -311,7 +312,7 @@
 	.scenario_describe_outer{text-align: left;padding-right: 10px;}
 
 	.functional_experience{margin: 50px 0;background-color: #fff;min-width: 800px;}
-	.functional_experience .title{text-align: center;color: #000;margin: 40px 0 15px;font-size: 36px;}
+	.functional_experience .title{text-align: center;color: #000;margin: 40px 0 15px;font-size: 30px;}
 	.functional_experience .voice_experience_outer{height: 415px;border: 2px dashed #acc3ff;margin-top: 50px;padding: 20px;background-color: #fbfcff;}
 	.functional_experience .voice_experience_outer .item_outer{display: flex;}
 	.functional_experience .voice_experience_outer .item_outer .voice_content{height: 310px;flex: 1;margin-right: 20px;border: 1px solid #e2ecfc;background-color: #ffffff;}
@@ -341,7 +342,7 @@
 
 
 	.advantage_product{padding: 65px 0 80px ;overflow: hidden;background-color: #f2f2f5;}
-	.advantage_product .title{text-align: center;color: #000000;margin: 10px 0;font-size: 36px;}
+	.advantage_product .title{text-align: center;color: #000000;margin: 10px 0;font-size: 30px;}
 	.advantage_product span{display: inline-block;padding: 10px;}
 	.title_image_common{width: 70px; height: 70px;display: inline-block;margin-top: 50px;background-size: 70px 70px;}
 	.title_image{background-image: url("../assets/image/yellow/yellow_advantage1.png");}
@@ -354,7 +355,7 @@
 
 
 	.recommended_scenario{padding: 50px 0 200px;overflow: hidden;background-color: #fff;min-width: 1200px;}
-	.recommended_scenario .title{text-align: center;color: #000000;margin: 50px 0;font-size: 36px;}
+	.recommended_scenario .title{text-align: center;color: #000000;margin: 50px 0;font-size: 30px;}
 	.recommended_scenario ul{display: flex;}
 	.recommended_scenario ul li{width: 380px;height: 340px;margin-right: 30px;padding: 0 50px;color: #ffffff;text-align: justify;background-size: 100% 100%;}
 	.recommended_scenario ul li p{margin-top: 85px;height: 60px;line-height: 60px;font-size: 18px;text-align: center;}

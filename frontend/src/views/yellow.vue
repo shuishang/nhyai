@@ -354,13 +354,14 @@
 	.yellow_top_contain .banner_outer{position: relative;}
 	.yellow_top_contain .describe_outer_banner{position: absolute;top:25%;left: 18%;font-size: 16px;color: white;width: 28%;height: 75%;}
 	.yellow_top_contain .describe_outer_banner p{}
-	.yellow_top_contain .describe_outer_banner p:nth-of-type(1){font-size: 48px;height: 60px;line-height: 60px;margin-bottom: 15px;min-width: 400px;}
+	.yellow_top_contain .describe_outer_banner p:nth-of-type(1){font-size: 30px;height: 60px;line-height: 60px;margin-bottom: 15px;min-width: 400px;}
 	.yellow_top_contain .describe_outer_banner p:nth-of-type(2){height: 105px;text-align: justify;overflow: hidden;min-width: 550px;line-height: 30px;}
 	.yellow_top_contain  img{width: 100%;min-width: 1200px;}
-	.yellow_top_contain .practice_online{height: 40px;line-height:40px;width: 135px;font-size: 15px;text-align: center;color: #BEBEBE;border: 1px solid #BEBEBE;cursor:pointer}
+	.yellow_top_contain .practice_online{height: 40px;line-height:40px;width: 135px;font-size: 15px;text-align: center;color: #fff;border: 1px solid #fff;cursor:pointer}
+	.yellow_top_contain .practice_online:hover{background-color: white;color: #000;}
 
 	.functional_experience{margin: 50px 0;}
-	.functional_experience .title{text-align: center;color: #000;margin: 40px 0 15px;font-size: 36px;}
+	.functional_experience .title{text-align: center;color: #000;margin: 40px 0 15px;font-size: 30px;}
 	.functional_experience .title_describe{text-align: center;color: #000;font-size: 14px;margin-bottom: 50px;}
 
 	.top_nav_image_outer{text-align: center;margin-bottom: 50px;}
@@ -410,7 +411,7 @@
 
 
 	.advantage_product{padding: 65px 0 30px ;overflow: hidden;background-color: #f2f2f5;}
-	.advantage_product .title{text-align: center;color: #000000;margin: 10px 0;font-size: 36px;}
+	.advantage_product .title{text-align: center;color: #000000;margin: 10px 0;font-size: 30px;}
 	.advantage_product span{display: inline-block;padding: 10px;}
 	.title_image_common{width: 70px; height: 70px;display: inline-block;margin-top: 50px;background-size: 70px 70px;}
 	.title_image{background-image: url("../assets/image/yellow/yellow_advantage1.png");}
@@ -423,7 +424,7 @@
 
 
 	.recommended_scenario{padding: 50px 0 ;overflow: hidden;background-color: #fff;}
-	.recommended_scenario .title{text-align: center;color: #000000;margin: 50px 0;font-size: 36px;}
+	.recommended_scenario .title{text-align: center;color: #000000;margin: 50px 0;font-size: 30px;}
 	.recommended_scenario span{display: inline-block;padding: 10px;}
 	.recommended_scenario img{width: 100%;height: 100%;}
 
