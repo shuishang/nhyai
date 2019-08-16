@@ -239,23 +239,33 @@ class OcrIDCardViewSet(viewsets.ModelViewSet):
         check_result = OCR().getWordRecognition(file_path, bill_model)
         arr = check_result['res']
         dataMap= {}
+        count = 0
         for each in arr:
             name = ""
             if(each['name']=='姓名'):
                 name = "name"
+                count = count + 1
             if(each['name']=='性别'):
                 name = "sex"
+                count = count + 1
             if(each['name']=='民族'):
                 name = "nation"
+                count = count + 1
             if(each['name']=='出生年月'):
                 name = "birth"
+                count = count + 1
             if(each['name']=='身份证号码'):
                 name = "id"
+                count = count + 1
             if(each['name']=='身份证地址'):
                 name = "address"
+                count = count + 1
             dataMap[name] = each['text']
             #dataMap[each['name']] = each['text']
         #result = check_result
+        if (len(arr) == 0 or count<3):
+            ret = 1
+            msg = "请上传身份证图片"
         serializer.save(data=dataMap,ret=ret,msg=msg,image=iserializer.image)
 
         return Response(status=status.HTTP_201_CREATED)
