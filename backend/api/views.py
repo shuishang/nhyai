@@ -239,6 +239,7 @@ class OcrIDCardViewSet(viewsets.ModelViewSet):
         check_result = OCR().getWordRecognition(file_path, bill_model)
         arr = check_result['res']
         dataMap= {}
+
         for each in arr:
             name = ""
             if(each['name']=='姓名'):
@@ -256,6 +257,9 @@ class OcrIDCardViewSet(viewsets.ModelViewSet):
             dataMap[name] = each['text']
             #dataMap[each['name']] = each['text']
         #result = check_result
+        if len(arr) == 0:
+            ret = 1
+            msg = "请上传身份证图片"
         serializer.save(data=dataMap,ret=ret,msg=msg,image=iserializer.image)
 
         return Response(status=status.HTTP_201_CREATED)
