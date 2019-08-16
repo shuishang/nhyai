@@ -1,11 +1,18 @@
 <template>
 	<div id="voiceRecognition">
 		<Navigation></Navigation>
-		<div class="yellow_top_contain">
+		<div class="voice_top_contain">
 			<el-row>
 				<el-row>
 					<el-col :xl={span:24}>
-						<img src="../assets/image/voice/voice-banner.png" alt="">
+						<div class="banner_outer">
+							<img src="../assets/image/voice/voice_banner.png" alt="">
+							<div class="describe_outer_banner">
+								<p class="ell">语音识别</p>
+								<p class="ell-rows-4 ">依托南海云的语音识别技术，为您提供高精度的语音转文字功能，支持多场景多领域的识别，可为社交聊天、智能家居、游戏娱乐等行业提供语音解决方案；结合敏感词检测技术节省审核人力，规避违规风险。</p>
+								<p class="practice_online" @click="toPractice">在线体验</p>
+							</div>
+						</div>
 					</el-col>
 				</el-row>
 			</el-row>
@@ -58,7 +65,7 @@
 					</el-col>
 				</el-row>
 		</div>
-		<div class="functional_experience">
+		<div class="functional_experience" id="practice_title">
 			<p class="title">功能体验</p>
 			<el-row>
 				<el-col :xs={span:24} :sm={span:22,offset:1} :md={span:20,offset:2} :lg={span:18,offset:3} :xl={span:16,offset:4}>
@@ -157,6 +164,7 @@
 </template>
 
 <script>
+    import {scrollBy} from '../store/common'
 	import Navigation from "../components/navigation.vue"
     import FooterIndex from "../components/footerIndex.vue"
     import Recorder,{ ENCODE_TYPE } from 'recorderx';
@@ -263,6 +271,10 @@
                     }
                 });
             },
+            toPractice(){
+                scrollBy(document.getElementById('practice_title').offsetTop-100);
+//                window.scrollBy(0,document.getElementById('practice_title').offsetTop-100)
+            }
         },
 		components:{
             Navigation,
@@ -274,9 +286,14 @@
 </script>
 
 <style scoped>
-	.yellow_top_contain{font-size: 0;line-height: 0;}
-	.yellow_top_contain img{width: 100%;}
-	.show_title_outer h1{}
+	.voice_top_contain{font-size: 0;line-height: 0;}
+	.banner_outer{position: relative;}
+	.describe_outer_banner{position: absolute;top:25%;left: 18%;font-size: 16px;color: white;width: 28%;height: 85%;}
+	.describe_outer_banner p{}
+	.describe_outer_banner p:nth-of-type(1){font-size: 48px;height: 60px;line-height: 60px;margin-bottom: 15px;min-width: 400px;}
+	.describe_outer_banner p:nth-of-type(2){height: 120px;text-align: justify;overflow: hidden;min-width: 550px;line-height: 30px;}
+	.voice_top_contain img{width: 100%;min-width: 1300px;}
+	.practice_online{height: 40px;line-height:40px;width: 135px;font-size: 15px;text-align: center;color: #BEBEBE;border: 1px solid #BEBEBE;cursor:pointer}
 
 	.functional_introduce .title{text-align: center;color: #000;font-size: 36px;margin: 10px 0 30px;}
 	.functional_introduce{padding: 50px 0;background-color: #ffffff;min-width: 800px;}

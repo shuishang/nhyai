@@ -12,7 +12,6 @@
 								<p class="ell-rows-4 ">南海云暴恐图片识别基于领先的深度学习引擎，对用户上传的图片进行自动审核，暴恐识别算法会返回“疑似暴恐”的字段，对血腥、暴力等图片进行自动打击，用AI捍卫互联网安全，助力建立安全、健康的互联网环境。</p>
 								<p class="practice_online" @click="toPractice">在线体验</p>
 							</div>
-
 						</div>
 
 					</el-col>
@@ -97,7 +96,7 @@
 							<div class="yellow_result_outer clearfix" >
 								<div class="fl" v-for="item in resultList">
 									<img :src="item.image" alt="">
-									<div class="result_outer" v-if="item.number>90">
+									<div class="result_outer" v-if="item.number>80">
 										<p class="red_style_name">违规</p>
 										<p class="red_style_number">{{item.number}}%</p>
 									</div>
@@ -130,7 +129,6 @@
 							</el-carousel-item>
 						</el-carousel>
 					</div>
-					<p class="practice_online" @click="toPractice">在线体验</p>
 				</el-col>
 			</el-row>
 		</div>
@@ -176,6 +174,7 @@
 </template>
 
 <script>
+	import {scrollBy} from '../store/common'
 	import Navigation from "../components/navigation.vue"
     import FooterIndex from "../components/footerIndex.vue"
     export default {
@@ -324,7 +323,8 @@
                 this.dialogVisible = true;
             },
             toPractice(){
-                window.scrollBy(0,document.getElementById('practice_title').offsetTop-100)
+                scrollBy(document.getElementById('practice_title').offsetTop-100);
+//                window.scrollBy(0,document.getElementById('practice_title').offsetTop-100)
 			}
         },
 		components:{
@@ -339,11 +339,11 @@
 <style scoped>
 	.force_top_contain{font-size: 0;line-height: 0;}
 	.banner_outer{position: relative;}
-	.describe_outer_banner{position: absolute;top:25%;left: 20%;font-size: 16px;color: white;width: 28%;height: 85%;}
+	.describe_outer_banner{position: absolute;top:25%;left: 18%;font-size: 16px;color: white;width: 28%;height: 85%;}
 	.describe_outer_banner p{}
 	.describe_outer_banner p:nth-of-type(1){font-size: 48px;height: 60px;line-height: 60px;margin-bottom: 15px;min-width: 400px;}
-	.describe_outer_banner p:nth-of-type(2){height: 105px;text-align: justify;overflow: hidden;min-width: 550px;line-height: 30px;}
-	.force_top_contain img{width: 100%;min-width: 1200px;}
+	.describe_outer_banner p:nth-of-type(2){height: 130px;text-align: justify;overflow: hidden;min-width: 550px;line-height: 30px;}
+	.force_top_contain img{width: 100%;min-width: 1300px;}
 	.practice_online{height: 40px;line-height:40px;width: 135px;font-size: 15px;text-align: center;color: #BEBEBE;border: 1px solid #BEBEBE;cursor:pointer}
 
 	.functional_experience{margin: 50px 0;}

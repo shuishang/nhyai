@@ -249,15 +249,15 @@
                 const reader = new FileReader();
                 const that = this;
                 reader.readAsDataURL(file);
-                reader.onload = ()=> {
-                    that.dialogImageUrl = this.result;
+                reader.onload  = (e)=> {
+                    that.dialogImageUrl = e.target.result;
                     const fileType = file.type;
                     console.log(fileType)
                     if(fileType.substr(0, 5) === "image"){
                         that.checkType = 1;
                         that.stopVideo = true;
                         that.stopAudio = true;
-                        this.submitImageCallback(e,file);
+                        this.submitImageCallback(e,file,e.target.result);
                         this.isUploading = true;
                     }else if(fileType.substr(0, 5) === "audio"){
                         that.checkType = 3;

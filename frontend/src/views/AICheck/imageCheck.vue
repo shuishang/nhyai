@@ -84,10 +84,11 @@
 			}
 		},
 		methods:{
-	      submitImage(e,file){
+	      submitImage(e,file,url){
 	          console.log(file);
 	          this.sexLevel=200;
 	          this.forceLevel=200;
+	          this.dialogImageUrl = url;
               var loading = this.$loading({fullscreen:false,target:document.querySelector(".show_result_outer")});
 	          console.log("图片提交中。。。")
               var formData = new FormData();

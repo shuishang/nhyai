@@ -16,7 +16,7 @@
 							<router-link to=""><span>图像检测</span></router-link>
 							<ul class="header_nav_two">
 								<li v-for="(item,index) in imageList">
-									<router-link :to="item.link">{{item.title}}</router-link>
+									<router-link :to="item.link" @click.native="headerNavLeave">{{item.title}}</router-link>
 								</li>
 							</ul>
 						</li>
@@ -25,14 +25,14 @@
 							<router-link to=""><span>文本检测</span></router-link>
 							<ul class="header_nav_two">
 								<li v-for="(item,index) in OCRList">
-									<router-link :to="item.link">{{item.title}}</router-link>
+									<router-link @click.native="headerNavLeave" :to="item.link">{{item.title}}</router-link>
 								</li>
 							</ul>
 						</li>
 						<!--<li><router-link to=""><span>图像检测</span></router-link></li>-->
 						<!--<li><router-link to="/wordRecognition"><span>文本检测</span></router-link></li>-->
 						<li><router-link to="/voiceRecognition"><span>语音识别</span></router-link></li>
-						<li><router-link to="/videoRecognition"><span>视频检测</span></router-link></li>
+						<li><router-link @click.native="headerNavLeave" to="/videoRecognition"><span>视频检测</span></router-link></li>
 					</ul>
 				</div>
 			</el-col>

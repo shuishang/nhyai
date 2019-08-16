@@ -1,11 +1,18 @@
 <template>
 	<div id="videoRecognition">
 		<Navigation></Navigation>
-		<div class="yellow_top_contain">
+		<div class="video_top_contain">
 			<el-row>
 				<el-row>
 					<el-col :xl={span:24}>
-						<img src="../assets/image/video/video_banner.png" alt="">
+						<div class="banner_outer">
+							<img src="../assets/image/video/video_banner.png" alt="">
+							<div class="describe_outer_banner">
+								<p class="ell">视频检测</p>
+								<p class="ell-rows-4 ">针对视频内容进行多维智能审核，其中包括色情、暴恐、政治敏感、广告、自定义黑库等，让您的平台免去审核的后顾之忧 </p>
+								<p class="practice_online" @click="toPractice">在线体验</p>
+							</div>
+						</div>
 					</el-col>
 				</el-row>
 			</el-row>
@@ -59,7 +66,7 @@
 					</el-col>
 				</el-row>
 		</div>
-		<div class="functional_experience">
+		<div class="functional_experience" id="practice_title">
 			<p class="title">功能体验</p>
 			<!--初始化效果-->
 			<div v-show="!isChose">
@@ -226,6 +233,7 @@
 </template>
 
 <script>
+    import {scrollBy} from '../store/common'
 	import Navigation from "../components/navigation.vue"
     import FooterIndex from "../components/footerIndex.vue"
     import {secondToTime} from '../store/common'
@@ -421,6 +429,10 @@
                 this.isChose=true;
                 this.uploadImage(e,file,url);
             },
+            toPractice(){
+                scrollBy(document.getElementById('practice_title').offsetTop-100);
+//                window.scrollBy(0,document.getElementById('practice_title').offsetTop-100)
+            }
         },
 		components:{
             Navigation,
@@ -434,9 +446,14 @@
 <style scoped>
 	@import "../assets/css/videojs.markers.css";
 	@import "../assets/css/video-js.min.css";
-	.yellow_top_contain{font-size: 0;line-height: 0;}
-	.yellow_top_contain img{width: 100%;}
-	.show_title_outer h1{}
+	.video_top_contain{font-size: 0;line-height: 0;}
+	.banner_outer{position: relative;}
+	.describe_outer_banner{position: absolute;top:25%;left: 18%;font-size: 16px;color: white;width: 28%;height: 85%;}
+	.describe_outer_banner p{}
+	.describe_outer_banner p:nth-of-type(1){font-size: 48px;height: 60px;line-height: 60px;margin-bottom: 15px;min-width: 400px;}
+	.describe_outer_banner p:nth-of-type(2){height: 120px;text-align: justify;overflow: hidden;min-width: 550px;line-height: 30px;}
+	.video_top_contain img{width: 100%;min-width: 1300px;}
+	.practice_online{height: 40px;line-height:40px;width: 135px;font-size: 15px;text-align: center;color: #BEBEBE;border: 1px solid #BEBEBE;cursor:pointer}
 
 	.functional_introduce .title{text-align: center;color: #000;font-size: 36px;margin: 10px 0 30px;}
 	.functional_introduce{padding: 50px 0;background-color: #ffffff;min-width: 800px;}

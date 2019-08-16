@@ -1,11 +1,18 @@
 <template>
 	<div id="wordRecognition">
 		<Navigation></Navigation>
-		<div class="yellow_top_contain">
+		<div class="word_top_contain">
 			<el-row>
 				<el-row>
 					<el-col :xl={span:24}>
-						<img src="../assets/image/word/word_banner.png" alt="">
+						<div class="banner_outer">
+							<img src="../assets/image/word/word_banner.png" alt="">
+							<div class="describe_outer_banner">
+								<p class="ell">卡证类识别</p>
+								<p class="ell-rows-4 ">基于南海云网络领先的深度学习算法，利用光学字符识别技术，将图片上的文字内容，直接转换为可编辑文本。不仅能精准快速识别身份证、名片、营业执照、驾驶证等卡证类信息，更有通用OCR和手写体识别技术支持更多场景、任意版面的文字信息获取，大大提高了工作效率和用户体验。</p>
+								<p class="practice_online" @click="toPractice">在线体验</p>
+							</div>
+						</div>
 					</el-col>
 				</el-row>
 			</el-row>
@@ -34,7 +41,7 @@
 				</el-row>
 			</div>
 		</div>
-		<div class="functional_experience">
+		<div class="functional_experience" id="practice_title">
 			<p class="title">功能体验</p>
 			<el-row>
 				<el-col :xs={span:24} :sm={span:22,offset:1} :md={span:20,offset:2} :lg={span:18,offset:3} :xl={span:16,offset:4}>
@@ -118,6 +125,7 @@
 </template>
 
 <script>
+    import {scrollBy} from '../store/common'
 	import Navigation from "../components/navigation.vue"
     import FooterIndex from "../components/footerIndex.vue"
     export default {
@@ -233,6 +241,10 @@
             handlePictureCardPreview(file) {
                 this.dialogImageUrl = file.url;
                 this.dialogVisible = true;
+            },
+            toPractice(){
+                scrollBy(document.getElementById('practice_title').offsetTop-100);
+//                window.scrollBy(0,document.getElementById('practice_title').offsetTop-100)
             }
         },
 		components:{
@@ -245,9 +257,14 @@
 </script>
 
 <style scoped>
-	.yellow_top_contain{font-size: 0;line-height: 0;}
-	.yellow_top_contain img{width: 100%;}
-	.show_title_outer h1{}
+	.word_top_contain{font-size: 0;line-height: 0;}
+	.banner_outer{position: relative;}
+	.describe_outer_banner{position: absolute;top:25%;left: 18%;font-size: 16px;color: white;width: 28%;height: 75%;}
+	.describe_outer_banner p{}
+	.describe_outer_banner p:nth-of-type(1){font-size: 48px;height: 60px;line-height: 60px;margin-bottom: 15px;min-width: 400px;}
+	.describe_outer_banner p:nth-of-type(2){height: 130px;text-align: justify;overflow: hidden;min-width: 600px;line-height: 30px;}
+	.word_top_contain img{width: 100%;min-width: 1320px;}
+	.practice_online{height: 40px;line-height:40px;width: 135px;font-size: 15px;text-align: center;color: #BEBEBE;border: 1px solid #BEBEBE;cursor:pointer}
 
 	.functional_introduce .title{text-align: center;color: #000;font-size: 36px;margin: 10px 0 40px;}
 	.functional_introduce{padding: 50px 0;background-color: #f4f5f7;}

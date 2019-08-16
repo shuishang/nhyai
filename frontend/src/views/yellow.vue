@@ -5,12 +5,19 @@
 			<el-row>
 				<el-row>
 					<el-col :xl={span:24}>
-						<img src="../assets/image/yellow/yellow_banner.png" alt="">
+						<div class="banner_outer">
+							<img src="../assets/image/yellow/yellow_banner.png" alt="">
+							<div class="describe_outer_banner">
+								<p class="ell">色情检测</p>
+								<p class="ell-rows-4 ">基于海量大数据样本，领先机器学习算法，高效识别涉黄图<br/>片，精准鉴别图像中的涉黄内容，规避运营风险</p>
+								<p class="practice_online" @click="toPractice">在线体验</p>
+							</div>
+						</div>
 					</el-col>
 				</el-row>
 			</el-row>
 		</div>
-		<div class="functional_experience">
+		<div class="functional_experience" >
 			<h2 class="title">功能介绍</h2>
 			<p class="title_describe">人工智能鉴黄技术，智能识别图片和色情和性感内容，让您的应用轻松过审，远离违规风险</p>
 			<div class="handwrite">
@@ -23,7 +30,7 @@
 				</el-row>
 			</div>
 		</div>
-		<div class="functional_experience">
+		<div class="functional_experience" id="practice_title">
 			<h2 class="title">功能体验</h2>
 			<el-row style="min-width: 800px;margin-top: 40px;">
 				<el-col :xs={span:14} :sm={span:16} :md={span:14,offset:2} :lg={span:13,offset:2} :xl={span:11,offset:4}>
@@ -88,7 +95,7 @@
 							<div class="yellow_result_outer clearfix" >
 								<div class="fl" v-for="item in resultList">
 									<img :src="item.image" alt="">
-									<div class="result_outer" v-if="item.number>90">
+									<div class="result_outer" v-if="item.number>80">
 										<p class="red_style_name">违规</p>
 										<p class="red_style_number">{{item.number}}%</p>
 									</div>
@@ -125,7 +132,7 @@
 				</el-col>
 			</el-row>
 		</div>
-		<div class="advantage_product">
+		<div class="advantage_product" >
 			<h2 class="title">技术优势</h2>
 			<el-row>
 				<el-col :xs={span:24} :sm={span:22,offset:1} :md={span:20,offset:2} :lg={span:18,offset:3} :xl={span:16,offset:4}>
@@ -167,6 +174,7 @@
 </template>
 
 <script>
+    import {scrollBy} from '../store/common'
 	import Navigation from "../components/navigation.vue"
     import FooterIndex from "../components/footerIndex.vue"
     export default {
@@ -325,6 +333,10 @@
             handlePictureCardPreview(file) {
                 this.dialogImageUrl = file.url;
                 this.dialogVisible = true;
+            },
+            toPractice(){
+                scrollBy(document.getElementById('practice_title').offsetTop-100);
+//                window.scrollBy(0,document.getElementById('practice_title').offsetTop-100)
             }
         },
 		components:{
@@ -339,7 +351,13 @@
 <style scoped>
 	.yellow_top_contain{font-size: 0;line-height: 0;}
 	.yellow_top_contain img{width: 100%;}
-	.show_title_outer h1{}
+	.yellow_top_contain .banner_outer{position: relative;}
+	.yellow_top_contain .describe_outer_banner{position: absolute;top:25%;left: 18%;font-size: 16px;color: white;width: 28%;height: 75%;}
+	.yellow_top_contain .describe_outer_banner p{}
+	.yellow_top_contain .describe_outer_banner p:nth-of-type(1){font-size: 48px;height: 60px;line-height: 60px;margin-bottom: 15px;min-width: 400px;}
+	.yellow_top_contain .describe_outer_banner p:nth-of-type(2){height: 105px;text-align: justify;overflow: hidden;min-width: 550px;line-height: 30px;}
+	.yellow_top_contain  img{width: 100%;min-width: 1200px;}
+	.yellow_top_contain .practice_online{height: 40px;line-height:40px;width: 135px;font-size: 15px;text-align: center;color: #BEBEBE;border: 1px solid #BEBEBE;cursor:pointer}
 
 	.functional_experience{margin: 50px 0;}
 	.functional_experience .title{text-align: center;color: #000;margin: 40px 0 15px;font-size: 36px;}

@@ -70,10 +70,13 @@ export function formatDate(date, fmt) {//2018-03-21 18:08:48
 function padLeftZero(str) {
 	return('00' + str).substr(str.length);
 };
+export function scrollBy(offsetTop){
+    window.scrollBy(0,offsetTop)
+}
 export function secondToTime(second) {
 	const hour = second>3600?Math.floor(second/3600)+":":"00:";
 	const minute = second>60?Math.floor(second/60)>10?Math.floor(second/60):"0"+Math.floor(second/60)+":":"00:";
-	const sec = second%60<9?"0"+Math.ceil(second%60):Math.ceil(second%60);
+	const sec = second%60<=9?"0"+Math.ceil(second%60):Math.ceil(second%60);
 	return hour  + minute + sec;
 }
 
