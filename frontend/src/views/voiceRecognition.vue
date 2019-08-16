@@ -293,7 +293,7 @@
 	.describe_outer_banner p:nth-of-type(1){font-size: 48px;height: 60px;line-height: 60px;margin-bottom: 15px;min-width: 400px;}
 	.describe_outer_banner p:nth-of-type(2){height: 120px;text-align: justify;overflow: hidden;min-width: 550px;line-height: 30px;}
 	.voice_top_contain img{width: 100%;min-width: 1300px;}
-	.practice_online{height: 40px;line-height:40px;width: 135px;font-size: 15px;text-align: center;color: #BEBEBE;border: 1px solid #BEBEBE;cursor:pointer}
+	.practice_online{height: 40px;line-height:40px;width: 135px;font-size: 15px;text-align: center;color: #fff;border: 1px solid #fff;cursor:pointer}
 
 	.functional_introduce .title{text-align: center;color: #000;font-size: 36px;margin: 10px 0 30px;}
 	.functional_introduce{padding: 50px 0;background-color: #ffffff;min-width: 800px;}
