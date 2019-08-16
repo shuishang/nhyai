@@ -28,14 +28,17 @@
 			<el-col :xs={span:24} :sm={span:11} :md="10" :lg="9" :xl="8">
 				<div class="show_json_outer">
 					<span class="original_style">识别结果</span>
-					<div id="show_json" v-show="showJson.name">
-						<p>姓名：{{showJson.name}}</p>
-						<p>性别：{{showJson.sex}}</p>
-						<p>民族：{{showJson.nation}}</p>
-						<p>出生：{{showJson.birth}}</p>
-						<p>住址：{{showJson.address}}</p>
-						<p>公民身份证号：{{showJson.id}}</p>
+					<div v-if="!imageWrong">
+						<div id="show_json" v-show="showJson.name">
+							<p>姓名：{{showJson.name}}</p>
+							<p>性别：{{showJson.sex}}</p>
+							<p>民族：{{showJson.nation}}</p>
+							<p>出生：{{showJson.birth}}</p>
+							<p>住址：{{showJson.address}}</p>
+							<p>公民身份证号：{{showJson.id}}</p>
+						</div>
 					</div>
+					<div class="idCard_wrong" v-else>请上传身份证图片</div>
 				</div>
 			</el-col>
 		</el-row>
@@ -59,7 +62,8 @@
                 activeName: 'first',
                 showJson :{},
                 isLoading:false,
-				isCheck:false
+				isCheck:false,
+				imageWrong:false
 
             };
         },
@@ -75,7 +79,9 @@
         },
         methods: {
             uploadImage(e){
+                this.imageWrong = false;
                 this.isCheck= true;
+                this.showJson = {}
                 var loading = this.$loading({fullscreen:false,target:document.querySelector(".outer_add")});
                 var formData = new FormData();
                 formData.append('image', $('#datafile')[0].files[0]);
@@ -88,8 +94,14 @@
                     contentType: false,
                     processData: false,
                     success:(response)=>{
-                        console.log(response.data);
-                        this.showJson = response.data;
+                        console.log(response.ret);
+                        if(response.ret==1){
+                            this.showJson.name = response.msg;
+                            this.imageWrong = true;
+						}else {
+                            this.showJson = response.data;
+						}
+
                         loading.close();
                         this.isCheck= false;
                     },
@@ -134,6 +146,7 @@
 	.show_input_outer{display: flex;flex: 1;}
 	#show_json{margin: 50px auto;padding: 10px 30px;}
 	#show_json p{height: 30px;line-height: 30px;}
+	.idCard_wrong{text-align: center;height: 350px;line-height:350px;color: #ff4949;}
 
 	.advantage_product span{display: inline-block;padding: 10px;}
 	.show_word{width: 192px;height: 148px;  display: inline-block;  text-align: center;  font-size: 22px;  font-style: normal;  color: #fff;  box-sizing: border-box;  padding-top: 58px;}
