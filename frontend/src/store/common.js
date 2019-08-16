@@ -71,7 +71,8 @@ function padLeftZero(str) {
 	return('00' + str).substr(str.length);
 };
 export function scrollBy(offsetTop){
-    window.scrollBy(0,offsetTop)
+    // window.scrollBy(0,offsetTop);
+    $('html,body').animate({ scrollTop: offsetTop}, 200)
 }
 export function secondToTime(second) {
 	const hour = second>3600?Math.floor(second/3600)+":":"00:";
