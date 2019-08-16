@@ -356,8 +356,8 @@
 	.recommended_scenario{padding: 50px 0 200px;overflow: hidden;background-color: #fff;min-width: 1200px;}
 	.recommended_scenario .title{text-align: center;color: #000000;margin: 50px 0;font-size: 36px;}
 	.recommended_scenario ul{display: flex;}
-	.recommended_scenario ul li{width: 380px;height: 340px;margin-right: 30px;padding: 0 20px;color: #ffffff;text-align: justify;background-size: 100% 100%;}
-	.recommended_scenario ul li p{margin-top: 30px;height: 60px;line-height: 60px;font-size: 18px;text-align: center;}
+	.recommended_scenario ul li{width: 380px;height: 340px;margin-right: 30px;padding: 0 50px;color: #ffffff;text-align: justify;background-size: 100% 100%;}
+	.recommended_scenario ul li p{margin-top: 85px;height: 60px;line-height: 60px;font-size: 18px;text-align: center;}
 	.recommended_scenario ul li span{display: inline-block;line-height: 40px;font-size: 14px;}
 	.recommended_scenario ul li:nth-of-type(1){background-image: url("../assets/image/voice/voice_scence1.png");}
 	.recommended_scenario ul li:nth-of-type(2){background-image: url("../assets/image/voice/voice_scence2.png");}

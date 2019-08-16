@@ -13,7 +13,7 @@
 							</div>
 						</div>
 					</div>
-					<p class="suggest"><span class="red_color">*</span> 提示: 敏感系数<50%为合规，50%～90%为疑似违规，>90%为违规</p>
+					<p class="suggest"><span class="red_color">*</span> 提示: 敏感系数<50%为合规，50%～80%为疑似违规，>80%为违规</p>
 				</div>
 			</el-col>
 			<el-col :md="6" :lg="7" :xl="5">
