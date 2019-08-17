@@ -93,7 +93,6 @@
 							:multiple="true"
 							:on-change="onListChange"
 							:http-request="uploadImage"
-							:before-upload="beforeUpLoad"
 							:on-exceed="outSuggest"
 							:on-remove="handleRemove">
 							<i class="el-icon-plus"></i>

@@ -69,7 +69,7 @@
 </template>
 
 <script>
-
+    import fileUtil from '../../store/fileUtil'
 	export default {
         props:["file"],
 	    data(){
@@ -88,44 +88,58 @@
 	          console.log(file);
 	          this.sexLevel=200;
 	          this.forceLevel=200;
-//	          this.dialogImageUrl = url;
-              const reader = new FileReader();
-              const that = this;
-              reader.readAsDataURL(file);
-              reader.onload  = (e)=> {
-                  this.dialogImageUrl = e.target.result;
-              };
-              var loading = this.$loading({fullscreen:false,target:document.querySelector(".show_result_outer")});
-	          console.log("图片提交中。。。")
-              var formData = new FormData();
-              formData.append('image', file);
-              $.ajax({
-                  url: this.api+"/api/v1/image/get_image_inspection/",
-                  type: "post",
-                  data: formData,
+              var loading;
+              fileUtil.getOrientation(file).then((orient) => {
+                  if(orient && orient === 6) {
+                      const reader = new FileReader();
+                      reader.onload = ($event)=> {
+                          let img = new Image();
+                          img.src = $event.target.result;
+                          img.onload = ()=> {
+                              const data = fileUtil.rotateImage(img, img.width, img.height);
+                              const newFile = fileUtil.dataURLtoFile(data, file.name);
+                              console.log(newFile);
+                              this.dialogImageUrl= fileUtil.getObjectURL(newFile);
+                              loading = this.$loading({fullscreen:false,target:document.querySelector(".show_result_outer")});
+                          }
+                      };
+                      reader.readAsDataURL(file);
+                  } else {
+                      this.dialogImageUrl= fileUtil.getObjectURL(file);
+                      loading = this.$loading({fullscreen:false,target:document.querySelector(".show_result_outer")});
+                  }
+                  console.log("图片提交中。。。");
+                  var formData = new FormData();
+                  formData.append('image', file);
+                  $.ajax({
+                      url: this.api+"/api/v1/image/get_image_inspection/",
+                      type: "post",
+                      data: formData,
 //                    headers: {'Authorization': 'Token mytoken'},
-                  cache: false,
-                  contentType: false,
-                  processData: false,
-                  success:(response)=>{
-                      loading.close();
-                      console.log(response);
-                      this.dialogImageUrl = response.image;
-                      this.sexLevel = response.data.porn_percent;
-                      this.forceLevel = response.data.violence_percent;
-                      if(this.sexLevel>50|this.forceLevel>50){
-                          this.isForce = true;
-					  }else {
-                          this.isForce = false;
-					  }
-                      this.$parent.changeUploadState(false);
-                  },
-				  error:err=>{
-                      loading.close();
-                      console.log(err)
-                      this.$parent.changeUploadState(false);
-				  }
+                      cache: false,
+                      contentType: false,
+                      processData: false,
+                      success:(response)=>{
+                          loading.close();
+                          console.log(response);
+//                      this.dialogImageUrl = response.image;
+                          this.sexLevel = response.data.porn_percent;
+                          this.forceLevel = response.data.violence_percent;
+                          if(this.sexLevel>50|this.forceLevel>50){
+                              this.isForce = true;
+                          }else {
+                              this.isForce = false;
+                          }
+                          this.$parent.changeUploadState(false);
+                      },
+                      error:err=>{
+                          loading.close();
+                          console.log(err)
+                          this.$parent.changeUploadState(false);
+                      }
+                  });
               });
+
               e.preventDefault();
 		  }
 		}
