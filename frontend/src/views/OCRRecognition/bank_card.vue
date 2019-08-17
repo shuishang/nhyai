@@ -54,14 +54,14 @@
                 imageIsBig:false,
                 activeName: 'first',
                 showJson :{},
-                options:{background:"rgba(0, 0, 0, 0.3)",fullscreen:false,target:document.querySelector(".show_json_outer")}
+                options:{background:"rgba(0, 0, 0, 0.3)",fullscreen:false,target:document.querySelector(".outer_add")}
 
             };
         },
         mounted:function () {
             var that = this;
             var jdata = JSON.stringify(JSON.parse(this.jsonDemo), null, 4);
-            var loading = this.$loading({fullscreen:false,target:document.querySelector(".show_json_outer"),text:"正在加载..."});
+            var loading = this.$loading({fullscreen:false,target:document.querySelector(".outer_add")});
             this.intervalid1 = setTimeout(() => {
                 this.showJson = JSON.parse(this.jsonDemo);
                 clearInterval(this.intervalid1);
@@ -138,7 +138,7 @@
 
 	#show_json{margin: 50px auto;padding: 10px 30px;}
 	#show_json p{height: 30px;line-height: 30px;}
-	.inputfile{z-index: -11111;width: 0px;height:1px;opacity: 0;}
+	.inputfile{z-index: -11111;width: 0;height:1px;opacity: 0;position: absolute;}
 	.suggest{color: #b2b2b2;font-size: 14px;min-height: 30px;margin:8px 0;}
 	.show_result_outer{width: 100%;height: 100%;position: absolute;top: 0;z-index: 1;text-align: center; background-color: rgba(0,0,0,.4);}
 	.show_result_outer:before{content: '';position: absolute;left: 0;top: 0;width: 100%;height: 100%;}

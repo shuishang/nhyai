@@ -53,13 +53,13 @@
                 imageIsBig:false,
                 activeName: 'first',
                 showJson :{},
-                options:{background:"rgba(0, 0, 0, 0.3)",fullscreen:false,target:document.querySelector(".show_json_outer")}
+                options:{background:"rgba(0, 0, 0, 0.3)",fullscreen:false,target:document.querySelector(".outer_add")}
             };
         },
         mounted:function () {
             var that = this;
             var jdata = JSON.stringify(JSON.parse(this.jsonDemo), null, 4);
-            var loading = this.$loading({fullscreen:false,target:document.querySelector(".show_json_outer"),text:"正在加载..."});
+            var loading = this.$loading({fullscreen:false,target:document.querySelector(".outer_add")});
             this.intervalid1 = setTimeout(() => {
                 this.showJson = JSON.parse(this.jsonDemo);
                 clearInterval(this.intervalid1);

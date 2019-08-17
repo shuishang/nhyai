@@ -3,7 +3,7 @@
 		<el-row class="loading_con">
 			<el-col :xs={span:24} :sm={span:11,offset:1} :md={span:10,offset:2} :lg={span:9,offset:3} :xl={span:8,offset:4}>
 				<div class="image_outer">
-					<div class="outer_add">
+					<div class="outer_add" v-loading="isLoading">
 						<span class="original_style">原始图片</span>
 						<img class="show_add_image" :src="dialogImageUrl">
 					</div>
@@ -22,7 +22,7 @@
 				</div>
 			</el-col>
 			<el-col :xs={span:24} :sm={span:11} :md="10" :lg="9" :xl="8">
-				<div class="show_json_outer" v-loading="isLoading" element-loading-text="加载中..." >
+				<div class="show_json_outer"  >
 					<span class="original_style">识别结果</span>
 					<div id="show_json" v-show="showJson.name">
 						<p>姓名：{{showJson.name}}</p>
@@ -54,7 +54,7 @@
                 imageIsBig:false,
                 activeName: 'first',
                 showJson :{},
-                options:{background:"rgba(0, 0, 0, 0.3)",fullscreen:false,target:document.querySelector(".show_json_outer")},
+                options:{background:"rgba(0, 0, 0, 0.3)",fullscreen:false,target:document.querySelector(".outer_add")},
                 currentImage:1,
                 isLoading:false,
 				clickFirst:0
@@ -62,37 +62,7 @@
             };
         },
         mounted:function () {
-            var that = this;
-            var jdata = JSON.stringify(JSON.parse(this.jsonDemo), null, 4);
             this.loadDate();
-//            $("#show_json").html("<pre>"+jdata+"</pre>");//这时数据展示正确
-            $('form').submit(function(e) {
-                that.imageRight = false;
-                var formData = new FormData($(this));
-                formData.append('datafile', $('#datafile')[0].files[0]);
-                $.ajax({
-                    url: $(this).attr('action'),
-                    type: $(this).attr('method'),
-                    data: formData,
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    success:(response)=>{
-                        var result = response.result;
-                        console.log( result.data.tag_list[1].probability,"hhhhhhhhhhhh") ;
-                        var jdata = JSON.stringify(result, null, 4);
-                        $("#show_json").html("<pre>"+jdata+"</pre>");//这时数据展示正确
-                        var forcePercent = result.data.tag_list[1].probability.toString();
-                        forcePercent = forcePercent.substring(0,forcePercent.indexOf(".")+5)*100;
-                        console.log(forcePercent);
-                        that.showPercent =`概率：${forcePercent}%`;
-                        if(forcePercent>80){
-                            that.isForce = true;
-                        }
-                    },
-                });
-                e.preventDefault();
-            });
         },
         methods: {
             uploadImage(e){

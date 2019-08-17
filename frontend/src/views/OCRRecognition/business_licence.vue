@@ -54,49 +54,19 @@
                 imageIsBig:false,
                 activeName: 'first',
                 showJson :{},
-                options:{background:"rgba(0, 0, 0, 0.3)",fullscreen:false,target:document.querySelector(".show_json_outer")}
+                options:{background:"rgba(0, 0, 0, 0.3)",fullscreen:false,target:document.querySelector(".outer_add")}
 
             };
         },
         mounted:function () {
             var that = this;
             var jdata = JSON.stringify(JSON.parse(this.jsonDemo), null, 4);
-            var loading = this.$loading({fullscreen:false,target:document.querySelector(".show_json_outer"),text:"正在加载..."});
+            var loading = this.$loading({fullscreen:false,target:document.querySelector(".outer_add")});
             this.intervalid1 = setTimeout(() => {
                 this.showJson = JSON.parse(this.jsonDemo);
                 clearInterval(this.intervalid1);
                 loading.close();
             }, 2000)
-
-//            $("#show_json").html("<pre>"+jdata+"</pre>");//这时数据展示正确
-            $('form').submit(function(e) {
-                that.imageRight = false;
-                that.$loading({fullscreen:false,target:document.querySelector(".show_json_outer"),text:"正在加载..."});
-                var formData = new FormData($(this));
-                formData.append('datafile', $('#datafile')[0].files[0]);
-                $.ajax({
-                    url: $(this).attr('action'),
-                    type: $(this).attr('method'),
-                    data: formData,
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    success:(response)=>{
-                        var result = response.result;
-                        console.log( result.data.tag_list[1].probability,"hhhhhhhhhhhh") ;
-                        var jdata = JSON.stringify(result, null, 4);
-                        $("#show_json").html("<pre>"+jdata+"</pre>");//这时数据展示正确
-                        var forcePercent = result.data.tag_list[1].probability.toString();
-                        forcePercent = forcePercent.substring(0,forcePercent.indexOf(".")+5)*100;
-                        console.log(forcePercent);
-                        that.showPercent =`概率：${forcePercent}%`;
-                        if(forcePercent>80){
-                            that.isForce = true;
-                        }
-                    },
-                });
-                e.preventDefault();
-            });
         },
         methods: {
             uploadImage(e){

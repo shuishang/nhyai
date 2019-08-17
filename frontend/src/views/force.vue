@@ -72,6 +72,7 @@
 								class="avatar-uploader"
 								action="http://172.31.4.7:8000/api/v1/image/get_vision_porn/"
 								:auto-upload="false"
+								accept="image/png,image/jpg,image/jpeg"
 								:multiple="true"
 								:on-change="onImageChange">
 								<i class="el-icon-plus avatar-uploader-icon"></i>
@@ -88,6 +89,7 @@
 							:on-preview="handlePictureCardPreview"
 							:file-list="fileList"
 							:limit="10"
+							accept="image/png,image/jpg,image/jpeg"
 							:multiple="true"
 							:on-change="onListChange"
 							:http-request="uploadImage"
@@ -216,38 +218,6 @@
         methods: {
             onImageChange(file, fileList){
                 console.log(file);
-                if(!file.url){
-                    file.url = URL.createObjectURL(file.raw);
-                }
-                this.fileList.push(file);
-                this.isImage = 2;
-            },
-            beforeUpLoad(file){
-                console.log("beforeUpLoad执行了")
-			},
-            onListChange(file, fileList){
-
-                /*EXIF.getData(file.raw, ()=> {
-                    const orient = EXIF.getTag(this, 'Orientation');
-                    if (orient && orient === 6) {
-                        debugger
-                        let reader = new FileReader();
-                        let img = new Image();
-                        reader.onload = (e) => {
-                            img.src = e.target.result;
-                            img.onload =  ()=>{
-                                const data = fileUtil.rotateImage(img, img.width, img.height)
-                                const newFile = fileUtil.dataURLtoFile(data, file.raw.name)
-//                                resolve(newFile)
-                                file.raw= newFile;
-                                this.fileList.push(file);
-                            }
-                        }
-                    }else {
-                        debugger;
-                        this.fileList.push(file);
-                    }
-                })*/
                 fileUtil.getOrientation(file.raw).then((orient) => {
                     if(orient && orient === 6) {
                         const reader = new FileReader();
@@ -255,19 +225,49 @@
                             let img = new Image();
                             img.src = $event.target.result;
                             img.onload = ()=> {
-                                debugger;
-                                const data = fileUtil.rotateImage(img, img.width, img.height)
+                                const data = fileUtil.rotateImage(img, img.width, img.height);
                                 const newFile = fileUtil.dataURLtoFile(data, file.raw.name);
+                                console.log(newFile);
+                                file.url= fileUtil.getObjectURL(newFile);
                                 file.raw = newFile;
                                 this.fileList.push(file);
                             }
-						}
+                        };
+                        reader.readAsDataURL(file.raw);
+                        this.isImage = 2;
+                    } else {
+                        if(!file.url){
+                            file.url = URL.createObjectURL(file.raw);
+                        }
+                        this.fileList.push(file);
+                        this.isImage = 2;
+                    }
+                });
+//                this.fileList.push(file);
+
+            },
+            onListChange(file, fileList){
+                fileUtil.getOrientation(file.raw).then((orient) => {
+                    if(orient && orient === 6) {
+                        const reader = new FileReader();
+                        reader.onload = ($event)=> {
+                            let img = new Image();
+                            img.src = $event.target.result;
+                            img.onload = ()=> {
+                                const data = fileUtil.rotateImage(img, img.width, img.height);
+                                const newFile = fileUtil.dataURLtoFile(data, file.raw.name);
+                                console.log(newFile);
+                                file.url= fileUtil.getObjectURL(newFile);
+                                file.raw = newFile;
+                                this.fileList.push(file);
+                            }
+						};
                         reader.readAsDataURL(file.raw);
                     } else {
                         this.fileList.push(file);
                     }
-                })
-                if(this.fileList.length==10){
+                });
+                if(this.fileList.length===10){
                     this.$message.error('一次最多选择10张图片！');
                 }
             },
@@ -457,6 +457,8 @@
 	.result_outer{margin: 10px 2px;display: flex;color: #000000;height: 28px;line-height: 28px;}
 	.result_outer p:nth-of-type(1){font-size: 16px;flex: 5;}
 	.result_outer p:nth-of-type(2){font-size: 16px;flex: 4;text-align: center}
+	.yellow_result_suggest{text-align: center;font-size: 15px;color: #999999;margin-top: 10px;}
+	.yellow_result_suggest span{color: #ff4949;}
 
 	.advantage_product{padding: 65px 0 30px ;overflow: hidden;background-color: #f2f2f5;}
 	.advantage_product .title{text-align: center;color: #000000;margin: 10px 0;font-size: 30px;}

@@ -72,6 +72,7 @@
 								action="http://172.31.4.7:8000/api/v1/image/get_vision_porn/"
 								:auto-upload="false"
 								:multiple="true"
+								accept="image/png,image/jpg,image/jpeg"
 								:on-change="onImageChange">
 								<i class="el-icon-plus avatar-uploader-icon"></i>
 							</el-upload>
@@ -91,6 +92,7 @@
 							:on-change="onListChange"
 							:http-request="uploadImage"
 							:on-exceed="outSuggest"
+							accept="image/png,image/jpg,image/jpeg"
 							:on-remove="handleRemove">
 							<i class="el-icon-plus"></i>
 						</el-upload>
@@ -185,6 +187,7 @@
 </template>
 
 <script>
+    import fileUtil from '../store/fileUtil'
     import {scrollBy} from '../store/common'
 	import Navigation from "../components/navigation.vue"
     import FooterIndex from "../components/footerIndex.vue"
@@ -226,18 +229,59 @@
         methods: {
             onImageChange(file, fileList){
                 console.log(file);
-                if(!file.url){
-                    file.url = URL.createObjectURL(file.raw);
-                }
-                this.fileList.push(file);
-                this.isImage = 2;
+                fileUtil.getOrientation(file.raw).then((orient) => {
+                    if(orient && orient === 6) {
+                        const reader = new FileReader();
+                        reader.onload = ($event)=> {
+                            let img = new Image();
+                            img.src = $event.target.result;
+                            img.onload = ()=> {
+                                const data = fileUtil.rotateImage(img, img.width, img.height);
+                                const newFile = fileUtil.dataURLtoFile(data, file.raw.name);
+                                console.log(newFile);
+                                file.url= fileUtil.getObjectURL(newFile);
+                                file.raw = newFile;
+                                this.fileList.push(file);
+                            }
+                        };
+                        reader.readAsDataURL(file.raw);
+                        this.isImage = 2;
+                    } else {
+                        if(!file.url){
+                            file.url = URL.createObjectURL(file.raw);
+                        }
+                        this.fileList.push(file);
+                        this.isImage = 2;
+                    }
+                });
+//                this.fileList.push(file);
+
             },
-			onListChange(file, fileList){
-                this.fileList=fileList;
-                if(this.fileList.length==10){
+            onListChange(file, fileList){
+                fileUtil.getOrientation(file.raw).then((orient) => {
+                    if(orient && orient === 6) {
+                        const reader = new FileReader();
+                        reader.onload = ($event)=> {
+                            let img = new Image();
+                            img.src = $event.target.result;
+                            img.onload = ()=> {
+                                const data = fileUtil.rotateImage(img, img.width, img.height);
+                                const newFile = fileUtil.dataURLtoFile(data, file.raw.name);
+                                console.log(newFile);
+                                file.url= fileUtil.getObjectURL(newFile);
+                                file.raw = newFile;
+                                this.fileList.push(file);
+                            }
+                        };
+                        reader.readAsDataURL(file.raw);
+                    } else {
+                        this.fileList.push(file);
+                    }
+                });
+                if(this.fileList.length===10){
                     this.$message.error('一次最多选择10张图片！');
-				}
-			},
+                }
+            },
             outSuggest(){
                 this.$message.error('一次最多选择10张图片！');
 			},
