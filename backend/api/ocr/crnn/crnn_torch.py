@@ -6,8 +6,8 @@ from .utils import strLabelConverter,resizeNormalize
 from .network_torch import CRNN
 from . import keys
 from collections import OrderedDict
-from ..config import ocrModel,LSTMFLAG,GPU
-from ..config import chinsesModel
+from config import ocrModel,LSTMFLAG,GPU
+from config import chinsesModel
 def crnnSource():
     """
     加载模型

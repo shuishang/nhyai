@@ -1,12 +1,12 @@
 #coding:utf-8
-from .utils import strLabelConverter,resizeNormalize
+from utils import strLabelConverter,resizeNormalize
 
-from .network_keras import keras_crnn as CRNN
+from network_keras import keras_crnn as CRNN
 import tensorflow as tf
 graph = tf.get_default_graph()##解决web.py 相关报错问题
 
 from . import keys
-from ..config import ocrModelKeras
+from config import ocrModelKeras
 import numpy as np
 def crnnSource():
     alphabet = keys.alphabetChinese##中英文模型
