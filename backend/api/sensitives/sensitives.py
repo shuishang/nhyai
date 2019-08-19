@@ -37,7 +37,7 @@ class sensitiveClass:
             for index, row in df.iterrows():
                 sensitiveCms = row['内容'].split('、')
                 if keyword.strip()=='':
-                    break;
+                    break
                 #if (keyword == ' ')
                 # if keyword.strip()=='':
                 #     break;
@@ -115,7 +115,7 @@ class sensitiveClass:
             for index, row in settings.DF.iterrows():                
                 sensitiveCms = row['内容'].split('、')
                 if keyword.strip()=='':
-                    break;
+                    break
                 if keyword in sensitiveCms:
                     result = {}
                     result["firstType"] = row['大类']
