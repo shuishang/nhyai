@@ -31,8 +31,9 @@ class sensitiveClass:
         web_text = "<div>"
         app_text = ""
         if input_word != None:
-            keywords = input_word.split(' ')
-        
+            keywords = " ".join(input_word.split())
+            keywords = keywords.split(' ')
+        print("111111111111111===",keywords)
         for keyword in keywords:
             for index, row in df.iterrows():
                 sensitiveCms = row['内容'].split('、')
@@ -109,7 +110,8 @@ class sensitiveClass:
         web_text = "<div>"
         app_text = ""
         if input_word != None:
-            keywords = input_word.split(' ')
+            keywords = " ".join(input_word.split())
+            keywords = keywords.split(' ')
         
         for keyword in keywords:
             for index, row in settings.DF.iterrows():                
@@ -172,6 +174,7 @@ class sensitiveClass:
 
 if __name__ == '__main__':
     df = pd.read_csv(os.path.join(os.getcwd(),"backend","api","sensitives","sensitiveWords.csv"),encoding='gbk')
-    sensitiveClass().check_sensitiveWords_test(df, "十八摸 11111")
+    #sensitiveClass().check_sensitiveWords_test(df, "十八摸 11111")
+    sensitiveClass().check_sensitiveWords_test(df, "   \xa0台独\xa0SOHO红\xa0台独\xa0   ")
     #sensitiveClass().check_sensitiveWords_test(df, "  heheh ")
     #sensitiveClass().check_sensitiveWords_test(df, "你 不是 跟 我 讲的 笑话 吗 欲死欲仙 十八摸")
