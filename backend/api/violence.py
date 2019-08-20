@@ -11,24 +11,26 @@ import time
 import shutil
 from PIL import Image
 from tqdm import tqdm
-from django.conf import settings
 import torch
 import cv2
 from torch.utils.data import Dataset, DataLoader
 from torch.autograd import Variable
 import torchvision.models as models
 
-from .util import ProtestDatasetEvalFile, modified_resnet50
+# 添加当前项目到环境变量
+import sys
+sys.path.append(os.path.join(os.getcwd(),"backend","api"))
+from util import ProtestDatasetEvalFile, modified_resnet50
 import logging
 logging.basicConfig(level = logging.INFO,format = '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
 class violence:
-    def __init__(self):
+    def __init__(self, cuda):
         self = self
         self.path = os.getcwd()
         self.model_path = 'model_best.pth.tar'
-        self.cuda = settings.IS_GPU
+        self.cuda = cuda
         print("*** loading model from {model}".format(model = self.model_path))
         self.model = modified_resnet50()
         if self.cuda:
@@ -44,7 +46,7 @@ class violence:
             model.eval()
             batch_size = 1
             workers = 0
-            cuda = settings.IS_GPU
+            cuda = self.cuda
             timeout = 1
             # make dataloader
             try:
@@ -109,3 +111,9 @@ class violence:
         # df = eval_one_file(img_file, model)
         # return df
         return self.eval_one_file(img_file, self.model)
+
+if __name__ == '__main__':
+    is_gpu = False
+    myviolence = violence(is_gpu)
+    result = myviolence.check_violence(os.path.join(os.getcwd(),"backend","api","yahoo","open_nsfw","images","BDPAk8S.jpg"))
+    print (result)
