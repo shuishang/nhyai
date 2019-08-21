@@ -5,34 +5,44 @@
 			<el-row>
 				<el-row>
 					<el-col :xl={span:24}>
-						<img src="../assets/image/image_banner.png" alt="">
+						<div class="banner_outer ai-common-banner">
+							<!--<img src="../assets/image/write/write_banner.png" alt="">-->
+							<div class="describe_outer_banner">
+								<p class="ell">AI智能审查</p>
+								<p class="ell-rows-4 ">基于深度学习的图像识别算法，海量大数据样本，准确识别图片和视频中的涉黄、
+									涉暴涉恐、政治敏感、广告、等内容，也能从美观和清晰等维度对图像进行筛选，
+									快速精准，解放审核人力</p>
+								<span>
+									<img src="../assets/image/sindex/sindex_banner_mark1.png" alt="">
+									<img src="../assets/image/sindex/sindex_banner_mark2.png" alt="">
+									<img src="../assets/image/sindex/sindex_banner_mark3.png" alt="">
+									<img src="../assets/image/sindex/sindex_banner_mark4.png" alt="">
+
+								</span>
+							</div>
+							<span class="tech-banner-box"></span>
+						</div>
+						<!--<img src="../assets/image/image_banner.png" alt="">-->
 					</el-col>
 				</el-row>
 			</el-row>
 		</div>
 		<div class="functional_experience">
 			<p class="title">功能体验</p>
-			<el-row style="min-width: 800px;">
-				<el-col :xs={span:14} :sm={span:16} :md={span:14,offset:2} :lg={span:13,offset:2} :xl={span:11,offset:4}>
-					<div class="show_input_outer">
-						<input type="text" class="init_url_style" id="contentUrl" placeholder="请输入网络图片URL">
-						<p class="check_style" @click="showInputValue">检测</p>
-					</div>
-				</el-col>
-				<el-col :xs="10" :sm="8" :md="6" :lg="6" :xl="5">
-					<div class="local_upload">
-						<!--<p>本地上传</p>-->
-						<input id="datafile" name="datafile" type="file" class="inputfile" @change="changeImage($event)">
-						<label for="datafile" v-if="!isUploading" class="btn_upload">本地上传</label>
-						<label v-else class="btn_uploading">本地上传</label>
-					</div>
-				</el-col>
-			</el-row>
-			<el-row style="min-width: 800px;">
-				<el-col :md={span:20,offset:2} :lg={span:20,offset:2} :xl={span:16,offset:4}>
-					<p class="top_suggest">支持图片格式：PNG、JPG、JPEG，大小限制<2M。支持视频格式：mkv 、mp4 、avi 、mov，大小限制<50M；</p>
-				</el-col>
-			</el-row>
+			<div class="current_width_style clearfix">
+				<div class="show_input_outer fl">
+					<input type="text" class="init_url_style" id="contentUrl" placeholder="请输入网络图片URL">
+					<p class="check_style" @click="showInputValue">检测</p>
+				</div>
+				<div class="local_upload fl">
+					<!--<p>本地上传</p>-->
+					<input id="datafile" name="datafile" type="file" class="inputfile" @change="changeImage($event)">
+					<label for="datafile" v-if="!isUploading" class="btn_upload">本地上传</label>
+					<label v-else class="btn_uploading">本地上传</label>
+				</div>
+			</div>
+
+			<p class="top_suggest current_width_style">支持图片格式：PNG、JPG、JPEG；支持文本格式：text；支持音频格式：wav；支持视频格式：mp4。</p>
 
 			<!--图片评审-->
 			<ImageCheck v-show="checkType ===1" :file="imageFile" ref="imageCheck"></ImageCheck>
@@ -47,132 +57,135 @@
 		</div>
 		<div class="functional_experience">
 			<p class="title">历史记录</p>
+			<div style="width: 1200px;margin: 0 auto;">
+				<div class="show_search_con">
+					<span>上传时间</span>
+					<el-date-picker
+						v-model="beginDate"
+						type="date"
+						placeholder="起始日期">
+					</el-date-picker>
+					<span>-</span>
+					<el-date-picker
+						v-model="endDate"
+						type="date"
+						placeholder="截止日期">
+					</el-date-picker>
+					<input type="text" class="search_input">
+					<span class="search_btn">查询</span>
+				</div>
+				<table border="0" width="100%">
+					<tr class="show_history_title">
+						<th>文件名</th>
+						<th>审查结果</th>
+						<th>敏感类型</th>
+						<th>敏感系数</th>
+						<th>文本</th>
+						<th>上传时间</th>
+						<th>预览</th>
+					</tr>
+					<tr class="show_history_con">
+						<td class="ell">imadef.jpg</td>
+						<td class="red_color">违规</td>
+						<td class="ell">暴恐识别、色情识别、其他识别</td>
+						<td >92.243%</td>
+						<td class="ell">文本内容占位字符...</td>
+						<td class="ell">2019-03-04 20:29:33</td>
+						<td  @click="centerDialogVisible = true">预览</td>
+					</tr>
+					<tr class="show_history_con">
+						<td class="ell">imadef.jpg</td>
+						<td class="orange_color">疑似违规</td>
+						<td class="ell">暴恐识别、色情识别、其他识别</td>
+						<td >92.243%</td>
+						<td class="ell">文本内容占位字符...</td>
+						<td class="ell">2019-03-04 20:29:33</td>
+						<td  @click="centerDialogVisible = true">预览</td>
+					</tr>
+					<tr class="show_history_con">
+						<td class="ell">imadef.jpg</td>
+						<td class="green_color">合规</td>
+						<td class="ell">暴恐识别、色情识别、其他识别</td>
+						<td >92.243%</td>
+						<td class="ell">文本内容占位字符...</td>
+						<td class="ell">2019-03-04 20:29:33</td>
+						<td  @click="centerDialogVisible = true">预览</td>
+					</tr>
+				</table>
+				<div class="show_pagination">
+					<el-pagination
+						background
+						:prev-text="prevText"
+						:next-text="nextText"
+						layout="prev, pager, next"
+						:total="1000">
+					</el-pagination>
+				</div>
+				<el-dialog
+					:visible.sync="centerDialogVisible"
+					width="60%"
+					center>
+					<div class="image_con">
+						<img src="../assets/image/prelook_image.png">
+					</div>
+					<div class="pre_result_con">
+						<table width="100%" cellspacing="0" cellpadding="0">
+							<tr class="pre_item">
+								<td class="pre_item_common">文件名称</td>
+								<td>imadef.jpg</td>
+							</tr>
+							<tr class="pre_item">
+								<td class="pre_item_common">上传时间</td>
+								<td>2019/09/09    09:20:22</td>
+							</tr>
+							<tr class="pre_item">
+								<td class="pre_result_item">审查结果</td>
+								<td>
+									<div class="clearfix">
+										<div class="result_outer result_outer_notop fl">
+											<p>暴恐识别</p>
+											<p class="green_style_name">合规</p>
+											<p class="green_style_number">12.35%</p>
+										</div>
+										<div class="result_outer result_outer_notop left_50 fl">
+											<p>政治敏感识别</p>
+											<p class="green_style_name">合规</p>
+											<p class="green_style_number">12.56%</p>
+										</div>
+									</div>
+									<div class="clearfix">
+										<div class="result_outer fl">
+											<p class="ell">色情识别</p>
+											<p class="orange_style_name">疑似违规</p>
+											<p class="orange_style_number">60.35%</p>
+										</div>
+										<div class="result_outer left_50 fl" >
+											<p>公众人物识别</p>
+											<p class="red_style_name">违规</p>
+											<p class="red_style_number">90.35%</p>
+										</div>
+									</div>
+									<div class="clearfix">
+										<div class="result_outer fl">
+											<p>广告检测</p>
+											<p class="red_style_name">违规</p>
+											<p class="red_style_number">90.16%</p>
+										</div>
+									</div>
+								</td>
+							</tr>
+							<tr class="pre_item">
+								<td class="pre_word_item">文本识别</td>
+								<td>合规</td>
+							</tr>
+						</table>
+					</div>
+
+				</el-dialog>
+			</div>
 			<el-row style="min-width: 800px;">
 				<el-col :md={span:20,offset:2} :lg={span:20,offset:2} :xl={span:16,offset:4}>
-					<div class="show_search_con">
-						<span>上传时间</span>
-						<el-date-picker
-							v-model="beginDate"
-							type="date"
-							placeholder="起始日期">
-						</el-date-picker>
-						<span>-</span>
-						<el-date-picker
-							v-model="endDate"
-							type="date"
-							placeholder="截止日期">
-						</el-date-picker>
-						<input type="text" class="search_input">
-						<span class="search_btn">查询</span>
-					</div>
-					<table border="0" width="100%">
-						<tr class="show_history_title">
-							<th>文件名</th>
-							<th>审查结果</th>
-							<th>敏感类型</th>
-							<th>敏感系数</th>
-							<th>文本</th>
-							<th>上传时间</th>
-							<th>预览</th>
-						</tr>
-						<tr class="show_history_con">
-							<td class="ell">imadef.jpg</td>
-							<td class="red_color">违规</td>
-							<td class="ell">暴恐识别、色情识别、其他识别</td>
-							<td >92.243%</td>
-							<td class="ell">文本内容占位字符...</td>
-							<td class="ell">2019-03-04 20:29:33</td>
-							<td  @click="centerDialogVisible = true">预览</td>
-						</tr>
-						<tr class="show_history_con">
-							<td class="ell">imadef.jpg</td>
-							<td class="orange_color">疑似违规</td>
-							<td class="ell">暴恐识别、色情识别、其他识别</td>
-							<td >92.243%</td>
-							<td class="ell">文本内容占位字符...</td>
-							<td class="ell">2019-03-04 20:29:33</td>
-							<td  @click="centerDialogVisible = true">预览</td>
-						</tr>
-						<tr class="show_history_con">
-							<td class="ell">imadef.jpg</td>
-							<td class="green_color">合规</td>
-							<td class="ell">暴恐识别、色情识别、其他识别</td>
-							<td >92.243%</td>
-							<td class="ell">文本内容占位字符...</td>
-							<td class="ell">2019-03-04 20:29:33</td>
-							<td  @click="centerDialogVisible = true">预览</td>
-						</tr>
-					</table>
-					<div class="show_pagination">
-						<el-pagination
-							background
-							:prev-text="prevText"
-							:next-text="nextText"
-							layout="prev, pager, next"
-							:total="1000">
-						</el-pagination>
-					</div>
-					<el-dialog
-						:visible.sync="centerDialogVisible"
-						width="60%"
-						center>
-						<div class="image_con">
-							<img src="../assets/image/prelook_image.png">
-						</div>
-						<div class="pre_result_con">
-							<table width="100%" cellspacing="0" cellpadding="0">
-								<tr class="pre_item">
-									<td class="pre_item_common">文件名称</td>
-									<td>imadef.jpg</td>
-								</tr>
-								<tr class="pre_item">
-									<td class="pre_item_common">上传时间</td>
-									<td>2019/09/09    09:20:22</td>
-								</tr>
-								<tr class="pre_item">
-									<td class="pre_result_item">审查结果</td>
-									<td>
-										<div class="clearfix">
-											<div class="result_outer result_outer_notop fl">
-												<p>暴恐识别</p>
-												<p class="green_style_name">合规</p>
-												<p class="green_style_number">12.35%</p>
-											</div>
-											<div class="result_outer result_outer_notop left_50 fl">
-												<p>政治敏感识别</p>
-												<p class="green_style_name">合规</p>
-												<p class="green_style_number">12.56%</p>
-											</div>
-										</div>
-										<div class="clearfix">
-											<div class="result_outer fl">
-												<p class="ell">色情识别</p>
-												<p class="orange_style_name">疑似违规</p>
-												<p class="orange_style_number">60.35%</p>
-											</div>
-											<div class="result_outer left_50 fl" >
-												<p>公众人物识别</p>
-												<p class="red_style_name">违规</p>
-												<p class="red_style_number">90.35%</p>
-											</div>
-										</div>
-										<div class="clearfix">
-											<div class="result_outer fl">
-												<p>广告检测</p>
-												<p class="red_style_name">违规</p>
-												<p class="red_style_number">90.16%</p>
-											</div>
-										</div>
-									</td>
-								</tr>
-								<tr class="pre_item">
-									<td class="pre_word_item">文本识别</td>
-									<td>合规</td>
-								</tr>
-							</table>
-						</div>
 
-					</el-dialog>
 				</el-col>
 			</el-row>
 		</div>
@@ -293,12 +306,21 @@
 
 <style scoped>
 	@import "../assets/css/audio.css";
-	.top_contain img{width: 100%;}
+	.current_width_style{width: 1200px;margin: 0 auto;}
+	.banner_outer{position: relative;vertical-align: middle;text-align: center;}
+	.describe_outer_banner{font-size: 16px;color: white;;display: inline-block;vertical-align: middle;}
+	.describe_outer_banner img{width: 40px;height: 40px;margin-right: 40px;}
+	.describe_outer_banner img:nth-of-type(4){margin-right: 0;}
+	.describe_outer_banner p{}
+	.describe_outer_banner p:nth-of-type(1){font-size: 36px;height: 60px;line-height: 60px;margin-bottom: 15px;}
+	.describe_outer_banner p:nth-of-type(2){height: 130px;text-align: center;overflow: hidden;width: 580px;line-height: 30px;}
+	.tech-banner-box{display: inline-block;vertical-align: middle;height: 100%;width: 0;}
+	.top_contain .banner_outer{background-image: url('../assets/image/image_banner.png');min-width: 1300px;}
 	.functional_experience{margin: 50px 0;}
 	.functional_experience .title{text-align: center;color: #333333;margin: 40px 0;font-size: 36px;}
 
-	.top_suggest{color: #999999;font-size: 14px;line-height: 40px;height: 30px;}
-	.init_url_style{flex: 1;height: 35px;line-height: 35px;border: 1px solid #E2ECFC;font-size: 15px;padding-left: 10px;background-color: #FAFCFE;}
+	.top_suggest{color: #999999;font-size: 14px;line-height: 40px;height: 30px;margin-bottom: 25px;}
+	.init_url_style{flex: 1;height: 35px;line-height: 35px;border: 1px solid #E2ECFC;font-size: 15px;padding-left: 10px;background-color: #FAFCFE;width: 685px;}
 	.init_url_style:hover{border: 1px solid #C0C4CC;border-right: none;}
 	.init_url_style:focus{border: 1px solid #409EFF;border-right: none;}
 	.check_style{display:inline-block;height: 33px;line-height: 33px;font-size: 16px;color: #316DFF;border: 2px solid #316DFF;width: 100px;text-align: center;cursor:pointer;}

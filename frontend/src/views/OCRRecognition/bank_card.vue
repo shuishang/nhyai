@@ -10,7 +10,7 @@
 					<div class="upload_outer">
 						<div class="local_upload">
 							<!--<p>本地上传</p>-->
-							<input id="datafile" name="datafile" type="file" class="inputfile" @change="changeImage($event)">
+							<input id="datafile" name="datafile" type="file" accept="image/*" class="inputfile" @change="changeImage($event)">
 							<label for="datafile">本地上传</label>
 						</div>
 						<div class="show_input_outer">

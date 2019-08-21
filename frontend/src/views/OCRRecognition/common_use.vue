@@ -11,7 +11,7 @@
 					<div class="upload_outer">
 						<div class="local_upload" v-if="!isCheck">
 							<!--<p>本地上传</p>-->
-							<input id="datafile" name="datafile" type="file" class="inputfile" @change="changeImage($event)">
+							<input id="datafile" name="datafile" type="file" accept="image/*" class="inputfile" @change="changeImage($event)">
 							<label for="datafile">本地上传</label>
 						</div>
 						<div class="local_upload" v-else>
@@ -81,6 +81,7 @@
                 var loading = this.$loading({fullscreen:false,target:document.querySelector(".outer_add")});
                 var formData = new FormData();
                 formData.append('image', $('#datafile')[0].files[0]);
+                document.getElementById('show_common_json').innerHTML="";
                 $.ajax({
                     url: this.api+"/api/v1/ocr/get_general_ocr/",
                     type: "post",
@@ -90,6 +91,7 @@
                     contentType: false,
                     processData: false,
                     success:(response)=>{
+                        loading.close();
 						console.log(response.data);
 						var text =''
                         response.data.forEach((res)=>{
@@ -99,6 +101,10 @@
                         loading.close();
                         this.isCheck= false;
                     },
+					error:(error)=>{
+                        this.$message.error('上传失败，请重新上传！');
+                        loading.close();
+					}
                 });
                 e.preventDefault();
             },

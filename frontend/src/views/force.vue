@@ -5,8 +5,8 @@
 			<el-row>
 				<el-row>
 					<el-col :xl={span:24}>
-						<div class="banner_outer">
-							<img src="../assets/image/force/force_banner.png" alt="">
+						<div class="banner_outer ai-common-banner">
+							<!--<img src="../assets/image/force/force_banner.png" alt="">-->
 							<div class="describe_outer_banner">
 								<p class="ell">暴恐检测</p>
 								<p class="ell-rows-4 ">南海云暴恐图片识别基于领先的深度学习引擎，对用户上传的图片进行自动审核，暴恐识别算法会返回“疑似暴恐”的字段，对血腥、暴力等图片进行自动打击，用AI捍卫互联网安全，助力建立安全、健康的互联网环境。</p>
@@ -43,92 +43,90 @@
 			</div>
 		</div>
 		<div class="functional_experience" id="practice_title">
-			<h2 class="title" >功能体验</h2>
-			<el-row style="min-width: 800px;margin-top: 40px;">
-				<el-col :xs={span:14} :sm={span:16} :md={span:14,offset:2} :lg={span:13,offset:2} :xl={span:11,offset:4}>
-					<div class="show_input_outer">
+			<h2 class="title">功能体验</h2>
+			<div class="suggest_outer">
+				<div  class="current_width_style_1040 clearfix">
+					<div class="show_input_outer fl">
 						<input type="text" class="init_url_style" placeholder="请输入网络图片URL">
 						<p class="check_style">检测</p>
 					</div>
-				</el-col>
-				<el-col :xs="10" :sm="8" :md="6" :lg="6" :xl="5">
-					<div class="local_upload" v-if="!isCheck">
+					<div class="local_upload fl" v-if="!isCheck">
 						<!--<p>本地上传</p>-->
-						<input id="datafile" name="datafile" type="file" class="inputfile" @change="changeImage($event)">
+						<input id="datafile" name="datafile" type="file" accept="image/*" class="inputfile" @change="changeImage($event)" multiple>
 						<label for="datafile">本地上传</label>
 					</div>
-					<div class="local_upload" v-else>
+					<div class="local_upload fl" v-else>
 						<p class="is_check">正在检测</p>
 					</div>
-				</el-col>
-			</el-row>
-			<el-row style="min-width: 800px;">
-				<el-col :md={span:20,offset:2} :lg={span:20,offset:2} :xl={span:16,offset:4}>
-					<p class="top_suggest">图片文件类型支持PNG、JPG、JPEG、BMP，图片大小不超过2M。</p>
-					<div class="choose_image" v-show="isImage==1">
-						<div class="add_before">
-							<!--<img src="../assets/image/yellow/image_upload.png" alt="">-->
-							<el-upload
-								class="avatar-uploader"
-								action="http://172.31.4.7:8000/api/v1/image/get_vision_porn/"
-								:auto-upload="false"
-								accept="image/png,image/jpg,image/jpeg"
-								:multiple="true"
-								:on-change="onImageChange">
-								<i class="el-icon-plus avatar-uploader-icon"></i>
-							</el-upload>
-						</div>
-						<p class="choose_suggest">支持图片多张上传，一次检测十张</p>
-					</div>
-					<div class="choose_image_list" v-show="isImage==2">
-						<el-upload
-							ref="upload"
-							action="http://172.31.4.7:8000/api/v1/image/get_vision_porn/"
-							list-type="picture-card"
-							:auto-upload="false"
-							:on-preview="handlePictureCardPreview"
-							:file-list="fileList"
-							:limit="10"
-							accept="image/png,image/jpg,image/jpeg"
-							:multiple="true"
-							:on-change="onListChange"
-							:http-request="uploadImage"
-							:on-exceed="outSuggest"
-							:on-remove="handleRemove">
-							<i class="el-icon-plus"></i>
-						</el-upload>
-						<el-dialog :visible.sync="dialogVisible">
-							<img width="100%" :src="dialogImageUrl" alt="">
-						</el-dialog>
-						<p class="begin_check" @click="submitUpload($event)">开始检测</p>
-					</div>
-					<div class="choose_result" v-show="isImage==3">
-						<div class="result_title">
-							<img src="../assets/image/yellow/yellow_result_top.png" alt="">
-							<span>暴恐识别  |  审查结果</span>
-							<div class="yellow_result_outer clearfix" >
-								<div class="fl" v-for="item in resultList">
-									<img :src="item.image" alt="">
-									<div class="result_outer" v-if="item.number>80">
-										<p class="red_style_name">违规</p>
-										<p class="red_style_number">{{item.number}}%</p>
-									</div>
-									<div class="result_outer" v-else-if="item.number>50">
-										<p class="orange_style_name">疑似违规</p>
-										<p class="orange_style_number">{{item.number}}%</p>
-									</div>
-									<div class="result_outer" v-else>
-										<p class="green_style_name">合规</p>
-										<p class="green_style_number">{{item.number}}%</p>
-									</div>
-								</div>
+				</div>
+				<p class="top_suggest current_width_style_1040">图片文件类型支持PNG、JPG、JPEG、BMP，图片大小不超过2M。</p>
+			</div>
+
+			<div class="choose_image current_width_style" v-show="isImage==1">
+				<div class="add_before ">
+					<!--<img src="../assets/image/yellow/image_upload.png" alt="">-->
+					<el-upload
+						class="avatar-uploader"
+						action="http://172.31.4.7:8000/api/v1/image/get_vision_porn/"
+						:auto-upload="false"
+						:multiple="true"
+						:limit="limit"
+						accept="image/png,image/jpg,image/jpeg"
+						:on-exceed="outSuggest"
+						:on-change="onImageChange">
+						<i class="el-icon-plus avatar-uploader-icon"></i>
+					</el-upload>
+				</div>
+				<p class="choose_suggest">支持图片多张上传，一次检测十张</p>
+			</div>
+			<div class="choose_image_list current_width_style" v-show="isImage==2" >
+				<el-upload
+					ref="upload"
+					:class="{hide:hideUpload}"
+					action="http://172.31.4.7:8000/api/v1/image/get_vision_porn/"
+					list-type="picture-card"
+					:auto-upload="false"
+					:on-preview="handlePictureCardPreview"
+					:file-list="fileList"
+					:multiple="true"
+					:limit="limit"
+					:on-change="onListChange"
+					:http-request="uploadImage"
+					:on-exceed="outSuggest"
+					accept="image/png,image/jpg,image/jpeg"
+					:on-remove="handleRemove">
+					<i class="el-icon-plus"></i>
+				</el-upload>
+				<el-dialog :visible.sync="dialogVisible">
+					<img width="100%" :src="dialogImageUrl" alt="">
+				</el-dialog>
+				<p class="begin_check" @click="submitUpload($event)">开始检测</p>
+			</div>
+			<div class="choose_result current_width_style" v-show="isImage==3">
+				<div class="result_title">
+					<img src="../assets/image/yellow/yellow_result_top.png" alt="">
+					<span>暴恐识别  |  审查结果</span>
+					<div class="yellow_result_outer clearfix" >
+						<div class="fl" v-for="item in resultList">
+							<img :src="item.image" alt="">
+							<div class="result_outer" v-if="item.number>80">
+								<p class="red_style_name">违规</p>
+								<p class="red_style_number">{{item.number}}%</p>
+							</div>
+							<div class="result_outer" v-else-if="item.number>50">
+								<p class="orange_style_name">疑似违规</p>
+								<p class="orange_style_number">{{item.number}}%</p>
+							</div>
+							<div class="result_outer" v-else>
+								<p class="green_style_name">合规</p>
+								<p class="green_style_number">{{item.number}}%</p>
 							</div>
 						</div>
-						<p class="again_check" @click="uploadAgain">重新上传</p>
-						<p class="yellow_result_suggest"><span class="">*</span>提示：检测结果百分比越高代表违规越严重</p>
 					</div>
-				</el-col>
-			</el-row>
+				</div>
+				<p class="again_check" @click="uploadAgain">重新上传</p>
+				<p class="yellow_result_suggest"><span class="">*</span>提示：检测结果百分比越高代表违规越严重</p>
+			</div>
 		</div>
 		<div class="recommended_scenario">
 			<h2 class="title">应用场景</h2>
@@ -209,14 +207,17 @@
                 resultList:[],
 				sampleList:[{src:require("../assets/image/force/sample_image1.png"),number:93.18},{src:require("../assets/image/force/sample_image2.png"),number:38.52},{src:require("../assets/image/force/sample_image3.png"),number:20.01},
                     {src:require("../assets/image/force/sample_image4.png"),number:61.78},{src:require("../assets/image/force/sample_image5.png"),number:51.21},{src:require("../assets/image/force/sample_image6.png"),number:22.86}],
-				isCheck:false
+				isCheck:false,
+                hideUpload:false,
+                limit:10
+
 			}
         },
         mounted:function () {
         },
         methods: {
             onImageChange(file, fileList){
-                console.log(file);
+                console.log(file,"走了这里");
                 fileUtil.getOrientation(file.raw).then((orient) => {
                     if(orient && orient === 6) {
                         const reader = new FileReader();
@@ -229,7 +230,9 @@
                                 console.log(newFile);
                                 file.url= fileUtil.getObjectURL(newFile);
                                 file.raw = newFile;
-                                this.fileList.push(file);
+                                if(this.fileList.length<this.limit){
+                                    this.fileList.push(file);
+                                }
                             }
                         };
                         reader.readAsDataURL(file.raw);
@@ -238,53 +241,93 @@
                         if(!file.url){
                             file.url = URL.createObjectURL(file.raw);
                         }
-                        this.fileList.push(file);
+                        if(this.fileList.length<this.limit){
+                            this.fileList.push(file);
+                        }
                         this.isImage = 2;
                     }
                 });
+                if(fileList.length===this.limit){
+                    this.$message.error('一次最多选择10张图片！');
+                    this.hideUpload = true;
+                }
 //                this.fileList.push(file);
 
             },
             onListChange(file, fileList){
+                this.checkDegree(file);
+                if(fileList.length===this.limit){
+                    this.$message.error('一次最多选择10张图片！');
+                    this.hideUpload = true;
+                }
+            },
+            outSuggest(files, fileList){
+                console.log(files);
+                let x = 0;
+                console.log(x);
+                while(x<files.length&&this.fileList.length<this.limit){
+                    let file = files[x];
+                    var newFile = {};
+                    newFile.name = file.name;
+                    newFile.uid = file.uid;
+                    newFile.size = file.size;
+                    newFile.status = "ready";
+                    newFile.url = URL.createObjectURL(file);
+                    newFile.raw = file;
+                    this.fileList.push(newFile);
+                    x++;
+                }
+                this.isImage = 2;
+                this.hideUpload =true;
+                this.$message.error('一次最多选择10张图片！');
+            },
+            checkDegree(file) {
                 fileUtil.getOrientation(file.raw).then((orient) => {
-                    if(orient && orient === 6) {
+                    if (orient && orient === 6) {
                         const reader = new FileReader();
-                        reader.onload = ($event)=> {
+                        reader.onload = ($event) => {
                             let img = new Image();
                             img.src = $event.target.result;
-                            img.onload = ()=> {
+                            img.onload = () => {
                                 const data = fileUtil.rotateImage(img, img.width, img.height);
                                 const newFile = fileUtil.dataURLtoFile(data, file.raw.name);
                                 console.log(newFile);
-                                file.url= fileUtil.getObjectURL(newFile);
+                                file.url = fileUtil.getObjectURL(newFile);
                                 file.raw = newFile;
-                                this.fileList.push(file);
+                                if (this.fileList.length < this.limit) {
+                                    this.fileList.push(file);
+                                }
                             }
-						};
+                        };
                         reader.readAsDataURL(file.raw);
                     } else {
-                        this.fileList.push(file);
+                        if (this.fileList.length < this.limit) {
+                            this.fileList.push(file);
+                        }
                     }
                 });
-                if(this.fileList.length===10){
-                    this.$message.error('一次最多选择10张图片！');
-                }
-            },
-            outSuggest(){
-                this.$message.error('一次最多选择10张图片！');
             },
             changeImage(e){
-                this.imageIsBig = false;
-                this.imageRight = false;
-                var file = e.target.files[0]
-                var reader = new FileReader()
-                var that = this
-                reader.readAsDataURL(file);
-                reader.onload = function(e) {
-                    that.dialogImageUrl = this.result
+                var files = e.target.files;
+                console.log(files);
+                let j = 0;
+                while(j<files.length&&this.fileList.length<this.limit){
+                    let file = files[j];
+                    var newFile = {};
+                    newFile.name = file.name;
+                    newFile.uid = file.uid;
+                    newFile.size = file.size;
+                    newFile.status = "ready";
+                    newFile.url = URL.createObjectURL(file);
+                    newFile.raw = file;
+                    this.fileList.push(newFile);
+                    j++;
                 }
-                this.uploadImage(e,file)
-//                let size=file.size;//文件的大小，判断图片的大小
+                if(this.fileList.length>=10){
+                    this.hideUpload = true;
+                    this.$message.error('一次最多选择10张图片！');
+                }
+                this.isImage = 2;
             },
             submitUpload(e){
                 if(this.fileList.length==0){
@@ -328,6 +371,11 @@
                             this.isCheck= false;
                         }
                     },
+                    error:(error)=>{
+                        this.$message.error('上传失败，请重新上传！');
+                        loading.close();
+                    }
+
                 });
                 e.preventDefault();
             },
@@ -372,7 +420,10 @@
             handleRemove(file, fileList) {
                 console.log(file, fileList);
                 this.fileList = fileList;
-                console.log(this.fileList.length)
+                console.log(this.fileList.length);
+                window.setTimeout(()=>{
+                    this.hideUpload = fileList>=this.limit;
+                },500)
 
             },
             handlePictureCardPreview(file) {
@@ -401,7 +452,8 @@
 	.describe_outer_banner p{}
 	.describe_outer_banner p:nth-of-type(1){font-size: 30px;height: 60px;line-height: 60px;margin-bottom: 15px;min-width: 400px;}
 	.describe_outer_banner p:nth-of-type(2){height: 130px;text-align: justify;overflow: hidden;min-width: 550px;line-height: 30px;}
-	.force_top_contain img{width: 100%;min-width: 1300px;}
+	.force_top_contain img{height: 480px;min-width: 1300px;}
+	.force_top_contain .banner_outer{background-image: url('../assets/image/force/force_banner.png');min-width: 1300px;}
 	.practice_online{height: 40px;line-height:40px;width: 135px;font-size: 15px;text-align: center;color: #fff;border: 1px solid #fff;cursor:pointer}
 	.practice_online:hover{background-color: #fff;color: #000;}
 
@@ -425,6 +477,7 @@
 	.red_style_number{border: 1px solid #ff524a;color: #ff524a}
 
 
+	.suggest_outer{margin: 40px 0 20px;}
 	.top_suggest{color: #999999;font-size: 14px;line-height: 40px;height: 30px;}
 	.init_url_style{flex: 1;height: 35px;line-height: 35px;border: 1px solid #E2ECFC;font-size: 15px;padding-left: 10px;}
 	.init_url_style:hover{border: 1px solid #C0C4CC;border-right: none;}
@@ -438,17 +491,17 @@
 	.is_check{display:inline-block;height: 35px;line-height: 35px;font-size: 16px;background-color: #f5f5f5;color:#666666;border: 1px solid #dddddd;padding: 0 15px;text-align: center;}
 	.local_upload label{display:inline-block;height: 33px;line-height: 33px;font-size: 16px;background-color: #316DFF;color:white;border: 2px solid #316DFF;width: 100px;text-align: center;cursor: pointer;}
 	.local_upload label:hover{background-color: #6087F7;color: white;border: 2px solid #6087F7;}
-	.show_input_outer{display: flex;}
-	.choose_image{border: 2px dashed #acc3ff;padding: 40px 0 40px 40px;position: relative;margin-top: 15px;min-height: 330px;}
+	.show_input_outer{display: flex;width: 800px;}
+	.choose_image{border: 2px dashed #acc3ff;padding: 40px 0 40px 40px;position: relative;margin-top: 15px;height: 340px;overflow: hidden;}
 	.choose_image_list{border: 2px dashed #acc3ff;padding: 40px 0 40px 40px;position: relative;margin-top: 15px;min-height: 330px;}
 	.choose_result{border: 2px dashed #acc3ff;padding: 15px 0 30px 40px;position: relative;margin-top: 15px;min-height: 330px;}
 	.add_before{width: 160px;height: 160px;margin: 50px auto 15px;}
 	.choose_suggest{text-align: center;font-size: 14px;color: #333;}
 	.begin_check{width: 160px;height: 45px;line-height: 45px;background-color: #316DFF;color: white;font-size: 16px;margin: 50px auto 0;text-align: center;cursor: pointer;}
-	.begin_check:hover{background-color: #6087F7;color: white;}
 	.again_check{width: 160px;height: 45px;line-height: 45px;border:1px solid #E2E5E8;background-color: #ffffff;color: #333333;font-size: 16px;margin: 40px auto 0;text-align: center;cursor: pointer;}
+	.begin_check:hover{background-color: #6087F7;color: white;}
 	.yellow_result_outer{margin-top: 15px;}
-	.yellow_result_outer>div{width: 160px;overflow: hidden;text-align: center;margin-right: 30px;}
+	.yellow_result_outer>div{width: 160px;overflow: hidden;text-align: center;margin-right: 40px;}
 	.yellow_result_outer>div>img{width: 160px;height: 160px;}
 	.result_title{text-align: center;vertical-align: middle;}
 	.result_title img{vertical-align: middle;}
@@ -456,8 +509,16 @@
 	.result_outer{margin: 10px 2px;display: flex;color: #000000;height: 28px;line-height: 28px;}
 	.result_outer p:nth-of-type(1){font-size: 16px;flex: 5;}
 	.result_outer p:nth-of-type(2){font-size: 16px;flex: 4;text-align: center}
+	.result_outer .green_style_name{background-color: #54cd62;border: 1px solid #54cd62;color: #fff}
+	.result_outer .green_style_number{border: 1px solid #54cd62;color: #54cd62}
+	.result_outer .orange_style_name{background-color: #ffac09;border: 1px solid #ffac09;color: #fff}
+	.result_outer .orange_style_number{border: 1px solid #ffac09;color: #ffac09}
+	.result_outer .red_style_name{background-color: #ff524a;border: 1px solid #ff524a;color: #fff}
+	.result_outer .red_style_number{border: 1px solid #ff524a;color: #ff524a}
 	.yellow_result_suggest{text-align: center;font-size: 15px;color: #999999;margin-top: 10px;}
 	.yellow_result_suggest span{color: #ff4949;}
+	.current_width_style{width: 1000px;margin: 0 auto;}
+	.current_width_style_1040{width: 1040px;margin: 0 auto;}
 
 	.advantage_product{padding: 65px 0 30px ;overflow: hidden;background-color: #f2f2f5;}
 	.advantage_product .title{text-align: center;color: #000000;margin: 10px 0;font-size: 30px;}

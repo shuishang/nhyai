@@ -1,78 +1,58 @@
 <template>
 	<div class="videoCheck">
 		<!--视频评审-->
-		<el-row style="min-width: 800px;margin-top: 30px;">
-			<el-col :md={span:11,offset:2} :lg={span:11,offset:2} :xl={span:10,offset:4}>
-				<div class="show_video_outer">
-					<div class="show_video">
-						<video id="video" class="video-js vjs-defalut-skin" controls preload="metadata" :src="videoUrl.url">
-							<source :src="videoUrl.url" type="video/mp4">
-							<!--<source src="" type="video/mp4">-->
-							您的浏览器不支持视频
-						</video>
-					</div>
+		<div class="clearfix">
+			<div class="show_video_outer fl">
+				<div class="show_video">
+					<video id="video" class="video-js vjs-defalut-skin" controls preload="metadata" :src="videoUrl.url">
+						<source :src="videoUrl.url" type="video/mp4">
+						<!--<source src="" type="video/mp4">-->
+						您的浏览器不支持视频
+					</video>
 				</div>
-			</el-col>
-			<el-col :md="6" :lg="6" :xl="4">
-				<div class="video_result_outer">
-					<p class="result_title">审查结果</p>
-					<div class="result_outer">
-						<p>暴恐识别</p>
-						<p class="green_style_name" v-if="this.forceInfo==200">识别中...</p>
-						<p class="red_style_name" v-else-if="this.forceInfo>=90">违规</p>
-						<p class="orange_style_name" v-else-if="50<this.forceInfo">疑似违规</p>
-						<p class="green_style_name" v-else>合规</p>
-					</div>
-					<div class="result_outer">
-						<p>色情识别</p>
-						<p class="green_style_name" v-if="this.sexInfo==200">识别中...</p>
-						<p class="red_style_name" v-else-if="this.sexInfo>=90">违规</p>
-						<p class="orange_style_name" v-else-if="50<this.sexInfo">疑似违规</p>
-						<p class="green_style_name" v-else>合规</p>
-					</div>
-					<div class="result_outer">
-						<p class="ell">政治敏感识别</p>
-						<p class="green_style_name">合规</p>
-					</div>
-					<!--<div class="result_outer">
-						<p>公众人物识别</p>
-						<p class="red_style_name">违规</p>
-					</div>
-					<div class="result_outer">
-						<p>广告检测</p>
-						<p class="red_style_name">违规</p>
-					</div>-->
+			</div>
+			<div class="video_result_outer fl">
+				<p class="result_title">审查结果</p>
+				<div class="result_outer">
+					<p>暴恐识别</p>
+					<p class="green_style_name" v-if="this.forceInfo==200">识别中...</p>
+					<p class="red_style_name" v-else-if="this.forceInfo>=90">违规</p>
+					<p class="orange_style_name" v-else-if="50<this.forceInfo">疑似违规</p>
+					<p class="green_style_name" v-else>合规</p>
 				</div>
-			</el-col>
-		</el-row>
-		<el-row style="min-width: 800px;">
-			<el-col :md={span:17,offset:2} :lg={span:17,offset:2} :xl={span:14,offset:4}>
-				<div class="video_image_outer">
-					<p v-show="imageUrl.length">证据信息</p>
-					<div class="video_image_con clearfix">
-						<div class="video_image_item fl" v-for="(item,index) in imageUrl">
-							<div class="show_result_title">
-								<div></div>
-								<span class="video_result_red_title" v-if="item.state=='违规'">{{item.state}}</span>
-								<span class="video_result_orange_title" v-else>{{item.state}}</span>
-								<span class="video_result_red_number" v-if="item.state=='违规'">{{item.number}}%</span>
-								<span class="video_result_orange_number" v-else>{{item.number}}%</span>
-							</div>
-							<img :src="item.image" alt="">
-							<p>视频时间：{{item.time}}</p>
-						</div>
-					</div>
-					<div class="local_upload_video" v-if="!isLoading">
-						<!--<p>本地上传</p>-->
-						<input id="inputVideo" name="inputVideo" type="file"  class="inputfile" @change="onChangeFile($event)">
-						<label for="inputVideo">重新选择</label>
-					</div>
-					<p class="choose_again" v-else>重新选择</p>
+				<div class="result_outer">
+					<p>色情识别</p>
+					<p class="green_style_name" v-if="this.sexInfo==200">识别中...</p>
+					<p class="red_style_name" v-else-if="this.sexInfo>=90">违规</p>
+					<p class="orange_style_name" v-else-if="50<this.sexInfo">疑似违规</p>
+					<p class="green_style_name" v-else>合规</p>
 				</div>
-				<p class="suggest"><span style="color: red">*</span> 提示: 敏感系数<50%为合规，50%～80%为疑似违规，>80%为违规<span v-show="imageIsBig" style="color: red;margin-left: 10px;display: inline-block;">！该图片大小超过1M</span></p>
+			</div>
+		</div>
+		<div class="video_image_outer">
+			<p v-show="imageUrl.length">证据信息</p>
+			<div class="video_image_con clearfix">
+				<div class="video_image_item fl" v-for="(item,index) in imageUrl">
+					<div class="show_result_title">
+						<div></div>
+						<span class="video_result_red_title" v-if="item.state=='违规'">{{item.state}}</span>
+						<span class="video_result_orange_title" v-else>{{item.state}}</span>
+						<span class="video_result_red_number" v-if="item.state=='违规'">{{item.number}}%</span>
+						<span class="video_result_orange_number" v-else>{{item.number}}%</span>
+					</div>
+					<img :src="item.image" alt="">
+					<p>视频时间：{{item.time}}</p>
+				</div>
+			</div>
+			<div class="local_upload_video" v-if="!isLoading">
+				<!--<p>本地上传</p>-->
+				<input id="inputVideo" name="inputVideo" type="file"  class="inputfile" @change="onChangeFile($event)">
+				<label for="inputVideo">重新选择</label>
+			</div>
+			<p class="choose_again" v-else>重新选择</p>
+		</div>
+		<p class="suggest"><span style="color: red">*</span> 提示: 敏感系数<50%为合规，50%～80%为疑似违规，>80%为违规<span v-show="imageIsBig" style="color: red;margin-left: 10px;display: inline-block;">！该图片大小超过1M</span></p>
 
-			</el-col>
-		</el-row>
 	</div>
 </template>
 
@@ -226,6 +206,7 @@
                         loading.close();
                         console.log(err);
                         this.isLoading = false;
+                        this.$message.error('上传失败,重新上传！');
                         this.$parent.changeUploadState(false);
 					}
                 });
@@ -342,14 +323,15 @@
 
 <style scoped>
 	/*视频样式begin*/
-	.show_video_outer{height: 400px}
+	.videoCheck{width: 1200px;margin: 0 auto;}
+	.show_video_outer{height: 400px;width: 700px;}
 	.show_video{height:440px;position: relative;overflow: hidden;}
 
 	.show_video #video{width: 100%;height: 440px;}
-	.video_result_outer{height: 440px;z-index: 99;background-color: white;box-shadow:5px 0 20px #c5cff1}
+	.video_result_outer{ width:350px; height: 440px;z-index: 99;background-color: white;box-shadow:5px 0 20px #c5cff1;margin-left: 20px;}
 	.video_result_outer .result_title{font-size: 24px;color: #000000;text-align: center;height: 100px;padding-top: 30px;}
 	.video_result_outer .result_title:before{content: "";background: url("../../assets/image/result_top_image.png") no-repeat center center;height: 23px;display: block;margin-bottom: 10px;}
-	.video_image_outer{border: 1px solid #e2ecfc;min-height: 200px;margin-top: 20px;padding-left: 20px;}
+	.video_image_outer{border: 1px solid #e2ecfc;min-height: 200px;margin-top: 20px;padding-left: 20px;width: 1050px;}
 	.video_image_outer:first-child{color: #010101;font-size: 16px;line-height: 50px;}
 	.video_image_con{}
 	.video_image_item{height: 150px;width: 160px;padding-right: 20px;margin-bottom: 20px;position: relative;}

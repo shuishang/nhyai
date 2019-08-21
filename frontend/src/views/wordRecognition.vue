@@ -5,8 +5,8 @@
 			<el-row>
 				<el-row>
 					<el-col :xl={span:24}>
-						<div class="banner_outer">
-							<img src="../assets/image/word/word_banner.png" alt="">
+						<div class="banner_outer ai-common-banner">
+							<!--<img src="../assets/image/word/word_banner.png" alt="">-->
 							<div class="describe_outer_banner">
 								<p class="ell">卡证类识别</p>
 								<p class="ell-rows-4 ">基于南海云网络领先的深度学习算法，利用光学字符识别技术，将图片上的文字内容，直接转换为可编辑文本。不仅能精准快速识别身份证、名片、营业执照、驾驶证等卡证类信息，更有通用OCR和手写体识别技术支持更多场景、任意版面的文字信息获取，大大提高了工作效率和用户体验。</p>
@@ -263,7 +263,8 @@
 	.describe_outer_banner p{}
 	.describe_outer_banner p:nth-of-type(1){font-size: 30px;height: 60px;line-height: 60px;margin-bottom: 15px;min-width: 400px;}
 	.describe_outer_banner p:nth-of-type(2){height: 130px;text-align: justify;overflow: hidden;min-width: 600px;line-height: 30px;}
-	.word_top_contain img{width: 100%;min-width: 1320px;}
+	.word_top_contain img{height: 480px;min-width: 1300px;}
+	.word_top_contain .banner_outer{background-image: url('../assets/image/word/word_banner.png');min-width: 1300px;}
 	.practice_online{height: 40px;line-height:40px;width: 135px;font-size: 15px;text-align: center;color: #fff;border: 1px solid #fff;cursor:pointer}
 	.practice_online:hover{background-color: white;color: #000;}
 

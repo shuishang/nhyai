@@ -11,7 +11,7 @@
 					<div class="upload_outer">
 						<div class="local_upload" v-if="!isCheck">
 							<!--<p>本地上传</p>-->
-							<input id="datafile" name="datafile" type="file" class="inputfile" @change="changeImage($event)">
+							<input id="datafile" name="datafile" type="file" accept="image/*" class="inputfile" @change="changeImage($event)">
 							<label for="datafile">本地上传</label>
 						</div>
 						<div class="local_upload" v-else>
@@ -105,6 +105,10 @@
                         loading.close();
                         this.isCheck= false;
                     },
+                    error:(error)=>{
+                        this.$message.error('上传失败，请重新上传！');
+                        loading.close();
+                    }
                 });
                 e.preventDefault();
             },

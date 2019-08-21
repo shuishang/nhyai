@@ -5,8 +5,8 @@
 			<el-row>
 				<el-row>
 					<el-col :xl={span:24}>
-						<div class="banner_outer">
-							<img src="../assets/image/voice/voice_banner.png" alt="">
+						<div class="banner_outer ai-common-banner">
+							<!--<img src="../assets/image/voice/voice_banner.png" alt="">-->
 							<div class="describe_outer_banner">
 								<p class="ell">语音识别</p>
 								<p class="ell-rows-4 ">依托南海云的语音识别技术，为您提供高精度的语音转文字功能，支持多场景多领域的识别，可为社交聊天、智能家居、游戏娱乐等行业提供语音解决方案；结合敏感词检测技术节省审核人力，规避违规风险。</p>
@@ -263,11 +263,11 @@
 						}else {
                             this.showResult =  response.data.text;
 						}
-
-
                     },
                     error:()=>{
+                        loading.close();
                         this.isCheck = 3;
+                        this.$message.error('上传失败，请重新上传！');
                     }
                 });
             },
@@ -292,7 +292,8 @@
 	.describe_outer_banner p{}
 	.describe_outer_banner p:nth-of-type(1){font-size: 30px;height: 60px;line-height: 60px;margin-bottom: 15px;min-width: 400px;}
 	.describe_outer_banner p:nth-of-type(2){height: 120px;text-align: justify;overflow: hidden;min-width: 550px;line-height: 30px;}
-	.voice_top_contain img{width: 100%;min-width: 1300px;}
+	.voice_top_contain img{height: 480px;min-width: 1300px;}
+	.voice_top_contain .banner_outer{background-image: url('../assets/image/voice/voice_banner.png');min-width: 1300px;}
 	.practice_online{height: 40px;line-height:40px;width: 135px;font-size: 15px;text-align: center;color: #fff;border: 1px solid #fff;cursor:pointer}
 	.practice_online:hover{background-color: white;color: #000;}
 

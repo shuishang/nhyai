@@ -1,70 +1,75 @@
 <template>
 	<div class="imageCheck">
 		<!--图片评审-->
-		<el-row style="min-width: 800px;margin-top: 30px">
-			<el-col :md={span:14,offset:2} :lg={span:13,offset:2} :xl={span:11,offset:4}>
-				<div class="show_add_image_outer">
-					<div class="outer_add">
+		<!--<el-row style="min-width: 800px;margin-top: 30px">
+			<el-col :md={span:14,offset:2} :lg={span:13,offset:2} :xl={span:11,offset:4}>-->
+		<div style="width: 1200px;margin: 0 auto;"class="clearfix">
+			<div class="show_add_image_outer fl" >
+				<div class="outer_add">
+					<div class="show_image_outer">
 						<img class="show_add_image" :src="dialogImageUrl">
-						<div class="show_result_outer" >
-							<div v-show="forceLevel!=200">
-								<div class="show_result" v-if="isForce">
-									<i class="show_word danger_result_back"></i>
-								</div>
-								<div class="show_result" v-else>
-									<!--<i class="show_word normal_result_back"></i>-->
-									<i class="show_word normal_result_back"></i>
-								</div>
+					</div>
+					<div class="show_result_outer" >
+						<div v-show="forceLevel!=200">
+							<div class="show_result" v-if="isForce">
+								<i class="show_word danger_result_back"></i>
 							</div>
-
+							<div class="show_result" v-else>
+								<!--<i class="show_word normal_result_back"></i>-->
+								<i class="show_word normal_result_back"></i>
+							</div>
 						</div>
+
 					</div>
-					<p class="suggest"><span style="color: red">*</span> 提示: 敏感系数<50%为合规，50%～80%为疑似违规，>80%为违规<span v-show="imageIsBig" style="color: red;margin-left: 10px;display: inline-block;">！该图片大小超过1M</span></p>
 				</div>
-			</el-col>
-			<el-col :md="6" :lg="7" :xl="5">
-				<div class="show_json_outer">
-					<p class="result_title">审查结果</p>
-					<div class="result_outer">
-						<p>暴恐识别</p>
-						<p class="green_style_name" v-if="forceLevel==200">识别中...</p>
-						<p class="red_style_name" v-else-if="forceLevel>90">违规</p>
-						<p class="orange_style_name" v-else-if="forceLevel>50">疑似违规</p>
-						<p class="green_style_name" v-else>合规</p>
-						<p class="green_style_number" v-if="forceLevel==200"></p>
-						<p class="red_style_number" v-else-if="forceLevel>90">{{forceLevel}}%</p>
-						<p class="orange_style_number" v-else-if="forceLevel>50">{{forceLevel}}%</p>
-						<p class="green_style_number" v-else>{{forceLevel}}%</p>
-					</div>
-					<div class="result_outer">
-						<p>色情识别</p>
-						<p class="green_style_name" v-if="sexLevel==200">识别中...</p>
-						<p class="red_style_name" v-else-if="sexLevel>90">违规</p>
-						<p class="orange_style_name" v-else-if="sexLevel>50">疑似违规</p>
-						<p class="green_style_name" v-else>合规</p>
-						<p class="green_style_number" v-if="sexLevel==200"></p>
-						<p class="red_style_number" v-else-if="sexLevel>90">{{sexLevel}}%</p>
-						<p class="orange_style_number" v-else-if="sexLevel>50">{{sexLevel}}%</p>
-						<p class="green_style_number" v-else>{{sexLevel}}%</p>
-					</div>
-					<!--<div class="result_outer">
-						<p class="ell">政治敏感识别</p>
-						<p class="orange_style_name">疑似违规</p>
-						<p class="orange_style_number">60.35%</p>
-					</div>
-					<div class="result_outer">
-						<p>公众人物识别</p>
-						<p class="red_style_name">违规</p>
-						<p class="red_style_number">90.35%</p>
-					</div>
-					<div class="result_outer">
-						<p>广告检测</p>
-						<p class="red_style_name">违规</p>
-						<p class="red_style_number">90.16%</p>
-					</div>-->
+				<p class="suggest"><span style="color: red">*</span> 提示: 敏感系数<50%为合规，50%～80%为疑似违规，>80%为违规<span v-show="imageIsBig" style="color: red;margin-left: 10px;display: inline-block;">！该图片大小超过1M</span></p>
+			</div>
+			<!--</el-col>-->
+			<!--<el-col :md="6" :lg="7" :xl="5">-->
+			<div class="show_json_outer fl">
+				<p class="result_title">审查结果</p>
+				<div class="result_outer">
+					<p>暴恐识别</p>
+					<p class="green_style_name" v-if="forceLevel==200">识别中...</p>
+					<p class="red_style_name" v-else-if="forceLevel>90">违规</p>
+					<p class="orange_style_name" v-else-if="forceLevel>50">疑似违规</p>
+					<p class="green_style_name" v-else>合规</p>
+					<p class="green_style_number" v-if="forceLevel==200"></p>
+					<p class="red_style_number" v-else-if="forceLevel>90">{{forceLevel}}%</p>
+					<p class="orange_style_number" v-else-if="forceLevel>50">{{forceLevel}}%</p>
+					<p class="green_style_number" v-else>{{forceLevel}}%</p>
 				</div>
-			</el-col>
-		</el-row>
+				<div class="result_outer">
+					<p>色情识别</p>
+					<p class="green_style_name" v-if="sexLevel==200">识别中...</p>
+					<p class="red_style_name" v-else-if="sexLevel>90">违规</p>
+					<p class="orange_style_name" v-else-if="sexLevel>50">疑似违规</p>
+					<p class="green_style_name" v-else>合规</p>
+					<p class="green_style_number" v-if="sexLevel==200"></p>
+					<p class="red_style_number" v-else-if="sexLevel>90">{{sexLevel}}%</p>
+					<p class="orange_style_number" v-else-if="sexLevel>50">{{sexLevel}}%</p>
+					<p class="green_style_number" v-else>{{sexLevel}}%</p>
+				</div>
+				<!--<div class="result_outer">
+					<p class="ell">政治敏感识别</p>
+					<p class="orange_style_name">疑似违规</p>
+					<p class="orange_style_number">60.35%</p>
+				</div>
+				<div class="result_outer">
+					<p>公众人物识别</p>
+					<p class="red_style_name">违规</p>
+					<p class="red_style_number">90.35%</p>
+				</div>
+				<div class="result_outer">
+					<p>广告检测</p>
+					<p class="red_style_name">违规</p>
+					<p class="red_style_number">90.16%</p>
+				</div>-->
+			</div>
+		</div>
+
+			<!--</el-col>-->
+		<!--</el-row>-->
 	</div>
 </template>
 
@@ -147,12 +152,13 @@
 </script>
 <style scoped>
 	/*image样式begin*/
-	.show_add_image_outer{min-height: 400px}
+	.current_width_style{width: 1200px;margin: 0 auto;}
+	.show_add_image_outer{min-height: 400px;width: 800px;}
 	.show_input_outer{display: flex;}
 	.show_word{width: 180px;height: 200px;  display: inline-block;  text-align: center;  font-size: 22px;  font-style: normal;  color: #fff;  box-sizing: border-box;  padding-top: 58px;}
 	.normal_result_back{background-image: url("../../assets/image/normal_image_sample.png");background-repeat: no-repeat;position: absolute;top: 50%;left: 50%;margin-left: -90px;margin-top: -100px;}
 	.danger_result_back{background-image: url("../../assets/image/2.png");}
-	.show_json_outer{height: 430px;z-index: 99;background-color: white;position: relative;left: -20px;top: 35px;box-shadow:5px 0 20px #c5cff1}
+	.show_json_outer{height: 430px;width:400px;z-index: 99;background-color: white;position: relative;left: -20px;top: 35px;box-shadow:5px 0 20px #c5cff1}
 	.show_json_outer .result_title{font-size: 24px;color: #000000;text-align: center;height: 100px;padding-top: 30px;}
 	.show_json_outer .result_title:before{content: "";background: url("../../assets/image/result_top_image.png") no-repeat center center;height: 23px;display: block;margin-bottom: 10px;}
 	.suggest{color: #b2b2b2;font-size: 14px;min-height: 30px;margin:8px 0;}
@@ -169,8 +175,10 @@
 	.result_outer .orange_style_number{border: 1px solid #ffac09;color: #ffac09}
 	.result_outer .red_style_name{background-color: #ff524a;border: 1px solid #ff524a;color: #fff}
 	.result_outer .red_style_number{border: 1px solid #ff524a;color: #ff524a}
-	.show_add_image{height: 100%;margin: 0 auto;display: block;}
+	.show_image_outer{vertical-align: middle;display: table-cell;text-align: center;width: 800px;height: 500px;}
+	.show_add_image{max-height: 500px;max-width: 800px;}
 	.outer_add{height:500px;position: relative;overflow: hidden;}
+
 	/*image样式end*/
 
 </style>

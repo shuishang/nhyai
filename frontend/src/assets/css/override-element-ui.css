@@ -118,3 +118,6 @@
         transform: translateX(100%);
     }
 }
+.hide .el-upload--picture-card {
+    display: none;
+}

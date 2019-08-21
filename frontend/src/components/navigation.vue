@@ -74,7 +74,7 @@
 </script>
 
 <style>
-	#navigation{height:60px;position:absolute;top:0;width: 100%;z-index: 99;background-color: transparent;}
+	#navigation{height:60px;position:absolute;top:0;width: 100%;z-index: 99;background-color: transparent;min-width: 1300px;}
 	#navigation :hover{background-color: #060606;}
 	#navigation :hover .header_nav span{color: #fff;}
 	/*#navigation :hover .header_logo img{!*display: inline-block;width: 133px;height: 58px;*!}*/

@@ -1,65 +1,61 @@
 <template>
 	<div class="audioCheck">
 		<!--音频评审-->
-		<el-row style="min-width: 800px;margin-top: 30px;">
-			<el-col :md={span:14,offset:2} :lg={span:13,offset:2} :xl={span:11,offset:4}>
-				<div class="show_voice_outer">
-					<div class="outer_voice">
-						<p class="voice_title">语音审查</p>
-						<div class="voice_player_outer clearfix">
-							<img src="../../assets/image/voice_mark.png" class="fl icon_music" id="music_icon">
-							<div class="audio_wrapper_outer">
-								<div class="audio-wrapper">
-									<audio id="audio">
-										<source :src="recordSrc" type="audio/wav">
-									</audio>
-									<div class="audio-left">
-										<img id="audioPlayer" src="../../assets/image/audio/play.png">
+		<div class="clearfix">
+			<div class="show_voice_outer fl">
+				<div class="outer_voice">
+					<p class="voice_title">语音审查</p>
+					<div class="voice_player_outer clearfix">
+						<img src="../../assets/image/voice_mark.png" class="fl icon_music" id="music_icon">
+						<div class="audio_wrapper_outer">
+							<div class="audio-wrapper">
+								<audio id="audio">
+									<source :src="recordSrc" type="audio/wav">
+								</audio>
+								<div class="audio-left">
+									<img id="audioPlayer" src="../../assets/image/audio/play.png">
+								</div>
+								<div class="audio-right">
+									<div class="progress-bar-bg" id="progressBarBg">
+										<span id="progressDot"></span>
+										<div class="progress-bar" id="progressBar"></div>
 									</div>
-									<div class="audio-right">
-										<div class="progress-bar-bg" id="progressBarBg">
-											<span id="progressDot"></span>
-											<div class="progress-bar" id="progressBar"></div>
-										</div>
-										<div class="audio-time">
-											<span class="audio-length-current" id="audioCurTime">00:00</span>
-											<span class="audio-length-total"></span>
-										</div>
-										<p style="max-width: 536px;">{{audioName}}</p>
+									<div class="audio-time">
+										<span class="audio-length-current" id="audioCurTime">00:00</span>
+										<span class="audio-length-total"></span>
 									</div>
+									<p style="max-width: 536px;">{{audioName}}</p>
 								</div>
 							</div>
+						</div>
 
-						</div>
-						<div class="voice_result_outer">
-							<div class="show_voice_word">
-								<!--<span class="fl"> 1:05 - 1:06</span>-->
-								<!--<span class="fl ell"> 好，现在<span class="red_color">违禁词</span>到室当中呢，<span class="red_color">违禁词</span>了三十位</span>-->
-							</div>
+					</div>
+					<div class="voice_result_outer">
+						<div class="show_voice_word">
+							<!--<span class="fl"> 1:05 - 1:06</span>-->
+							<!--<span class="fl ell"> 好，现在<span class="red_color">违禁词</span>到室当中呢，<span class="red_color">违禁词</span>了三十位</span>-->
 						</div>
 					</div>
-					<p class="suggest"><span class="red_color">*</span> 提示: 敏感系数<50%为合规，50%～80%为疑似违规，>80%为违规<span v-show="imageIsBig" style="color: red;margin-left: 10px;display: inline-block;">！该图片大小超过1M</span></p>
 				</div>
-			</el-col>
-			<el-col :md="6" :lg="7" :xl="5">
-				<div class="show_json_outer">
-					<p class="result_title">审查结果</p>
-					<div class="result_outer" v-for="item in resultType">
-						<p>{{item.firstType}}</p>
-						<p class="red_style_name">违规</p>
+				<p class="suggest"><span class="red_color">*</span> 提示: 敏感系数<50%为合规，50%～80%为疑似违规，>80%为违规<span v-show="imageIsBig" style="color: red;margin-left: 10px;display: inline-block;">！该图片大小超过1M</span></p>
+			</div>
+			<div class="show_json_outer fl">
+				<p class="result_title">审查结果</p>
+				<div class="result_outer" v-for="item in resultType">
+					<p>{{item.firstType}}</p>
+					<p class="red_style_name">违规</p>
+				</div>
+				<div class="result_outer" v-if="isUploading">
+					<p class="green_style_name">识别中...</p>
+				</div>
+				<div v-else>
+					<div class="result_outer" v-show="isNone">
+						<p class="green_style_name">合规</p>
 					</div>
-					<div class="result_outer" v-if="isUploading">
-						<p class="green_style_name">识别中...</p>
-					</div>
-					<div v-else>
-						<div class="result_outer" v-show="isNone">
-							<p class="green_style_name">合规</p>
-						</div>
-					</div>
+				</div>
+			</div>
+		</div>
 
-				</div>
-			</el-col>
-		</el-row>
 	</div>
 </template>
 
@@ -325,8 +321,9 @@
                     },
                     error:err=>{
                         loading.close();
-                        console.log(err)
+                        console.log(err);
                         this.$parent.changeUploadState(false);
+                        this.$message.error('上传失败,重新上传！');
                     }
                 });
                 e.preventDefault();
@@ -338,7 +335,8 @@
 <style scoped>
 	@import "../../assets/css/audio.css";
 	/*音频样式begin*/
-	.show_voice_outer{min-height: 440px}
+	.audioCheck{width: 1200px;margin: 0 auto;}
+	.show_voice_outer{min-height: 440px;width: 800px;}
 	.outer_voice{height:500px;z-index: 1;text-align: center;background-color: #f4f5f7;padding-right: 20px;}
 	.voice_title{height: 34px;line-height:34px;width: 135px;margin: 0 auto;background-color: #deecf9;color: #007bff;margin-bottom: 20px;}
 	.voice_player_outer{height: 125px;width: 94%;margin: 10px auto;border-radius: 5px;background-color: white;}
@@ -349,7 +347,7 @@
 	.show_voice_word span{display: inline-block;text-align: left;}
 	.show_voice_word span:nth-of-type(2){margin-left: 20px;flex: 1;}
 
-	.show_json_outer{height: 430px;z-index: 99;background-color: white;position: relative;left: -20px;top: 35px;box-shadow:5px 0 20px #c5cff1;overflow-y: auto;}
+	.show_json_outer{width:400px;height: 430px;z-index: 99;background-color: white;position: relative;left: -20px;top: 35px;box-shadow:5px 0 20px #c5cff1;overflow-y: auto;}
 	.show_json_outer .result_title{font-size: 24px;color: #000000;text-align: center;height: 100px;padding-top: 30px;}
 	.show_json_outer .result_title:before{content: "";background: url("../../assets/image/result_top_image.png") no-repeat center center;height: 23px;display: block;margin-bottom: 10px;}
 	.suggest{color: #b2b2b2;font-size: 14px;min-height: 30px;margin:8px 0;}

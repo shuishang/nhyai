@@ -5,8 +5,8 @@
 			<el-row>
 				<el-row>
 					<el-col :xl={span:24}>
-						<div class="banner_outer">
-							<img src="../assets/image/video/video_banner.png" alt="">
+						<div class="banner_outer ai-common-banner">
+							<!--<img src="../assets/image/video/video_banner.png" alt="">-->
 							<div class="describe_outer_banner">
 								<p class="ell">视频检测</p>
 								<p class="ell-rows-4 ">针对视频内容进行多维智能审核，其中包括色情、暴恐、政治敏感、广告、自定义黑库等，让您的平台免去审核的后顾之忧 </p>
@@ -75,7 +75,7 @@
 						<div class="video_original">
 							<div>
 								<img src="../assets/image/video/video_play_logo.png" alt="">
-								<p>支持视频格式：flv、mkv 、mp4 、rmvb 、avi 、wmv、3gp、ts、mov，大小限制<100M，视频时长<3分钟</p>
+								<p>支持视频格式：mp4，大小限制<100M</p>
 								<div class="local_upload">
 									<!--<p>本地上传</p>-->
 									<input id="datafile" name="datafile" type="file" accept="video/*" class="inputfile" @change="changeImage($event)">
@@ -101,8 +101,10 @@
 									<!--<source src="" type="video/mp4">-->
 									您的浏览器不支持视频
 								</video>
+
 							</div>
 						</div>
+						<el-progress v-show="isLoading" :text-inside="true" :percentage="percentage" :stroke-width="3"></el-progress>
 					</el-col>
 					<el-col :md="8" :lg="6" :xl="4">
 						<div class="video_result_outer">
@@ -162,13 +164,11 @@
 								<p>重新选择</p>
 							</div>
 						</div>
-						<p class="suggest"><span style="color: red">*</span> 提示: 敏感系数<50%为合规，50%～90%为疑似违规，>90%为违规<span v-show="imageIsBig" style="color: red;margin-left: 10px;display: inline-block;">！该图片大小超过1M</span></p>
+						<p class="suggest"><span style="color: red">*</span> 提示: 敏感系数<50%为合规，50%～80%为疑似违规，>80%为违规<span v-show="imageIsBig" style="color: red;margin-left: 10px;display: inline-block;">！该图片大小超过1M</span></p>
 
 					</el-col>
 				</el-row>
 			</div>
-
-
 		</div>
 		<div class="recommended_scenario">
 			<p class="title">应用场景</p>
@@ -255,13 +255,17 @@
 				sexInfo:5,
 				forceInfo:5,
                 player:{},
-                first:true
+                first:true,
+                percentage:0
 			}
         },
         mounted:function () {
 
         },
         methods: {
+            format(percentage) {
+                return percentage === 100 ? '满' : `${percentage}%`;
+            },
             resetMarker(marker){
 //                this.player = null;
                 this.player = videojs('myVideo');
@@ -287,7 +291,7 @@
 						  只需返回一个字符串，参数标记是传递给插件的标记对象
 						 */
                         text: function(marker) {
-                            return "This is a break: " + marker.text;
+                            return  marker.text;
                         }
                     },
                     breakOverlay:{  //每个标记的中断覆盖选项
@@ -297,7 +301,7 @@
                             color:"red"
                         },
                         text: function(marker) {  //回调函数动态构建叠加文本
-                            return "This is an break overlay: " + marker.text;
+                            return  marker.text;
                         }
                     },
                     onMarkerReached:function(marker, index){  //只要播放到标记的时间间隔，就会出发此回调函数
@@ -323,7 +327,14 @@
                 var formData = new FormData();
                 formData.append('video', file);
                 formData.append('video_url', url);
-                console.log(file,url)
+                console.log(file,url);
+                this.percentage= 0;
+                var timer = window.setInterval(()=>{
+                    this.percentage += 5;
+                    if (this.percentage > 95) {
+                        this.percentage = 95;
+                    }
+                },2000);
                 $.ajax({
                     url: this.api+"/api/v1/video/get_video_inspection/",
                     type: "post",
@@ -339,6 +350,8 @@
                         this.forceInfo= 5;
                         this.imageUrl= [];
                         this.markerInfo= [];
+                        this.percentage = 100;
+                        window.clearInterval(timer);
                         this.isLoading= false;
 //                        this.videoUrl={url:response.data.video} ;
 //						this.video_url= response.data.video_url;
@@ -411,6 +424,10 @@
                             this.resetMarker(this.markerInfo);
 						}
                     },
+                    error:(error)=>{
+                        this.$message.error('上传失败，请重新上传！');
+                        this.isLoading= false;
+                    }
                 });
                 e.preventDefault();
             },
@@ -428,11 +445,12 @@
                 console.log(this.videoUrl);
                 this.isChose=true;
                 this.uploadImage(e,file,url);
+                this.toPractice();
             },
             toPractice(){
                 scrollBy(document.getElementById('practice_title').offsetTop-100);
 //                window.scrollBy(0,document.getElementById('practice_title').offsetTop-100)
-            }
+            },
         },
 		components:{
             Navigation,
@@ -452,7 +470,8 @@
 	.describe_outer_banner p{}
 	.describe_outer_banner p:nth-of-type(1){font-size: 30px;height: 60px;line-height: 60px;margin-bottom: 15px;min-width: 400px;}
 	.describe_outer_banner p:nth-of-type(2){height: 120px;text-align: justify;overflow: hidden;min-width: 550px;line-height: 30px;}
-	.video_top_contain img{width: 100%;min-width: 1300px;}
+	.video_top_contain img{height: 480px;min-width: 1300px;}
+	.video_top_contain .banner_outer{background-image: url('../assets/image/video/video_banner.png');min-width: 1300px;}
 	.practice_online{height: 40px;line-height:40px;width: 135px;font-size: 15px;text-align: center;color: #fff;border: 1px solid #fff;cursor:pointer}
 	.practice_online:hover{background-color: white;color: #000;}
 

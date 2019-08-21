@@ -1,12 +1,12 @@
 <template>
 	<div id="writeRecognition">
 		<Navigation></Navigation>
-		<div class="yellow_top_contain">
+		<div class="write_top_contain">
 			<el-row>
 				<el-row>
 					<el-col :xl={span:24}>
-						<div class="banner_outer">
-							<img src="../assets/image/write/write_banner.png" alt="">
+						<div class="banner_outer ai-common-banner">
+							<!--<img src="../assets/image/write/write_banner.png" alt="">-->
 							<div class="describe_outer_banner">
 								<p class="ell">文本检测</p>
 								<p class="ell-rows-4 ">基于海量样本数据，智能策略定制，高效过滤色情、广告、涉政、暴恐等多类垃圾文字及敏感词、违禁变种</p>
@@ -240,6 +240,7 @@
                     },
                     error:()=>{
                         this.isCheck = 3;
+                        this.$message.error('识别失败，请重新识别！');
 					}
                 });
 			},
@@ -270,13 +271,14 @@
 </script>
 
 <style scoped>
-	.yellow_top_contain{font-size: 0;line-height: 0;}
+	.write_top_contain{font-size: 0;line-height: 0;}
 	.banner_outer{position: relative;}
 	.describe_outer_banner{position: absolute;top:25%;left: 18%;font-size: 16px;color: white;width: 28%;height: 75%;}
 	.describe_outer_banner p{}
 	.describe_outer_banner p:nth-of-type(1){font-size: 30px;height: 60px;line-height: 60px;margin-bottom: 15px;min-width: 400px;}
 	.describe_outer_banner p:nth-of-type(2){height: 105px;text-align: justify;overflow: hidden;min-width: 550px;line-height: 30px;}
-	.yellow_top_contain img{width: 100%;min-width: 1200px;}
+	.write_top_contain img{height: 480px;min-width: 1300px;}
+	.write_top_contain .banner_outer{background-image: url('../assets/image/write/write_banner.png');min-width: 1300px;}
 	.practice_online{height: 40px;line-height:40px;width: 135px;font-size: 15px;text-align: center;color: #fff;border: 1px solid #fff;cursor:pointer}
 	.practice_online:hover{background-color: white;color: #000;}
 
