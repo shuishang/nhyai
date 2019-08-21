@@ -29,15 +29,16 @@ class sensitiveClass:
         sensitive_size = 0    #敏感词数量
         list_index = 0
         web_text = "<div>"
+        app_text = ""
         if input_word != None:
-            keywords = input_word.split(' ')
-        
+            keywords = " ".join(input_word.split())
+            keywords = keywords.split(' ')
+        print("111111111111111===",keywords)
         for keyword in keywords:
-            print("33333333333=",keyword)
             for index, row in df.iterrows():
                 sensitiveCms = row['内容'].split('、')
                 if keyword.strip()=='':
-                    break;
+                    break
                 #if (keyword == ' ')
                 # if keyword.strip()=='':
                 #     break;
@@ -55,8 +56,10 @@ class sensitiveClass:
                     
             if (temp_flag == 1):
                 web_text = web_text + "<a style='color:red'>" +keyword +"&nbsp;</a>"
+                app_text = app_text + "<font color ='red' size='20'>" +keyword +"&nbsp;</font>"
             else:
                 web_text = web_text + keyword+"&nbsp;"
+                app_text = app_text + "<font>" +keyword +"&nbsp;</font>"
             temp_flag = 0
         web_text = web_text + "</div>"
         t = time.time()
@@ -93,6 +96,8 @@ class sensitiveClass:
         print("aList=",aList)
         print("sensitive_list=",sensitive_list)
         resultMap["web_text"] = web_text
+        resultMap["app_text"] = app_text
+        print("ddddddd=",resultMap)
         return resultMap
 
     def check_sensitiveWords(self, input_word):
@@ -103,14 +108,16 @@ class sensitiveClass:
         sensitive_list = [] #敏感词列表
         sensitive_size = 0    #敏感词数量
         web_text = "<div>"
+        app_text = ""
         if input_word != None:
-            keywords = input_word.split(' ')
+            keywords = " ".join(input_word.split())
+            keywords = keywords.split(' ')
         
         for keyword in keywords:
             for index, row in settings.DF.iterrows():                
                 sensitiveCms = row['内容'].split('、')
                 if keyword.strip()=='':
-                    break;
+                    break
                 if keyword in sensitiveCms:
                     result = {}
                     result["firstType"] = row['大类']
@@ -122,8 +129,10 @@ class sensitiveClass:
                     sensitive_list.append(result)
             if (temp_flag == 1):
                 web_text = web_text + "<a style='color:red'>" +keyword +"&nbsp;</a>"
+                app_text = app_text + "<font color ='red' size='20'>" +keyword +"&nbsp;</font>"
             else:
                 web_text = web_text + keyword+"&nbsp;"
+                app_text = app_text + "<font>" +keyword +"&nbsp;</font>"
             temp_flag = 0
         web_text = web_text + "</div>"
         t = time.time()
@@ -158,13 +167,14 @@ class sensitiveClass:
         aList = list(set(aList)) 
         resultMap["sensitive_list"] = sensitive_list
         resultMap["final_list"] = aList
-        print("aList=",aList)
         #resultMap["sensitive_list"] = sensitive_list
         resultMap["web_text"] = web_text
+        resultMap["app_text"] = app_text
         return resultMap
 
 if __name__ == '__main__':
     df = pd.read_csv(os.path.join(os.getcwd(),"backend","api","sensitives","sensitiveWords.csv"),encoding='gbk')
-    sensitiveClass().check_sensitiveWords_test(df, "十八摸 十八摸 十八摸 十八摸 十八摸 十八摸")
+    #sensitiveClass().check_sensitiveWords_test(df, "十八摸 11111")
+    sensitiveClass().check_sensitiveWords_test(df, "   \xa0台独\xa0SOHO红\xa0台独\xa0   ")
     #sensitiveClass().check_sensitiveWords_test(df, "  heheh ")
     #sensitiveClass().check_sensitiveWords_test(df, "你 不是 跟 我 讲的 笑话 吗 欲死欲仙 十八摸")

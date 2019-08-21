@@ -1,6 +1,6 @@
 #coding:utf-8
 import numpy as np
-from ...config import GPUID,GPU,nmsFlag
+from config import GPUID,GPU,nmsFlag
 from .utils.python_nms import nms as python_nms ##python版本nms
 
 from .text_proposal_connector import TextProposalConnector

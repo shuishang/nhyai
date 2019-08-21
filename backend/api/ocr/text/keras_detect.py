@@ -2,10 +2,10 @@
 YOLO_v3 Model Defined in Keras.
 Reference: https://github.com/qqwweee/keras-yolo3.git
 """
-from ..config import kerasTextModel,IMGSIZE,keras_anchors,class_names,GPU,GPUID
+from config import kerasTextModel,IMGSIZE,keras_anchors,class_names,GPU,GPUID
 from .keras_yolo3 import yolo_text,box_layer,K
 
-from ..apphelper.image import resize_im,letterbox_image
+from apphelper.image import resize_im,letterbox_image
 from PIL import Image
 import numpy as np
 import tensorflow as tf

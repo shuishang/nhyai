@@ -9,9 +9,14 @@ import time
 import uuid
 import base64
 from PIL import Image
-from .ocrmodel import model
-from .apphelper.image import union_rbox,adjust_box_to_origin
-from .application import idcard
+
+# 添加当前项目到环境变量
+import sys
+sys.path.append(os.path.join(os.getcwd(),"backend","api","ocr"))
+# print(sys.path)
+from ocrmodel import model
+from apphelper.image import union_rbox,adjust_box_to_origin
+from application import idcard
 
 
 class OCR:
@@ -74,3 +79,8 @@ class OCR:
         timeTake = time.time()-timeTake
         
         return {'res':res,'timeTake':round(timeTake,4)}
+
+if __name__ == '__main__':
+    ocrTest = OCR()
+    idcard = ocrTest.getWordRecognition(os.path.join(os.getcwd(),"backend","api","ocr","test","idcard-demo.jpeg"),"身份证")
+    print(idcard)

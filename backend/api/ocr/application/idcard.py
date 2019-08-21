@@ -1,7 +1,7 @@
 """
 身份证
 """
-from ..apphelper.image import union_rbox
+from apphelper.image import union_rbox
 import re
 class idcard:
     """

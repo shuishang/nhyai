@@ -1,6 +1,6 @@
-from ..config import yoloCfg,yoloWeights,opencvFlag
-from ..config import AngleModelPb,AngleModelPbtxt
-from ..config import IMGSIZE
+from config import yoloCfg,yoloWeights,opencvFlag
+from config import AngleModelPb,AngleModelPbtxt
+from config import IMGSIZE
 from PIL import Image
 import numpy as np
 import cv2

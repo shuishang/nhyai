@@ -165,7 +165,7 @@ CORS_ORIGIN_REGEX_WHITELIST = (
 DF = pd.read_csv(os.path.join(os.getcwd(),"backend","api","sensitives","sensitiveWords.csv"),encoding='gbk')
 
 #是否支持GPU
-IS_GPU = True
+IS_GPU = False
 
 #视屏检测图片存放路径
 TEMP_PATH = 'capture_out_images/'
@@ -176,7 +176,7 @@ VIDEO_URL = 'http://172.31.4.7:8000/media/videos/'
 
 #色情模型预加载
 NSFW = nsfw()
-VIOLENCE = violence()
+VIOLENCE = violence(IS_GPU)
 
 #暴恐级别比例
 VIOLENCESCORE_MIN = 0.5
