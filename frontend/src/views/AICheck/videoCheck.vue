@@ -10,6 +10,7 @@
 						您的浏览器不支持视频
 					</video>
 				</div>
+				<el-progress  :text-inside="true" :percentage="percentage" :stroke-width="3"></el-progress>
 			</div>
 			<div class="video_result_outer fl">
 				<p class="result_title">审查结果</p>
@@ -30,7 +31,7 @@
 			</div>
 		</div>
 		<div class="video_image_outer">
-			<p v-show="imageUrl.length">证据信息</p>
+			<p v-show="imageUrl.length" class="evidence_info">证据信息</p>
 			<div class="video_image_con clearfix">
 				<div class="video_image_item fl" v-for="(item,index) in imageUrl">
 					<div class="show_result_title">
@@ -70,7 +71,9 @@
                 forceInfo:5,
                 player:null,
                 first:true,
-                isLoading:false
+                isLoading:false,
+                percentage:0
+
 			}
 		},
 		mounted(){
@@ -98,10 +101,18 @@
                 this.isLoading = true;
                 this.sexInfo = 200;
                 this.forceInfo = 200;
+                this.imageUrl=[];
                 var url = URL.createObjectURL(file);
                 console.log(url);
                 this.videoUrl={url:url} ;
                 console.log(file);
+                this.percentage= 0;
+                var timer = window.setInterval(()=>{
+                    this.percentage += 5;
+                    if (this.percentage > 95) {
+                        this.percentage = 95;
+                    }
+                },2000);
                 var loading = this.$loading({fullscreen:false,target:document.querySelector(".show_video")});
                 console.log("视频提交中。。。")
                 var formData = new FormData();
@@ -116,13 +127,14 @@
                     contentType: false,
                     processData: false,
                     success:(response)=>{
+                        this.percentage = 100;
+                        window.clearInterval(timer);
                         loading.close();
                         console.log(response);
                         this.sexInfo= 5;
                         this.forceInfo= 5;
                         this.imageUrl= [];
                         this.markerInfo= [];
-                        this.isLoading = false;
 //                        this.uploadInfo(response);
 //                        this.videoUrl={url:response.data.video_url} ;
 //                        this.videoUrl={url:response.data.video};
@@ -196,7 +208,7 @@
                         }else {
                             this.resetMarker(this.markerInfo);
                         }
-
+                        this.isLoading = false;
                         this.$parent.changeUploadState(false);
                         console.log( this.imageUrl,this.markerTime);
                         console.log( response);
@@ -333,7 +345,7 @@
 	.video_result_outer .result_title:before{content: "";background: url("../../assets/image/result_top_image.png") no-repeat center center;height: 23px;display: block;margin-bottom: 10px;}
 	.video_image_outer{border: 1px solid #e2ecfc;min-height: 200px;margin-top: 20px;padding-left: 20px;width: 1050px;}
 	.video_image_outer:first-child{color: #010101;font-size: 16px;line-height: 50px;}
-	.video_image_con{}
+	.evidence_info{height: 35px;line-height: 35px;font-size: 15px;}
 	.video_image_item{height: 150px;width: 160px;padding-right: 20px;margin-bottom: 20px;position: relative;}
 	.video_image_con .video_image_item img{height: 120px;width: 100%;display: block}
 	.video_image_con .video_image_item p{height: 30px;line-height:30px;font-size: 14px;text-align: center;border: 1px solid #e2ecfc;border-top: none;}

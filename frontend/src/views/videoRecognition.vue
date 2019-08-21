@@ -104,7 +104,7 @@
 
 							</div>
 						</div>
-						<el-progress v-show="isLoading" :text-inside="true" :percentage="percentage" :stroke-width="3"></el-progress>
+						<el-progress  :text-inside="true" :percentage="percentage" :stroke-width="3"></el-progress>
 					</el-col>
 					<el-col :md="8" :lg="6" :xl="4">
 						<div class="video_result_outer">
@@ -141,7 +141,7 @@
 				<el-row style="min-width: 800px;">
 					<el-col :md={span:18,offset:3} :lg={span:18,offset:3} :xl={span:14,offset:5}>
 						<div class="video_image_outer">
-							<p v-show="imageUrl.length">证据信息</p>
+							<p v-show="imageUrl.length" class="evidence_info">证据信息</p>
 							<div class="video_image_con clearfix">
 								<div class="video_image_item fl" v-for="(item,index) in imageUrl">
 									<div class="show_result_title">
@@ -352,7 +352,7 @@
                         this.markerInfo= [];
                         this.percentage = 100;
                         window.clearInterval(timer);
-                        this.isLoading= false;
+
 //                        this.videoUrl={url:response.data.video} ;
 //						this.video_url= response.data.video_url;
                         response.data.video_evidence_information.forEach((item,index)=>{
@@ -423,6 +423,7 @@
 						}else {
                             this.resetMarker(this.markerInfo);
 						}
+                        this.isLoading= false;
                     },
                     error:(error)=>{
                         this.$message.error('上传失败，请重新上传！');
@@ -513,7 +514,7 @@
 	.video_result_outer .result_title:before{content: "";background: url("../assets/image/result_top_image.png") no-repeat center center;height: 23px;display: block;margin-bottom: 10px;}
 	.video_image_outer{border: 1px solid #e2ecfc;min-height: 200px;margin-top: 20px;padding-left: 20px;}
 	.video_image_outer:first-child{color: #010101;font-size: 16px;line-height: 50px;}
-	.video_image_con{}
+	.evidence_info{height: 35px;line-height: 35px;font-size: 15px;}
 	.video_image_item{height: 150px;width: 160px;padding-right: 20px;margin-bottom: 20px;position: relative;}
 	.video_image_con .video_image_item img{height: 120px;width: 100%;display: block}
 	.video_image_con .video_image_item p{height: 30px;line-height:30px;font-size: 14px;text-align: center;border: 1px solid #e2ecfc;border-top: none;}

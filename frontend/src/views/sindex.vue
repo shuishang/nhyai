@@ -27,7 +27,7 @@
 				</el-row>
 			</el-row>
 		</div>
-		<div class="functional_experience">
+		<div class="functional_experience" id="practice_title">
 			<p class="title">功能体验</p>
 			<div class="current_width_style clearfix">
 				<div class="show_input_outer fl">
@@ -201,6 +201,7 @@
 	import AudioCheck from '../views/AICheck/AudioCheck.vue'
 	import VideoCheck from '../views/AICheck/videoCheck.vue'
 	import TextCheck from '../views/AICheck/textCheck.vue'
+    import {scrollBy} from '../store/common'
     export default {
         data() {
             return {
@@ -284,6 +285,7 @@
                         that.stopAudio = true;
                         this.submitVideoCallback(e,file);
                         this.isUploading = true;
+                        this.toPractice();
 					}else if(fileType.substr(0, 4) === "text"){
                         that.checkType = 4;
                         that.stopVideo = true;
@@ -298,7 +300,11 @@
 			},
 			changeUploadState(isUploading){
                 this.isUploading = isUploading;
-			}
+			},
+            toPractice(){
+                scrollBy(document.getElementById('practice_title').offsetTop-100);
+//                window.scrollBy(0,document.getElementById('practice_title').offsetTop-100)
+            },
         }
     }
 
