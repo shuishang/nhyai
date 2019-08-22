@@ -217,6 +217,8 @@
 					error:err=>{
                         loading.close();
                         console.log(err);
+                        this.percentage = 0;
+                        window.clearInterval(timer);
                         this.isLoading = false;
                         this.$message.error('上传失败,重新上传！');
                         this.$parent.changeUploadState(false);

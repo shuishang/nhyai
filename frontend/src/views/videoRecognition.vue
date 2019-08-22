@@ -428,6 +428,8 @@
                     error:(error)=>{
                         this.$message.error('上传失败，请重新上传！');
                         this.isLoading= false;
+                        this.percentage = 0;
+                        window.clearInterval(timer);
                     }
                 });
                 e.preventDefault();
@@ -447,6 +449,7 @@
                 this.isChose=true;
                 this.uploadImage(e,file,url);
                 this.toPractice();
+                document.getElementById("datafile").value=null;
             },
             toPractice(){
                 scrollBy(document.getElementById('practice_title').offsetTop-100);

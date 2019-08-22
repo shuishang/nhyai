@@ -223,7 +223,8 @@
                 stopAudio:false,
                 centerDialogVisible: false,
 				imageFile:'',
-				isUploading:false
+				isUploading:false,
+                currentValue:null
             };
         },
 		components:{
@@ -257,6 +258,7 @@
                 this.$refs.textCheck.submitText(e,file);
             },
             changeImage(e){
+
                 this.imageIsBig = false;
                 this.imageRight = false;
                 const file = e.target.files[0];
@@ -295,6 +297,7 @@
                     }else{
                         this.$message.error('您选择的文件格式错误！');
 					}
+                    document.getElementById("datafile").value=null;
 
                 };
 			},
