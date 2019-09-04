@@ -27,6 +27,8 @@ from .kaldi.audios import audio
 from .sensitives.sensitives import sensitiveClass
 import wave
 import contextlib
+import codecs
+import chardet
 
 def get_two_float(f_str, n):
     f_str = str(f_str)      # f_str = '{}'.format(f_str) 也可以转换为字符串
@@ -177,15 +179,22 @@ class WordRecognitionInspectionViewSet(viewsets.ModelViewSet):
         iserializer = serializer.save()
         
         txtfile = iserializer.text.path
-        print(txtfile)
-        f=open(txtfile,"r")
-        lines = f.readlines()
+        # print(txtfile)
+        # 增加gbk编码格式转换
+        f_test = open(txtfile, 'rb')
+        file_type = chardet.detect(f_test.read(100))
+
+        if (file_type['encoding'] == 'GB2312'):
+            f = codecs.open(txtfile, 'r', encoding='gbk')
+        elif (file_type['encoding'] == 'UTF-8-SIG'):
+            f = codecs.open(txtfile, 'r', encoding='utf-8')
+        else:
+            f = codecs.open(txtfile, 'r')
+
+        text_content = f.read()
         sensitive_map = {}
-        text_content = ""
-        #lines=f.readline()     #按行读取文件中的内容
         sensitive_list = []
-        for line in lines:     #循环输出读取的内容
-            text_content = text_content + " " + line 
+        
         result = sensitiveClass().check_sensitiveWords(text_content)
         ret = 0
         msg = "匹配记录"
