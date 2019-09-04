@@ -80,7 +80,7 @@ class FileVisionPornUpload(models.Model):
     data = models.TextField(max_length=256, default='')
 
 class WordRecognition(models.Model):
-    text = models.CharField(_('text'), max_length=255, null=True, blank=True)
+    text = models.CharField(_('text'), max_length=1530, null=True, blank=True)
     sensitive_hit_flag = models.IntegerField(_('sensitive_hit_flag'), null=True, blank=True)
     sensitive_size = models.IntegerField(_('sensitive_size'), null=True, blank=True)
     sensitive_list = models.TextField(max_length=1024, default='')
@@ -88,7 +88,7 @@ class WordRecognition(models.Model):
     msg = models.TextField(max_length=255, default='')
     data = models.TextField(max_length=2048, default='')
 class WordRecognitionInspection(models.Model):
-    text = models.FileField(upload_to=text_and_rename, max_length=255, null=True, blank=True)
+    text = models.FileField(upload_to=text_and_rename, max_length=1530, null=True, blank=True)
     ret = models.IntegerField(_('ret'), null=True, blank=True)
     msg = models.TextField(max_length=255, default='')
     data = models.TextField(max_length=2048, default='')    
