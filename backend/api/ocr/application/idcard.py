@@ -64,8 +64,8 @@ class idcard:
             txt = self.result[i]['text'].replace(' ','')
             txt = txt.replace(' ','')
             ##出生年月
-            res = re.findall('出生\d*年\d*月\d*日',txt)
-            res = re.findall('\d*年\d*月\d*日',txt)
+            res = re.findall(r'出生\d*年\d*月\d*日',txt)
+            res = re.findall(r'\d*年\d*月\d*日',txt)
             
             if len(res)>0:
                 birth['出生年月']  =res[0].replace('出生','').replace('年','-').replace('月','-').replace('日','')
@@ -82,9 +82,9 @@ class idcard:
             txt = txt.replace(' ','')
             ##身份证号码, 增加判断去掉:号情况
             txt = txt.replace(':', '')
-            res = re.findall('号码\d*[X|x]',txt)
-            res += re.findall('号码\d*',txt)
-            res += re.findall('\d{16,18}',txt)
+            res = re.findall(r'号码\d*[X|x]',txt)
+            res += re.findall(r'号码\d*',txt)
+            res += re.findall(r'\d{16,18}',txt)
             
             if len(res)>0:
                 No['身份证号码']  =res[0].replace('号码','')
@@ -103,11 +103,12 @@ class idcard:
             txt = txt.replace(' ','')
             
             ##身份证地址
-            if '住址' in txt or '省' in txt or '市' in txt or '县' in txt or '街' in txt or '村' in txt or "镇" in txt or "区" in txt or "城" in txt:
+            if '住址' in txt or '省' in txt or '市' in txt or '县' in txt or '街' in txt or '村' in txt or "镇" in txt or "区" in txt or "城" in txt or "室" in txt or "房" in txt:
                 addString.append(txt.replace('住址',''))
-
-            ##增加地址第二行判断
-            res = re.findall('\d+号',txt)
+            else:
+                ##增加地址第二行判断
+                res = re.findall(r'\d+号',txt)
+            
             if len(res)>0:
                 addString.append(txt.replace('住址',''))
             
