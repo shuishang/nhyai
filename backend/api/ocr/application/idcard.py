@@ -80,7 +80,8 @@ class idcard:
         for i in range(self.N):
             txt = self.result[i]['text'].replace(' ','')
             txt = txt.replace(' ','')
-            ##身份证号码
+            ##身份证号码, 增加判断去掉:号情况
+            txt = txt.replace(':', '')
             res = re.findall('号码\d*[X|x]',txt)
             res += re.findall('号码\d*',txt)
             res += re.findall('\d{16,18}',txt)
@@ -103,6 +104,11 @@ class idcard:
             
             ##身份证地址
             if '住址' in txt or '省' in txt or '市' in txt or '县' in txt or '街' in txt or '村' in txt or "镇" in txt or "区" in txt or "城" in txt:
+                addString.append(txt.replace('住址',''))
+
+            ##增加地址第二行判断
+            res = re.findall('\d+号',txt)
+            if len(res)>0:
                 addString.append(txt.replace('住址',''))
             
         if len(addString)>0:
