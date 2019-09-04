@@ -50,6 +50,8 @@ def check_video(file_path):
     temp_path = settings.SAVE_PATH+uuidStr+"/"
     os.makedirs(temp_path) #重新创建文件夹  
     contentList=[]
+    violenceList=[]
+    pornList=[]
     violenceScoreArr = [0]*int(totalFrameNumber)
     pornScoreArr = [0]*int(totalFrameNumber)
     FPS_FLAG = settings.FPS_FLAG  #为True时，按帧读取；False时，按秒读取
@@ -83,6 +85,8 @@ def check_video(file_path):
                 pornScoreArr[COUNT] = pornScore
 
                 infoMap = {}
+                violenceMap = {}
+                pornMap = {}
                 if (violenceScore >= settings.VIOLENCESCORE_MIN or pornScore >= settings.PORNSCORE_MIN):
                     infoMap['violence_sensitivity_level'] = get_two_float(violenceScore * 100,2)
                     infoMap['porn_sensitivity_level'] = get_two_float(float(pornPercent[1]) * 100,2)
@@ -90,6 +94,21 @@ def check_video(file_path):
                     infoMap['sensitivity_time'] = get_two_float((COUNT+1) / fps,2)
                     infoMap['current_fps'] = COUNT
                     contentList.append(infoMap)
+
+                if (violenceScore >= settings.VIOLENCESCORE_MIN):
+                    violenceMap['violence_sensitivity_level'] = get_two_float(violenceScore * 100,2)
+                    violenceMap['image_url'] =  settings.VIDEO_URL + settings.TEMP_PATH + uuidStr + '/' + imageName
+                    violenceMap['sensitivity_time'] = get_two_float((COUNT+1) / fps,2)
+                    violenceMap['current_fps'] = COUNT
+                    violenceList.append(violenceMap)
+
+                if (pornScore >= settings.PORNSCORE_MIN):
+                    pornMap['porn_sensitivity_level'] = get_two_float(pornPercent[1] * 100,2)
+                    pornMap['image_url'] =  settings.VIDEO_URL + settings.TEMP_PATH + uuidStr + '/' + imageName
+                    pornMap['sensitivity_time'] = get_two_float((COUNT+1) / fps,2)
+                    pornMap['current_fps'] = COUNT
+                    pornList.append(pornMap)
+
                 COUNT = COUNT + 1
                 #if COUNT>3:
                 #    violencePercent=0
@@ -122,6 +141,8 @@ def check_video(file_path):
         resultMap['violence_sensitivity_level'] = violence_sensitivity_level
         resultMap['porn_sensitivity_level'] = porn_sensitivity_level
         resultMap['video_evidence_information'] = contentList
+        resultMap['violence_evidence_information'] = violenceList
+        resultMap['porn_evidence_information'] = pornList
         resultMap['interval'] = get_two_float(float(get_two_float((COUNT+1) / fps,2)) - float(get_two_float((COUNT) / fps,2)),3)
         t = time.time()
         endTime = int(round(t * 1000))
@@ -154,6 +175,8 @@ def check_video(file_path):
                 violenceScoreArr[COUNT] = violenceScore
                 pornScoreArr[COUNT] = pornScore
                 infoMap = {}
+                violenceMap = {}
+                pornMap = {}
                 if (violenceScore >= settings.VIOLENCESCORE_MIN or pornScore >= settings.PORNSCORE_MIN):
                     infoMap['violence_sensitivity_level'] = get_two_float(violenceScore * 100,2)
                     infoMap['porn_sensitivity_level'] = get_two_float(float(pornPercent[1]) * 100,2)
@@ -161,6 +184,21 @@ def check_video(file_path):
                     infoMap['sensitivity_time'] = get_two_float(COUNT+1,2)
                     infoMap['current_fps'] = c+1
                     contentList.append(infoMap)
+
+                if (violenceScore >= settings.VIOLENCESCORE_MIN):
+                    violenceMap['violence_sensitivity_level'] = get_two_float(violenceScore * 100,2)
+                    violenceMap['image_url'] =  settings.VIDEO_URL + settings.TEMP_PATH + uuidStr + '/' + imageName
+                    violenceMap['sensitivity_time'] = get_two_float((COUNT+1) / fps,2)
+                    violenceMap['current_fps'] = c+1
+                    violenceList.append(violenceMap)
+
+                if (pornScore >= settings.PORNSCORE_MIN):
+                    pornMap['porn_sensitivity_level'] = get_two_float(pornPercent[1] * 100,2)
+                    pornMap['image_url'] =  settings.VIDEO_URL + settings.TEMP_PATH + uuidStr + '/' + imageName
+                    pornMap['sensitivity_time'] = get_two_float((COUNT+1) / fps,2)
+                    pornMap['current_fps'] = c+1
+                    pornList.append(pornMap)
+
                 COUNT = COUNT + 1
             c = c + 1
             cv2.waitKey(1)
@@ -190,6 +228,8 @@ def check_video(file_path):
         resultMap['violence_sensitivity_level'] = violence_sensitivity_level
         resultMap['porn_sensitivity_level'] = porn_sensitivity_level
         resultMap['video_evidence_information'] = contentList
+        resultMap['violence_evidence_information'] = violenceList
+        resultMap['porn_evidence_information'] = pornList
         resultMap['interval'] = get_two_float(float(get_two_float((COUNT+1) / fps,2)) - float(get_two_float((COUNT) / fps,2)),3)
         t = time.time()
         endTime = int(round(t * 1000))
