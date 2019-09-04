@@ -104,6 +104,7 @@
 					error:(error)=>{
                         this.$message.error('上传失败，请重新上传！');
                         loading.close();
+                        this.isCheck= false;
 					}
                 });
                 e.preventDefault();

@@ -19,11 +19,18 @@
 .el-pagination.is-background .el-pager li:not(.disabled).active{
     background-color: #316dff;
 }
+/*.el-upload-list--picture-card{*/
+    /*zoom:1;*/
+/*}*/
+/*.el-upload-list--picture-card:after{content:''; clear:both; display:block; height:0; overflow:hidden;}*/
 .el-upload-list--picture-card .el-upload-list__item{
     margin: 0 40px 10px 0;
     width: 160px;
     height: 160px;
     border-radius: inherit;
+}
+ .el-upload-list__item-thumbnail{
+    object-fit: cover;
 }
 /*.el-upload-dragger{
     background-color: transparent;

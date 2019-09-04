@@ -419,6 +419,9 @@
                         this.isCheck= false;
                         loading.close();
                     },
+					error:(err)=>{
+
+					}
                 });
                 e.preventDefault();
             },
@@ -509,7 +512,7 @@
 	.begin_check:hover{background-color: #6087F7;color: white;}
 	.yellow_result_outer{margin-top: 15px;}
 	.yellow_result_outer>div{width: 160px;overflow: hidden;text-align: center;margin-right: 40px;}
-	.yellow_result_outer>div>img{width: 160px;height: 160px;}
+	.yellow_result_outer>div>img{width: 160px;height: 160px;object-fit: cover;}
 	.result_title{text-align: center;vertical-align: middle;}
 	.result_title img{vertical-align: middle;}
 	.result_title span{vertical-align: middle;font-size: 18px;}
