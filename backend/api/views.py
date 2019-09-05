@@ -353,7 +353,12 @@ class AudioFileUploadViewSet(viewsets.ModelViewSet):
         msg = "成功"
         file_path = iserializer.speech.path
         print(file_path)
-        check_result = audio().getOneAudioContent(file_path)
+        size = os.path.getsize(file_path)
+        print(size)
+        if size <= 44:
+            check_result = '录音时间太短，请重新录音！'
+        else:
+            check_result = audio().getOneAudioContent(file_path)
         # print (check_result)
         resultMap ={}
         resultMap['text'] = check_result
