@@ -188,6 +188,8 @@ class WordRecognitionInspectionViewSet(viewsets.ModelViewSet):
             f = codecs.open(txtfile, 'r', encoding='gbk')
         elif (file_type['encoding'] == 'UTF-8-SIG'):
             f = codecs.open(txtfile, 'r', encoding='utf-8')
+        elif (file_type['encoding'] == 'ascii'):
+            f = codecs.open(txtfile, 'r', encoding='gbk')
         else:
             f = codecs.open(txtfile, 'r')
 
