@@ -165,10 +165,10 @@
 	.show_result_outer{width: 100%;height: 100%;position: absolute;top: 0;z-index: 1;text-align: center; background-color: rgba(0,0,0,.2);}
 	.show_result_outer:before{content: '';position: absolute;left: 0;top: 0;width: 100%;height: 100%;}
 	.show_result{ z-index: 3;display: inline-block;vertical-align: middle;margin-top: 15%}
-	.result_outer{margin: 20px 30px;display: flex;color: #000000;height: 28px;line-height: 28px;}
-	.result_outer p:nth-of-type(1){font-size: 16px;flex: 5;margin-left: 10px;}
+	.result_outer{margin: 20px auto;display: flex;color: #000000;height: 28px;line-height: 28px;width: 280px;}
+	.result_outer p:nth-of-type(1){font-size: 16px;flex: 2.5;}
 	.result_outer p:nth-of-type(2){font-size: 16px;flex: 3;text-align: center}
-	.result_outer p:nth-of-type(3){font-size: 16px;flex: 4;text-align: center}
+	.result_outer p:nth-of-type(3){font-size: 16px;flex: 2;text-align: center}
 	.result_outer .green_style_name{background-color: #54cd62;border: 1px solid #54cd62;color: #fff}
 	.result_outer .green_style_number{border: 1px solid #54cd62;color: #54cd62}
 	.result_outer .orange_style_name{background-color: #ffac09;border: 1px solid #ffac09;color: #fff}

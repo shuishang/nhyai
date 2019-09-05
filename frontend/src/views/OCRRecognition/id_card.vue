@@ -18,18 +18,18 @@
 							<p class="is_check">正在检测</p>
 						</div>
 						<div class="show_input_outer">
-							<input type="text" class="init_url_style" placeholder="请输入网络图片URL">
-							<p class="check_style">检测</p>
+							<input type="text" class="init_url_style" readonly placeholder="请输入网络图片URL">
+							<p class="check_style_hidden" @click="urlCheck()">检测</p>
 						</div>
 					</div>
-					<p class="top_suggest">提示：图片大小不超过1M，请保证需要识别部分为图片主体部分</p>
+					<p class="top_suggest">提示：图片大小不超过20M，请保证需要识别部分为图片主体部分</p>
 				</div>
 			</el-col>
 			<el-col :xs={span:24} :sm={span:11} :md="10" :lg="9" :xl="8">
 				<div class="show_json_outer">
 					<span class="original_style">识别结果</span>
 					<div v-if="!imageWrong">
-						<div id="show_json" v-show="showJson.name">
+						<div id="show_json" v-show="showResult">
 							<p>姓名：{{showJson.name}}</p>
 							<p>性别：{{showJson.sex}}</p>
 							<p>民族：{{showJson.nation}}</p>
@@ -44,9 +44,56 @@
 		</el-row>
 	</div>
 
+	<!--<template>
+		<div class="bg-login">
+			<div class="middle-box">
+				<div class="login-title text-center">
+					<h1>用户登录</h1>
+				</div>
+				<div class="login-from">
+					<a-form layout="vertical" :form="form" @submit="handleSubmit">
+						<a-form-item
+							:validate-status="userNameError() ? 'error' : ''"
+							:help="userNameError() || ''"
+						>
+							<a-input
+								v-decorator="['userName',{rules: [{ required: true, message: '请输入您的用户名!' }]}]"
+								placeholder="用户名：Username"
+							>
+								<a-icon slot="prefix" type="user" style="color:rgba(0,0,0,.5)" />
+							</a-input>
+						</a-form-item>
+						<a-form-item
+							:validate-status="passwordError() ? 'error' : ''"
+							:help="passwordError() || ''"
+						>
+							<a-input
+								v-decorator="['password',{rules: [{ required: true, message: '请输入您的密码!' }]}]"
+								type="password"
+								placeholder="密码：Password"
+							>
+								<a-icon slot="prefix" type="lock" style="color:rgba(0,0,0,.5)" />
+							</a-input>
+						</a-form-item>
+						<a-form-item>
+							<a-button
+								type="primary"
+								html-type="submit"
+								:disabled="hasErrors(form.getFieldsError())"
+								block="large"
+							>登录</a-button>
+						</a-form-item>
+					</a-form>
+				</div>
+			</div>
+			<span class="tech-box"></span>
+		</div>
+	</template>-->
+
 </template>
 
 <script>
+	import {urlCheck} from '../../store/common'
     export default {
         data() {
             return {
@@ -63,7 +110,8 @@
                 showJson :{},
                 isLoading:false,
 				isCheck:false,
-				imageWrong:false
+				imageWrong:false,
+                showResult:false
 
             };
         },
@@ -72,14 +120,19 @@
             var loading = this.$loading({fullscreen:false,target:document.querySelector(".outer_add")});
             this.intervalid1 = setTimeout(() => {
                 this.showJson = JSON.parse(this.jsonId);
+                this.showResult = true;
                 clearInterval(this.intervalid1);
                 this.isCheck= false;
                 loading.close();
             }, 2000);
         },
         methods: {
+            urlCheck(){
+                this.$message.error('该功能尚未开通！')
+			},
             uploadImage(e){
                 this.imageWrong = false;
+                this.showResult = false;
                 this.isCheck= true;
                 this.showJson = {}
                 var loading = this.$loading({fullscreen:false,target:document.querySelector(".outer_add")});
@@ -94,14 +147,14 @@
                     contentType: false,
                     processData: false,
                     success:(response)=>{
-                        console.log(response.ret);
+                        console.log(response);
                         if(response.ret==1){
                             this.showJson.name = response.msg;
                             this.imageWrong = true;
 						}else {
                             this.showJson = response.data;
+                            this.showResult = true;
 						}
-
                         loading.close();
                         this.isCheck= false;
                     },
@@ -138,9 +191,11 @@
 	.upload_outer{display: flex;margin-top: 20px;}
 	.top_suggest{color: #999999;font-size: 14px;line-height: 40px;height: 30px;}
 	.init_url_style{flex: 1;height: 43px;line-height: 43px;border: 1px solid #E2ECFC;font-size: 15px;padding-left: 10px;background-color: #fafcfe;}
-	.init_url_style:hover{border: 1px solid #C0C4CC;border-right: none;}
-	.init_url_style:focus{border: 1px solid #409EFF;border-right: none;}
+	/*.init_url_style:hover{border: 1px solid #C0C4CC;border-right: none;}*/
+	/*.init_url_style:focus{border: 1px solid #409EFF;border-right: none;}*/
 	.check_style{display:inline-block;height: 41px;line-height: 41px;font-size: 16px;color: #316dff;border: 2px solid #316dff;width: 100px;text-align: center;cursor:pointer;background-color: #fafcfe;}
+	.check_style_hidden{display:inline-block;height: 41px;line-height: 41px;font-size: 16px;color: #666666;border: 2px solid #f5f5f5;
+		width: 100px;text-align: center;cursor:pointer;background-color: #f5f5f5}
 	.check_style:hover{background-color: #316DFF;color: white;}
 	.local_upload{height: 45px;line-height: 45px;font-size: 16px;}
 	.local_upload:after{content: "或";margin: 0 15px;}
@@ -150,7 +205,7 @@
 	.local_upload label:hover{background-color: #6087F7;color: white;}
 	.show_input_outer{display: flex;flex: 1;}
 	#show_json{margin: 50px auto;padding: 10px 30px;}
-	#show_json p{height: 30px;line-height: 30px;}
+	#show_json p{min-height: 30px;line-height: 30px;}
 	.idCard_wrong{text-align: center;height: 350px;line-height:350px;color: #ff4949;}
 
 	.advantage_product span{display: inline-block;padding: 10px;}

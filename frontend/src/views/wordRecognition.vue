@@ -48,14 +48,14 @@
 					<div class="show_nav">
 						<ul class="clearfix">
 							<li ><router-link to="/wordRecognition/idCard" >身份证识别</router-link></li>
-							<li ><router-link to="/wordRecognition/runningLicence" >行驶证识别</router-link></li>
-							<li ><router-link to="/wordRecognition/drivingLicence" >驾驶证识别</router-link></li>
 							<li ><router-link to="/wordRecognition/commonUse" >通用识别</router-link></li>
+							<!--<li ><router-link to="/wordRecognition/runningLicence" >行驶证识别</router-link></li>
+							<li ><router-link to="/wordRecognition/drivingLicence" >驾驶证识别</router-link></li>
 							<li ><router-link to="/wordRecognition/businessLicence" >营业执照识别</router-link></li>
 							<li ><router-link to="/wordRecognition/bankCard" >银行卡识别</router-link></li>
 							<li ><router-link to="/wordRecognition/handwriten" >手写体识别</router-link></li>
 							<li ><router-link to="/wordRecognition/carNumber" >车牌识别</router-link></li>
-							<li ><router-link to="/wordRecognition/visitingCard" >名片识别</router-link></li>
+							<li ><router-link to="/wordRecognition/visitingCard" >名片识别</router-link></li>-->
 						</ul>
 					</div>
 				</el-col>
@@ -154,9 +154,9 @@
                 recommendedList:[{'imgUrl':"../../static/imgs/usage_image1.png"},{'imgUrl':'../../static/imgs/usage_image2.png'},{'imgUrl':'../../static/imgs/usage_image03.png'}],
             	introduceList:[
             	    {'src':'../../static/imgs/word1.png','title':'身份证识别','des':'对二代居民身份证正反两面全部字段的结构化识别，能够满足身份证使用场景中对任意字段的识别需求'},
+                    {'src':'../../static/imgs/word4.png','title':'通用识别','des':'能够快速准确识别各种网络图片中的文字，在复杂字体 和复杂背景的情况下仍能保持非常高的识别准确率'},
             	    {'src':'../../static/imgs/word2.png','title':'行驶证识别','des':'对机动车行驶证主页及副页所有21个字段进行结构化识别'},
             	    {'src':'../../static/imgs/word3.png','title':'驾驶证识别','des':'支持对机动车驾驶证正本所有9个字段进行结构化识别，包括证号、姓名、性别、国籍、住址、出生日期等 '},
-            	    {'src':'../../static/imgs/word4.png','title':'通用识别','des':'能够快速准确识别各种网络图片中的文字，在复杂字体 和复杂背景的情况下仍能保持非常高的识别准确率'},
             	    {'src':'../../static/imgs/word5.png','title':'营业执照识别','des':'对营业执照的注册号、社会信用代码、单位名称、法人、住址、有效期进行结构化识别'},
             	    {'src':'../../static/imgs/word6.png','title':'银行卡识别','des':'对银行卡的卡号、有效期、发卡行、卡片类型进行结构化识别'},
             	    {'src':'../../static/imgs/word7.png','title':'手写体识别','des':'支持对图片中的手写中文、手写数字进行检测和识别，针对不规则的手写字体进行专项优化，识别准确率高'},
@@ -275,7 +275,8 @@
 	.functional_experience .title_describe{text-align: center;color: #000;font-size: 14px;width: 70%;margin: 0 auto 30px;}
 	.show_nav{width: 100%;margin: 0 auto;}
 	.show_nav ul{margin:30px 0;display: flex;border-bottom: 1px solid #e2ecfc;}
-	.show_nav ul li{height:36px;float:left;flex: 1;overflow: hidden;padding-bottom: 10px;}
+	/*.show_nav ul li{height:36px;float:left;flex: 1;overflow: hidden;padding-bottom: 10px;}*/
+	.show_nav ul li{height:36px;width: 120px;overflow: hidden;padding-bottom: 10px;}
 	.show_nav ul li a{height:36px;line-height:36px;font-size:16px;color:#666;display:block;text-align: center;padding-bottom: 8px;}
 	.show_nav ul li a.active{color:#316dff;border-bottom:2px solid #316dff;}
 	.show_nav ul li a:hover{color:#316dff;}

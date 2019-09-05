@@ -17,32 +17,48 @@
 				<div class="result_outer">
 					<p>暴恐识别</p>
 					<p class="green_style_name" v-if="this.forceInfo==200">识别中...</p>
-					<p class="red_style_name" v-else-if="this.forceInfo>=90">违规</p>
+					<p class="red_style_name" v-else-if="forceInfo==201">上传失败...</p>
+					<p class="red_style_name" v-else-if="this.forceInfo>=80">违规</p>
 					<p class="orange_style_name" v-else-if="50<this.forceInfo">疑似违规</p>
 					<p class="green_style_name" v-else>合规</p>
 				</div>
 				<div class="result_outer">
 					<p>色情识别</p>
 					<p class="green_style_name" v-if="this.sexInfo==200">识别中...</p>
-					<p class="red_style_name" v-else-if="this.sexInfo>=90">违规</p>
+					<p class="red_style_name" v-else-if="sexInfo==201">上传失败...</p>
+					<p class="red_style_name" v-else-if="this.sexInfo>=80">违规</p>
 					<p class="orange_style_name" v-else-if="50<this.sexInfo">疑似违规</p>
 					<p class="green_style_name" v-else>合规</p>
 				</div>
 			</div>
 		</div>
 		<div class="video_image_outer">
-			<p v-show="imageUrl.length" class="evidence_info">证据信息</p>
+			<p v-show="forceImageUrl.length" class="evidence_info">暴恐识别证据信息</p>
 			<div class="video_image_con clearfix">
-				<div class="video_image_item fl" v-for="(item,index) in imageUrl">
+				<div class="video_image_item fl" v-for="(item,index) in forceImageUrl">
 					<div class="show_result_title">
 						<div></div>
-						<span class="video_result_red_title" v-if="item.state=='违规'">{{item.state}}</span>
-						<span class="video_result_orange_title" v-else>{{item.state}}</span>
-						<span class="video_result_red_number" v-if="item.state=='违规'">{{item.number}}%</span>
-						<span class="video_result_orange_number" v-else>{{item.number}}%</span>
+						<span class="video_result_red_title" v-if="item.violence_sensitivity_level>80">违规</span>
+						<span class="video_result_orange_title" v-else>疑似违规</span>
+						<span class="video_result_red_number" v-if="item.violence_sensitivity_level>80">{{item.violence_sensitivity_level}}%</span>
+						<span class="video_result_orange_number" v-else>{{item.violence_sensitivity_level}}%</span>
 					</div>
-					<img :src="item.image" alt="">
-					<p>视频时间：{{item.time}}</p>
+					<img :src="item.image_url" alt="">
+					<p>视频时间：{{item.sensitivity_time|secondToTime}}</p>
+				</div>
+			</div>
+			<p v-show="sexImageUrl.length" class="evidence_info">色情识别证据信息</p>
+			<div class="video_image_con clearfix">
+				<div class="video_image_item fl" v-for="(item,index) in sexImageUrl">
+					<div class="show_result_title">
+						<div></div>
+						<span class="video_result_red_title" v-if="item.porn_sensitivity_level>80">违规</span>
+						<span class="video_result_orange_title" v-else>疑似违规</span>
+						<span class="video_result_red_number" v-if="item.porn_sensitivity_level>80">{{item.porn_sensitivity_level}}%</span>
+						<span class="video_result_orange_number" v-else>{{item.porn_sensitivity_level}}%</span>
+					</div>
+					<img :src="item.image_url" alt="">
+					<p>视频时间：{{item.sensitivity_time|secondToTime}}</p>
 				</div>
 			</div>
 			<div class="local_upload_video" v-if="!isLoading">
@@ -59,6 +75,7 @@
 
 <script>
     import {secondToTime} from '../../store/common'
+    import { Message } from 'element-ui';
 	export default {
         props:['stopVideo'],
 	    data(){
@@ -66,6 +83,8 @@
                 imageIsBig:false,
                 videoUrl:{},
                 imageUrl:[],
+                sexImageUrl:[],
+                forceImageUrl:[],
                 markerInfo:[],
                 sexInfo:5,
                 forceInfo:5,
@@ -102,6 +121,8 @@
                 this.sexInfo = 200;
                 this.forceInfo = 200;
                 this.imageUrl=[];
+                this.sexImageUrl= [];
+                this.forceImageUrl= [];
                 var url = URL.createObjectURL(file);
                 console.log(url);
                 this.videoUrl={url:url} ;
@@ -139,6 +160,8 @@
 //                        this.videoUrl={url:response.data.video_url} ;
 //                        this.videoUrl={url:response.data.video};
 //						this.video_url= response.data.video_url;
+                        this.sexImageUrl = response.data.porn_evidence_information;
+                        this.forceImageUrl = response.data.violence_evidence_information;
                         response.data.video_evidence_information.forEach((item,index)=>{
                             if(parseFloat(item.porn_sensitivity_level)>this.sexInfo){
                                 this.sexInfo = parseFloat(item.porn_sensitivity_level);
@@ -147,33 +170,31 @@
                                 this.forceInfo = parseFloat(item.violence_sensitivity_level);
                             }
                             if(parseFloat(item.porn_sensitivity_level)>parseFloat(item.violence_sensitivity_level)){
-                                if(parseFloat(item.porn_sensitivity_level)>80){//(item.sensitivity_time-response.data.interval/2).toFixed(2),
+                                if(parseFloat(item.porn_sensitivity_level)>80){
                                     this.markerInfo.push({
                                         time:item.sensitivity_time-response.data.interval/2,
                                         text:"违规",
                                         class:"red_style"
                                     });
-                                    this.imageUrl.push({
+                                    /*this.imageUrl.push({
                                         image:item.image_url,
-                                        time:secondToTime(parseFloat(item.sensitivity_time)),
+                                        time:secondToTime(item.sensitivity_time),
                                         number:item.porn_sensitivity_level,
                                         state:"违规"
-                                    });
+                                    });*/
                                 }else if(50<=parseFloat(item.porn_sensitivity_level)<80) {
                                     this.markerInfo.push({
-                                        time:item.sensitivity_time-response.data.interval/2,
+                                        time:item.sensitivity_time,
                                         text:"疑似违规",
                                         class:"orange_style"
                                     });
-                                    this.imageUrl.push({
+                                    /*this.imageUrl.push({
                                         image:item.image_url,
-                                        time:secondToTime(parseFloat(item.sensitivity_time)),
+                                        time:secondToTime(item.sensitivity_time),
                                         number:item.porn_sensitivity_level,
                                         state:"疑似违规"
-                                    });
-                                }else {
-
-								}
+                                    });*/
+                                }
                             }else {
                                 if(parseFloat(item.violence_sensitivity_level)>80){
                                     this.markerInfo.push({
@@ -181,24 +202,24 @@
                                         text:"违规",
                                         class:"red_style"
                                     });
-                                    this.imageUrl.push({
-                                        image:item.image_url,
-                                        time:secondToTime(parseFloat(item.sensitivity_time)),
-                                        number:item.violence_sensitivity_level,
-                                        state:"违规"
-                                    });
+                                    /* this.imageUrl.push({
+										 image:item.image_url,
+										 time:secondToTime(item.sensitivity_time),
+										 number:item.violence_sensitivity_level,
+										 state:"违规"
+									 });*/
                                 }else if(50<=parseFloat(item.violence_sensitivity_level)<80){
                                     this.markerInfo.push({
                                         time:item.sensitivity_time-response.data.interval/2,
                                         text:"疑似违规",
                                         class:"orange_style"
                                     });
-                                    this.imageUrl.push({
-                                        image:item.image_url,
-                                        time:secondToTime(parseFloat(item.sensitivity_time)),
-                                        number:item.violence_sensitivity_level,
-                                        state:"疑似违规"
-                                    });
+                                    /* this.imageUrl.push({
+										 image:item.image_url,
+										 time:secondToTime(item.sensitivity_time),
+										 number:item.violence_sensitivity_level,
+										 state:"疑似违规"
+									 });*/
                                 }
                             }
                         });
@@ -218,13 +239,23 @@
                         loading.close();
                         console.log(err);
                         this.percentage = 0;
+                        this.sexInfo = 201;
+                        this.forceInfo = 201;
                         window.clearInterval(timer);
                         this.isLoading = false;
-                        this.$message.error('上传失败,重新上传！');
+                        this.showMessage('上传失败,重新上传！');
                         this.$parent.changeUploadState(false);
 					}
                 });
                 e.preventDefault();
+            },
+            showMessage(msg){
+                this.$message.error({
+                    showClose: true,
+                    message: msg,
+                    type: 'error',
+                    duration:0
+                });
             },
             resetMarker(marker){
                 this.player = videojs('video');
@@ -347,9 +378,9 @@
 	.video_result_outer .result_title:before{content: "";background: url("../../assets/image/result_top_image.png") no-repeat center center;height: 23px;display: block;margin-bottom: 10px;}
 	.video_image_outer{border: 1px solid #e2ecfc;min-height: 200px;margin-top: 20px;padding-left: 20px;width: 1050px;}
 	.video_image_outer:first-child{color: #010101;font-size: 16px;line-height: 50px;}
-	.evidence_info{height: 35px;line-height: 35px;font-size: 15px;}
-	.video_image_item{height: 150px;width: 160px;padding-right: 20px;margin-bottom: 20px;position: relative;}
-	.video_image_con .video_image_item img{height: 120px;width: 100%;display: block}
+	.evidence_info{height: 80px;line-height: 80px;font-size: 16px;}
+	.video_image_item{height: 160px;width: 190px;padding-right: 20px;margin-bottom: 20px;position: relative;}
+	.video_image_con .video_image_item img{height: 130px;width: 100%;display: block;object-fit: cover;}
 	.video_image_con .video_image_item p{height: 30px;line-height:30px;font-size: 14px;text-align: center;border: 1px solid #e2ecfc;border-top: none;}
 	.show_result_title{position: absolute;height: 20px;font-size: 0;line-height: 0}
 	.show_result_title span{;font-size: 14px;line-height: 20px;display: inline-block;vertical-align: top;}
@@ -370,9 +401,9 @@
 	.show_json_outer .result_title:before{content: "";background: url("../../assets/image/result_top_image.png") no-repeat center center;height: 23px;display: block;margin-bottom: 10px;}
 	.suggest{color: #b2b2b2;font-size: 14px;min-height: 30px;margin:8px 0;}
 
-	.result_outer{margin: 20px 30px;display: flex;color: #000000;height: 28px;line-height: 28px;}
-	.result_outer p:nth-of-type(1){font-size: 16px;flex: 5;margin-left: 10px;}
-	.result_outer p:nth-of-type(2){font-size: 16px;flex: 3;text-align: center}
+	.result_outer{margin: 20px auto;display: flex;color: #000000;height: 28px;line-height: 28px;width: 210px;}
+	.result_outer p:nth-of-type(1){font-size: 16px;width: 90px;}
+	.result_outer p:nth-of-type(2){font-size: 16px;width: 120px;text-align: center}
 	.result_outer p:nth-of-type(3){font-size: 16px;flex: 4;text-align: center}
 	.result_outer .green_style_name{background-color: #54cd62;border: 1px solid #54cd62;color: #fff}
 	.result_outer .orange_style_name{background-color: #ffac09;border: 1px solid #ffac09;color: #fff}
