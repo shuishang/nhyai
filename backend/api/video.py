@@ -72,7 +72,6 @@ def check_video(file_path):
             try:
                 cv2.imwrite(temp_path+imageName, frame)
                 jsonResultInfo  = settings.VIOLENCE.check_violence(temp_path + '/' +imageName)
-                print(jsonResultInfo)
                 violencePercent = jsonResultInfo.get('violence')
                 violenceScore = float(violencePercent)
                 pornPercent  = settings.NSFW.caffe_preprocess_and_compute_api(temp_path+imageName)
@@ -165,8 +164,7 @@ def check_video(file_path):
             if (c % timeF == 0 or c == 1):  # 每隔timeF帧进行存储操作
                 imageName = str(COUNT) + '.jpg'
                 cv2.imwrite(temp_path + '/' + imageName, frame)#存储图像 
-                jsonResultInfo  = settings.VIOLENCE.check_violence(temp_path + '/' +imageName)
-                print(jsonResultInfo)
+                jsonResultInfo  = settings.VIOLENCE.check_violence(temp_path + '/' +imageName)                
                 violencePercent = jsonResultInfo.get('violence')
                 violenceScore = float(violencePercent)
                 pornPercent  = settings.NSFW.caffe_preprocess_and_compute_api(temp_path+imageName)

@@ -60,7 +60,6 @@ class FileUploadViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         
-        print(self.request.data)
         iserializer = serializer.save()
         # file_obj = self.request.data.get('datafile')
         # print (file_obj)
@@ -77,7 +76,6 @@ class FileUploadViewSet(viewsets.ModelViewSet):
         #     raise ParseError("Unsupported image type")
 
         file_path = iserializer.datafile.path
-        print(file_path)
         check_result = settings.VIOLENCE.check_violence(file_path)
         # print (check_result)
 
@@ -148,11 +146,9 @@ class WordRecognitionViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
 
-        print (self.request.data)
         iserializer = serializer.save()
         
         text = iserializer.text
-        print (text)
         sensitive_list = sensitiveClass().check_sensitiveWords(text)
 
         if sensitive_list.get('sensitive_hit_flag') == 0:
@@ -175,7 +171,6 @@ class WordRecognitionInspectionViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
 
-        print (self.request.data)
         iserializer = serializer.save()
         
         txtfile = iserializer.text.path
@@ -225,7 +220,6 @@ class OcrGeneralViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
 
-        print (self.request.data)
         iserializer = serializer.save()
         ret = 0
         msg = "成功"
@@ -250,7 +244,6 @@ class OcrIDCardViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
 
-        print (self.request.data)
         iserializer = serializer.save()
         ret = 0
         msg = "成功"
@@ -298,14 +291,11 @@ class FileImageTerrorismUploadViewSet(viewsets.ModelViewSet):
     parser_classes = (MultiPartParser, FormParser,)
 
     def perform_create(self, serializer):
-        print(self.request.data)
         iserializer = serializer.save()
         ret = 0
         msg = "成功"
         file_path = iserializer.image.path
-        print(file_path)
         check_result = settings.VIOLENCE.check_violence(file_path)
-        # print (check_result)
         violence = check_result['violence']
         resultMap = {}
         resultMap['violence'] = get_two_float(float(violence) * 100,2)
@@ -319,12 +309,10 @@ class FileVisionPornUploadViewSet(viewsets.ModelViewSet):
         parser_classes = (MultiPartParser, FormParser,)
         
         def perform_create(self, serializer):
-            print(self.request.data)
             iserializer = serializer.save()
             ret = 0
             msg = "成功"
             file_path = iserializer.image.path
-            print(file_path)
             # check_result = vision_porn(file_path)
             scores = settings.NSFW.caffe_preprocess_and_compute_api(file_path)
             resultMap = {}
@@ -339,18 +327,12 @@ class VideoFileUploadViewSet(viewsets.ModelViewSet):
     parser_classes = (MultiPartParser, FormParser,)
 
     def perform_create(self, serializer):
-        print(self.request.data)
         iserializer = serializer.save()
         file_path = iserializer.video.path
-        print (file_path)
         resultMap = check_video(file_path)
         ret = 0
         msg = "成功"
-        #serializer.save(result=contentList,video=file_path,duration=totalFrameNumber/fps,width=cap.get(3),height=cap.get(4),count=totalCount)
         serializer.save(data=resultMap,ret=ret,msg=msg,video=iserializer.video)
-        
-        
-        # print (check_result)
         return Response(status=status.HTTP_201_CREATED)
 
 class AudioFileUploadViewSet(viewsets.ModelViewSet):
@@ -359,14 +341,11 @@ class AudioFileUploadViewSet(viewsets.ModelViewSet):
     parser_classes = (MultiPartParser, FormParser,)
 
     def perform_create(self, serializer):
-        print(self.request.data)
         iserializer = serializer.save()
         ret = 0
         msg = "成功"
         file_path = iserializer.speech.path
-        print(file_path)
         size = os.path.getsize(file_path)
-        print(size)
         if size <= 44:
             check_result = '录音时间太短，请重新录音！'
         else:
@@ -383,12 +362,10 @@ class AudioFileInspectionViewSet(viewsets.ModelViewSet):
     parser_classes = (MultiPartParser, FormParser,)
 
     def perform_create(self, serializer):
-        print(self.request.data)
         iserializer = serializer.save()
         ret = 0
         msg = "成功"
         file_path = iserializer.speech.path
-        print(file_path)
         duration = 0
         with contextlib.closing(wave.open(file_path,'r')) as f:
             frames = f.getnframes()
@@ -408,13 +385,10 @@ class ImageFileUploadViewSet(viewsets.ModelViewSet):
     parser_classes = (MultiPartParser, FormParser,)
     
     def perform_create(self, serializer):
-        print(self.request.data)
         iserializer = serializer.save()
         ret = 0
         msg = "成功"
         file_path = iserializer.image.path
-        print(file_path)
-        # check_result = vision_porn(file_path)
         scores = settings.NSFW.caffe_preprocess_and_compute_api(file_path)
         resultMap = {}
         porn_sensitivity_level = "0"
