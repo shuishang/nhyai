@@ -186,14 +186,14 @@ def check_video(file_path):
                 if (violenceScore >= settings.VIOLENCESCORE_MIN):
                     violenceMap['violence_sensitivity_level'] = get_two_float(violenceScore * 100,2)
                     violenceMap['image_url'] =  settings.VIDEO_URL + settings.TEMP_PATH + uuidStr + '/' + imageName
-                    violenceMap['sensitivity_time'] = get_two_float((COUNT+1) / fps,2)
+                    violenceMap['sensitivity_time'] = get_two_float(COUNT+1,2)
                     violenceMap['current_fps'] = c+1
                     violenceList.append(violenceMap)
 
                 if (pornScore >= settings.PORNSCORE_MIN):
                     pornMap['porn_sensitivity_level'] = get_two_float(pornPercent[1] * 100,2)
                     pornMap['image_url'] =  settings.VIDEO_URL + settings.TEMP_PATH + uuidStr + '/' + imageName
-                    pornMap['sensitivity_time'] = get_two_float((COUNT+1) / fps,2)
+                    pornMap['sensitivity_time'] = get_two_float(COUNT+1,2)
                     pornMap['current_fps'] = c+1
                     pornList.append(pornMap)
 
