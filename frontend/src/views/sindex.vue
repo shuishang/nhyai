@@ -10,7 +10,7 @@
 							<div class="describe_outer_banner">
 								<p class="ell">AI智能审查</p>
 								<p class="ell-rows-4 ">基于深度学习的图像识别算法，海量大数据样本，准确识别图片和视频中的涉黄、
-									涉暴涉恐、政治敏感、广告、等内容，也能从美观和清晰等维度对图像进行筛选，
+									涉暴涉恐、政治敏感、民谣、等内容，也能从美观和清晰等维度对图像进行筛选，
 									快速精准，解放审核人力</p>
 								<span>
 									<img src="../assets/image/sindex/sindex_banner_mark1.png" alt="">
@@ -31,8 +31,9 @@
 			<p class="title">功能体验</p>
 			<div class="current_width_style clearfix">
 				<div class="show_input_outer fl">
-					<input type="text" class="init_url_style" id="contentUrl" placeholder="请输入网络图片URL">
-					<p class="check_style" @click="showInputValue">检测</p>
+					<input type="text" class="init_url_style" id="contentUrl" readonly placeholder="请输入网络图片URL">
+					<!--<p class="check_style" @click="showInputValue">检测</p>-->
+					<p class="check_style_hidden" @click="showInputValue">检测</p>
 				</div>
 				<div class="local_upload fl">
 					<!--<p>本地上传</p>-->
@@ -42,7 +43,7 @@
 				</div>
 			</div>
 
-			<p class="top_suggest current_width_style">支持图片格式：PNG、JPG、JPEG；支持文本格式：text；支持音频格式：wav；支持视频格式：mp4。</p>
+			<p class="top_suggest current_width_style">支持图片格式：PNG、JPG、JPEG，大小限制<20M。支持视频格式：mp4，大小限制<20M；支持文本格式：txt，大小限制<10M</p>
 
 			<!--图片评审-->
 			<ImageCheck v-show="checkType ===1" :file="imageFile" ref="imageCheck"></ImageCheck>
@@ -55,7 +56,7 @@
 			<TextCheck v-show="checkType ===4" ref="textCheck"></TextCheck>
 
 		</div>
-		<div class="functional_experience">
+		<!--<div class="functional_experience">
 			<p class="title">历史记录</p>
 			<div style="width: 1200px;margin: 0 auto;">
 				<div class="show_search_con">
@@ -188,7 +189,7 @@
 
 				</el-col>
 			</el-row>
-		</div>
+		</div>-->
 		<FooterIndex></FooterIndex>
 	</div>
 
@@ -201,6 +202,7 @@
 	import AudioCheck from '../views/AICheck/AudioCheck.vue'
 	import VideoCheck from '../views/AICheck/videoCheck.vue'
 	import TextCheck from '../views/AICheck/textCheck.vue'
+    import { Message } from 'element-ui';
     import {scrollBy} from '../store/common'
     export default {
         data() {
@@ -244,6 +246,7 @@
         methods: {
             showInputValue(){
                 console.log(document.getElementById('contentUrl').value);
+                this.$message.error('该功能尚未开通！')
 			},
 			submitImageCallback(e,file){
                 this.$refs.imageCheck.submitImage(e,file);
@@ -258,7 +261,7 @@
                 this.$refs.textCheck.submitText(e,file);
             },
             changeImage(e){
-
+                Message.closeAll();
                 this.imageIsBig = false;
                 this.imageRight = false;
                 const file = e.target.files[0];
@@ -270,6 +273,10 @@
                     const fileType = file.type;
                     console.log(fileType)
                     if(fileType.substr(0, 5) === "image"){
+                        if(file.size>20971520){
+                            this.$message.error('请选择小于20M的图片！');
+                            return;
+                        }
                         that.checkType = 1;
                         that.stopVideo = true;
                         that.stopAudio = true;
@@ -282,6 +289,15 @@
                         this.submitAudioCallback(e,file);
                         this.isUploading = true;
 					}else if(fileType.substr(0, 5) === "video"){
+
+                        if(fileType.indexOf("mp4") ==-1){
+                            this.$message.error('请选择mp4格式的视频！');
+                            return;
+						}
+                        if(file.size>20971520){
+                            this.$message.error('请选择小于20M的视频！');
+                            return;
+                        }
                         that.checkType = 2;
                         that.stopVideo = false;
                         that.stopAudio = true;
@@ -289,6 +305,10 @@
                         this.isUploading = true;
                         this.toPractice();
 					}else if(fileType.substr(0, 4) === "text"){
+                        if(file.size>10485760){
+                            this.$message.error('请选择小于10M的文件！');
+                            return;
+                        }
                         that.checkType = 4;
                         that.stopVideo = true;
                         that.stopAudio = true;
@@ -318,21 +338,23 @@
 	.current_width_style{width: 1200px;margin: 0 auto;}
 	.banner_outer{position: relative;vertical-align: middle;text-align: center;}
 	.describe_outer_banner{font-size: 16px;color: white;;display: inline-block;vertical-align: middle;}
+	.tech-banner-box{display: inline-block;vertical-align: middle;height: 100%;width: 0;}
 	.describe_outer_banner img{width: 40px;height: 40px;margin-right: 40px;}
 	.describe_outer_banner img:nth-of-type(4){margin-right: 0;}
 	.describe_outer_banner p{}
 	.describe_outer_banner p:nth-of-type(1){font-size: 36px;height: 60px;line-height: 60px;margin-bottom: 15px;}
 	.describe_outer_banner p:nth-of-type(2){height: 130px;text-align: center;overflow: hidden;width: 580px;line-height: 30px;}
-	.tech-banner-box{display: inline-block;vertical-align: middle;height: 100%;width: 0;}
+
 	.top_contain .banner_outer{background-image: url('../assets/image/image_banner.png');min-width: 1300px;}
 	.functional_experience{margin: 50px 0;}
 	.functional_experience .title{text-align: center;color: #333333;margin: 40px 0;font-size: 36px;}
 
 	.top_suggest{color: #999999;font-size: 14px;line-height: 40px;height: 30px;margin-bottom: 25px;}
 	.init_url_style{flex: 1;height: 35px;line-height: 35px;border: 1px solid #E2ECFC;font-size: 15px;padding-left: 10px;background-color: #FAFCFE;width: 685px;}
-	.init_url_style:hover{border: 1px solid #C0C4CC;border-right: none;}
-	.init_url_style:focus{border: 1px solid #409EFF;border-right: none;}
+	/*.init_url_style:hover{border: 1px solid #C0C4CC;border-right: none;}*/
+	/*.init_url_style:focus{border: 1px solid #409EFF;border-right: none;}*/
 	.check_style{display:inline-block;height: 33px;line-height: 33px;font-size: 16px;color: #316DFF;border: 2px solid #316DFF;width: 100px;text-align: center;cursor:pointer;}
+	.check_style_hidden{display:inline-block;height: 33px;line-height: 33px;font-size: 16px;color: #666666;border: 2px solid #f5f5f5;width: 100px;text-align: center;cursor:pointer;background-color: #f5f5f5}
 	.check_style:hover{background-color: #316DFF;color: white;}
 	.local_upload{height: 33px;line-height: 33px;font-size: 16px;}
 	.local_upload:before{content: "或";margin: 0 25px;}

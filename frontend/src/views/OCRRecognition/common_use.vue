@@ -18,8 +18,8 @@
 							<p class="is_check">正在检测</p>
 						</div>
 						<div class="show_input_outer">
-							<input type="text" class="init_url_style" placeholder="请输入网络图片URL">
-							<p class="check_style">检测</p>
+							<input type="text" class="init_url_style" readonly  placeholder="请输入网络图片URL">
+							<p class="check_style_hidden" @click="urlCheck">检测</p>
 						</div>
 					</div>
 					<p class="top_suggest">提示：图片大小不超过1M，请保证需要识别部分为图片主体部分</p>
@@ -76,6 +76,9 @@
             }, 2000);
         },
         methods: {
+            urlCheck(){
+                this.$message.error('该功能尚未开通！')
+            },
             uploadImage(e){
                 this.isCheck= true;
                 var loading = this.$loading({fullscreen:false,target:document.querySelector(".outer_add")});
@@ -93,10 +96,14 @@
                     success:(response)=>{
                         loading.close();
 						console.log(response.data);
+
 						var text =''
                         response.data.forEach((res)=>{
                             text= text+res+'<br/>'
 						});
+                        if(response.data.length==0){
+                            text = "未识别到内容，请重新识别！"
+                        }
 						document.getElementById('show_common_json').innerHTML= text;
                         loading.close();
                         this.isCheck= false;
@@ -134,9 +141,11 @@
 	.upload_outer{display: flex;margin-top: 20px;}
 	.top_suggest{color: #999999;font-size: 14px;line-height: 40px;height: 30px;}
 	.init_url_style{flex: 1;height: 43px;line-height: 43px;border: 1px solid #E2ECFC;font-size: 15px;padding-left: 10px;background-color: #fafcfe;}
-	.init_url_style:hover{border: 1px solid #C0C4CC;border-right: none;}
-	.init_url_style:focus{border: 1px solid #409EFF;border-right: none;}
+	/*.init_url_style:hover{border: 1px solid #C0C4CC;border-right: none;}*/
+	/*.init_url_style:focus{border: 1px solid #409EFF;border-right: none;}*/
 	.check_style{display:inline-block;height: 41px;line-height: 41px;font-size: 16px;color: #316dff;border: 2px solid #316dff;width: 100px;text-align: center;cursor:pointer;background-color: #fafcfe;}
+	.check_style_hidden{display:inline-block;height: 41px;line-height: 41px;font-size: 16px;color: #666666;border: 2px solid #f5f5f5;
+		width: 100px;text-align: center;cursor:pointer;background-color: #f5f5f5}
 	.check_style:hover{background-color: #316DFF;color: white;}
 	.local_upload{height: 45px;line-height: 45px;font-size: 16px;}
 	.local_upload:after{content: "或";margin: 0 15px;}

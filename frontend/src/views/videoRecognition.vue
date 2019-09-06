@@ -9,7 +9,7 @@
 							<!--<img src="../assets/image/video/video_banner.png" alt="">-->
 							<div class="describe_outer_banner">
 								<p class="ell">视频检测</p>
-								<p class="ell-rows-4 ">针对视频内容进行多维智能审核，其中包括色情、暴恐、政治敏感、广告、自定义黑库等，让您的平台免去审核的后顾之忧 </p>
+								<p class="ell-rows-4 ">针对视频内容进行多维智能审核，其中包括色情、暴恐、政治敏感、民谣、自定义黑库等，让您的平台免去审核的后顾之忧 </p>
 								<p class="practice_online" @click="toPractice">在线体验</p>
 							</div>
 						</div>
@@ -21,7 +21,7 @@
 			<p class="title">功能介绍</p>
 				<el-row>
 					<el-col :xs={span:24} :sm={span:22,offset:1} :md={span:18,offset:3} :lg={span:18,offset:3} :xl={span:14,offset:5}>
-						<p class="title_describe">对视频中的语音、文字、图像进行多维检测，及时发现涉黄、涉暴、政治敏感、广告、
+						<p class="title_describe">对视频中的语音、文字、图像进行多维检测，及时发现涉黄、涉暴、政治敏感、民谣、
 							违禁品等风险内容同时支持自定义视频黑库，基于视频指纹技术实现视频对比。识别准确率高，实时跟进最新政策，大幅减少人工审核 </p>
 						<div class="introduce_outer">
 							<div class="clearfix show_scenario_outer">
@@ -75,10 +75,10 @@
 						<div class="video_original">
 							<div>
 								<img src="../assets/image/video/video_play_logo.png" alt="">
-								<p>支持视频格式：mp4，大小限制<100M</p>
+								<p>支持视频格式：mp4，大小限制<20M</p>
 								<div class="local_upload">
 									<!--<p>本地上传</p>-->
-									<input id="datafile" name="datafile" type="file" accept="video/*" class="inputfile" @change="changeImage($event)">
+									<input id="datafile" name="datafile" type="file" accept="video/mp4" class="inputfile" @change="changeImage($event)">
 									<label for="datafile">开始选择</label>
 								</div>
 							</div>
@@ -112,14 +112,16 @@
 							<div class="result_outer">
 								<p>暴恐识别</p>
 								<p class="green_style_name" v-if="forceInfo==200">识别中...</p>
-								<p class="red_style_name" v-else-if="this.forceInfo>=90">违规</p>
+								<p class="red_style_name" v-else-if="forceInfo==201">上传失败...</p>
+								<p class="red_style_name" v-else-if="this.forceInfo>=80">违规</p>
 								<p class="orange_style_name" v-else-if="50<this.forceInfo">疑似违规</p>
 								<p class="green_style_name" v-else>合规</p>
 							</div>
 							<div class="result_outer">
 								<p>色情识别</p>
 								<p class="green_style_name" v-if="sexInfo==200">识别中...</p>
-								<p class="red_style_name" v-else-if="this.sexInfo>=90">违规</p>
+								<p class="red_style_name" v-else-if="sexInfo==201">上传失败...</p>
+								<p class="red_style_name" v-else-if="this.sexInfo>=80">违规</p>
 								<p class="orange_style_name" v-else-if="50<this.sexInfo">疑似违规</p>
 								<p class="green_style_name" v-else>合规</p>
 							</div>
@@ -141,23 +143,37 @@
 				<el-row style="min-width: 800px;">
 					<el-col :md={span:18,offset:3} :lg={span:18,offset:3} :xl={span:14,offset:5}>
 						<div class="video_image_outer">
-							<p v-show="imageUrl.length" class="evidence_info">证据信息</p>
+							<p v-show="forceImageUrl.length" class="evidence_info">暴恐识别证据信息</p>
 							<div class="video_image_con clearfix">
-								<div class="video_image_item fl" v-for="(item,index) in imageUrl">
+								<div class="video_image_item fl" v-for="(item,index) in forceImageUrl">
 									<div class="show_result_title">
 										<div></div>
-										<span class="video_result_red_title" v-if="item.state=='违规'">{{item.state}}</span>
-										<span class="video_result_orange_title" v-else>{{item.state}}</span>
-										<span class="video_result_red_number" v-if="item.state=='违规'">{{item.number}}%</span>
-										<span class="video_result_orange_number" v-else>{{item.number}}%</span>
+										<span class="video_result_red_title" v-if="item.violence_sensitivity_level>80">违规</span>
+										<span class="video_result_orange_title" v-else>疑似违规</span>
+										<span class="video_result_red_number" v-if="item.violence_sensitivity_level>80">{{item.violence_sensitivity_level}}%</span>
+										<span class="video_result_orange_number" v-else>{{item.violence_sensitivity_level}}%</span>
 									</div>
-									<img :src="item.image" alt="">
-									<p>视频时间：{{item.time}}</p>
+									<img :src="item.image_url" alt="">
+									<p>视频时间：{{item.sensitivity_time|secondToTime}}</p>
+								</div>
+							</div>
+							<p v-show="sexImageUrl.length" class="evidence_info">色情识别证据信息</p>
+							<div class="video_image_con clearfix">
+								<div class="video_image_item fl" v-for="(item,index) in sexImageUrl">
+									<div class="show_result_title">
+										<div></div>
+										<span class="video_result_red_title" v-if="item.porn_sensitivity_level>80">违规</span>
+										<span class="video_result_orange_title" v-else>疑似违规</span>
+										<span class="video_result_red_number" v-if="item.porn_sensitivity_level>80">{{item.porn_sensitivity_level}}%</span>
+										<span class="video_result_orange_number" v-else>{{item.porn_sensitivity_level}}%</span>
+									</div>
+									<img :src="item.image_url" alt="">
+									<p>视频时间：{{item.sensitivity_time|secondToTime}}</p>
 								</div>
 							</div>
 							<div class="local_upload" v-if="!isLoading">
 								<!--<p>本地上传</p>-->
-								<input id="videofile" name="datafile" type="file" accept="video/*" class="inputfile" @change="changeImage($event)">
+								<input id="videofile" name="datafile" type="file" accept="video/mp4" class="inputfile" @change="changeImage($event)">
 								<label for="datafile">重新选择</label>
 							</div>
 							<div class="local_upload" v-else>
@@ -237,6 +253,7 @@
 	import Navigation from "../components/navigation.vue"
     import FooterIndex from "../components/footerIndex.vue"
     import {secondToTime} from '../store/common'
+    import { Message } from 'element-ui';
     export default {
         data() {
 			return{
@@ -251,6 +268,8 @@
                 videoUrl:{},
                 imageIsBig:false,
 				imageUrl:[],
+				sexImageUrl:[],
+				forceImageUrl:[],
 				markerInfo:[],
 				sexInfo:5,
 				forceInfo:5,
@@ -322,6 +341,8 @@
                 this.sexInfo = 200;
                 this.forceInfo = 200;
                 this.imageUrl= [];
+                this.sexImageUrl= [];
+                this.forceImageUrl= [];
 //                this.loading = this.$loading(this.options);
                 this.isLoading= true;
                 var formData = new FormData();
@@ -348,13 +369,14 @@
 //                        this.$loading().close();
                         this.sexInfo= 5;
                         this.forceInfo= 5;
-                        this.imageUrl= [];
                         this.markerInfo= [];
                         this.percentage = 100;
                         window.clearInterval(timer);
-
+						console.log(response);
 //                        this.videoUrl={url:response.data.video} ;
 //						this.video_url= response.data.video_url;
+                        this.sexImageUrl = response.data.porn_evidence_information;
+                        this.forceImageUrl = response.data.violence_evidence_information;
                         response.data.video_evidence_information.forEach((item,index)=>{
                             if(parseFloat(item.porn_sensitivity_level)>this.sexInfo){
                                 this.sexInfo = parseFloat(item.porn_sensitivity_level);
@@ -369,24 +391,24 @@
                                         text:"违规",
                                         class:"red_style"
                                     });
-                                    this.imageUrl.push({
+                                    /*this.imageUrl.push({
                                         image:item.image_url,
                                         time:secondToTime(item.sensitivity_time),
                                         number:item.porn_sensitivity_level,
                                         state:"违规"
-                                    });
+                                    });*/
 								}else if(50<=parseFloat(item.porn_sensitivity_level)<80) {
                                     this.markerInfo.push({
                                         time:item.sensitivity_time,
                                         text:"疑似违规",
                                         class:"orange_style"
                                     });
-                                    this.imageUrl.push({
+                                    /*this.imageUrl.push({
                                         image:item.image_url,
                                         time:secondToTime(item.sensitivity_time),
                                         number:item.porn_sensitivity_level,
                                         state:"疑似违规"
-                                    });
+                                    });*/
 								}
 							}else {
                                 if(parseFloat(item.violence_sensitivity_level)>80){
@@ -395,24 +417,24 @@
                                         text:"违规",
                                         class:"red_style"
                                     });
-                                    this.imageUrl.push({
+                                   /* this.imageUrl.push({
                                         image:item.image_url,
                                         time:secondToTime(item.sensitivity_time),
                                         number:item.violence_sensitivity_level,
                                         state:"违规"
-                                    });
+                                    });*/
                                 }else if(50<=parseFloat(item.violence_sensitivity_level)<80){
                                     this.markerInfo.push({
                                         time:item.sensitivity_time-response.data.interval/2,
                                         text:"疑似违规",
                                         class:"orange_style"
                                     });
-                                    this.imageUrl.push({
+                                   /* this.imageUrl.push({
                                         image:item.image_url,
                                         time:secondToTime(item.sensitivity_time),
                                         number:item.violence_sensitivity_level,
                                         state:"疑似违规"
-                                    });
+                                    });*/
                                 }
 							}
 						});
@@ -426,25 +448,42 @@
                         this.isLoading= false;
                     },
                     error:(error)=>{
-                        this.$message.error('上传失败，请重新上传！');
+                        this.showMessage('上传失败，请重新上传！');
                         this.isLoading= false;
                         this.percentage = 0;
+                        this.forceInfo = 201;
+                        this.sexInfo = 201;
                         window.clearInterval(timer);
                     }
                 });
                 e.preventDefault();
             },
+			showMessage(msg){
+                this.$message.error({
+                    showClose: true,
+                    message: msg,
+                    type: 'error',
+                    duration:0
+                });
+			},
             changeImage(e){
+                Message.closeAll();
                 this.player = null;
                 this.imageIsBig = false;
                 this.imageRight = false;
                 const file = e.target.files[0];
+                if(file.size>20971520){
+                    this.$message.error('请上传小于20M的视频！');
+//                    this.showMessage('请上传小于20M的视频！');
+                    return;
+				}
+                console.log(file);
                 const reader = new FileReader();
                 const that = this;
                 reader.readAsDataURL(file);
                 var url = URL.createObjectURL(file);
                 console.log(url);
-                this.videoUrl={url:url} ;
+                this.videoUrl={url:url};
                 console.log(this.videoUrl);
                 this.isChose=true;
                 this.uploadImage(e,file,url);
@@ -517,7 +556,7 @@
 	.video_result_outer .result_title:before{content: "";background: url("../assets/image/result_top_image.png") no-repeat center center;height: 23px;display: block;margin-bottom: 10px;}
 	.video_image_outer{border: 1px solid #e2ecfc;min-height: 200px;margin-top: 20px;padding-left: 20px;}
 	.video_image_outer:first-child{color: #010101;font-size: 16px;line-height: 50px;}
-	.evidence_info{height: 35px;line-height: 35px;font-size: 15px;}
+	.evidence_info{height: 80px;line-height: 80px;font-size: 16px;}
 	.video_image_item{height: 150px;width: 160px;padding-right: 20px;margin-bottom: 20px;position: relative;}
 	.video_image_con .video_image_item img{height: 120px;width: 100%;display: block}
 	.video_image_con .video_image_item p{height: 30px;line-height:30px;font-size: 14px;text-align: center;border: 1px solid #e2ecfc;border-top: none;}
@@ -536,9 +575,9 @@
 	.show_json_outer .result_title:before{content: "";background: url("../assets/image/result_top_image.png") no-repeat center center;height: 23px;display: block;margin-bottom: 10px;}
 	.suggest{color: #b2b2b2;font-size: 14px;min-height: 30px;margin:8px 0;}
 
-	.result_outer{margin: 20px 30px;display: flex;color: #000000;height: 28px;line-height: 28px;}
-	.result_outer p:nth-of-type(1){font-size: 16px;flex: 5;margin-left: 10px;}
-	.result_outer p:nth-of-type(2){font-size: 16px;flex: 3;text-align: center}
+	.result_outer{margin: 20px auto;display: flex;color: #000000;height: 28px;line-height: 28px;width: 210px;}
+	.result_outer p:nth-of-type(1){font-size: 16px;width: 90px;}
+	.result_outer p:nth-of-type(2){font-size: 16px;width: 120px;text-align: center}
 	.result_outer p:nth-of-type(3){font-size: 16px;flex: 4;text-align: center}
 	.result_outer .green_style_name{background-color: #54cd62;border: 1px solid #54cd62;color: #fff}
 	.result_outer .orange_style_name{background-color: #ffac09;border: 1px solid #ffac09;color: #fff}

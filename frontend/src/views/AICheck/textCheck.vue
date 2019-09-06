@@ -16,16 +16,38 @@
 			</div>
 			<div class="show_json_outer fl">
 				<p class="result_title">审查结果</p>
-				<div class="result_outer" v-for="item in resultType">
+				<!--<div class="result_outer" v-for="item in resultType">
 					<p>{{item.firstType}}</p>
 					<p class="red_style_name">违规</p>
 				</div>
 				<div class="result_outer" v-if="isUploadText">
+					<p></p>
 					<p class="green_style_name">识别中...</p>
-				</div>
-				<div v-else>
-					<div class="result_outer" v-if="resultType.length==0&&!isError">
-						<p class="green_style_name">合规</p>
+				</div>-->
+				<div>
+					<div class="result_outer">
+						<p>色情文字检测</p>
+						<p class="green_style_name" v-if="isUploadText">识别中...</p>
+						<p class="red_style_name" v-else-if="isSex">违规</p>
+						<p class="green_style_name" v-else>合规</p>
+					</div>
+					<div class="result_outer">
+						<p>涉政文字检测 </p>
+						<p class="green_style_name" v-if="isUploadText">识别中...</p>
+						<p class="red_style_name" v-else-if="isPolitics">违规</p>
+						<p class="green_style_name" v-else>合规</p>
+					</div>
+					<div class="result_outer">
+						<p>违禁品检测</p>
+						<p class="green_style_name" v-if="isUploadText">识别中...</p>
+						<p class="red_style_name" v-else-if="isForce">违规</p>
+						<p class="green_style_name" v-else>合规</p>
+					</div>
+					<div class="result_outer">
+						<p>民谣类检测</p>
+						<p class="green_style_name" v-if="isUploadText">识别中...</p>
+						<p class="red_style_name" v-else-if="isSong">违规</p>
+						<p class="green_style_name" v-else>合规</p>
 					</div>
 				</div>
 			</div>
@@ -40,7 +62,11 @@
             return{
 				resultType:[],
                 isUploadText:false,
-                isError:false
+                isError:false,
+				isSex:false,
+				isForce:false,
+				isSong:false,
+				isPolitics:false
 			}
         },
 		mounted(){
@@ -52,7 +78,12 @@
 
             submitText(e,file){
                 console.log(file);
+                document.getElementsByClassName('show_text_word')[0].innerHTML='';
                 this.isUploadText = true;
+                this.isSex = false;
+                this.isPolitics = false;
+                this.isSong = false;
+                this.isForce = false;
                 this.audioName = file.name;
                 var loading = this.$loading({fullscreen:false,target:document.querySelector(".outer_text")});
                 console.log("文本提交中。。。")
@@ -73,17 +104,31 @@
                             document.getElementsByClassName('show_text_word')[0].innerHTML= response.data.web_text;
                             loading.close();
                             this.isUploadText = false;
+                            this.$parent.changeUploadState(false);
                         },1000);
-                        if(response.data.sensitive_list.length!=0){
-                            this.resultType = response.data.sensitive_list;
-                            this.isNone = false;
-                            this.$parent.changeUploadState(false);
-                        }else {
-                            this.resultType=[];
-                            this.isNone = true;
-                            this.$parent.changeUploadState(false);
-                            loading.close();
-                        }
+                        if(response.data.final_list.length!=0){
+                            response.data.final_list.forEach(item=>{
+                                if(item.indexOf('色情')!=-1){
+									this.isSex = true;
+								}else if(item.indexOf('政治')!=-1){
+                                    this.isPolitics = true;
+                                }else if(item.indexOf('民谣')!=-1){
+                                    this.isSong = true;
+                                }else if(item.indexOf('违禁品')!=-1){
+                                    this.isForce = true;
+								}
+							});
+						}
+//                        if(response.data.sensitive_list.length!=0){
+//                            this.resultType = response.data.sensitive_list;
+//                            this.isNone = false;
+//                            this.$parent.changeUploadState(false);
+//                        }else {
+//                            this.resultType=[];
+//                            this.isNone = true;
+//                            this.$parent.changeUploadState(false);
+//                            loading.close();
+//                        }
                     },
                     error:err=>{
                         loading.close();
@@ -119,9 +164,9 @@
 	.show_json_outer .result_title{font-size: 24px;color: #000000;text-align: center;height: 100px;padding-top: 30px;}
 	.show_json_outer .result_title:before{content: "";background: url("../../assets/image/result_top_image.png") no-repeat center center;height: 23px;display: block;margin-bottom: 10px;}
 	.suggest{color: #b2b2b2;font-size: 14px;min-height: 30px;margin:8px 0;}
-	.result_outer{margin: 20px 30px;display: flex;color: #000000;height: 28px;line-height: 28px;}
-	.result_outer p:nth-of-type(1){font-size: 16px;flex: 5;margin-left: 10px;}
-	.result_outer p:nth-of-type(2){font-size: 16px;flex: 3;text-align: center}
+	.result_outer{margin: 20px auto;display: flex;color: #000000;height: 28px;line-height: 28px;width: 240px;}
+	.result_outer p:nth-of-type(1){font-size: 16px;width: 120px;}
+	.result_outer p:nth-of-type(2){font-size: 16px;width: 120px;text-align: center}
 	.result_outer p:nth-of-type(3){font-size: 16px;flex: 4;text-align: center}
 	.result_outer .green_style_name{background-color: #54cd62;border: 1px solid #54cd62;color: #fff;text-align: center;}
 	.result_outer .green_style_number{border: 1px solid #54cd62;color: #54cd62}

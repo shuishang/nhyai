@@ -73,15 +73,14 @@
 						<div class="item_outer">
 							<div class="voice_content">
 								<p class="voice_title">语音识别</p>
-								<div class="language_select_outer">
+								<!--<div class="language_select_outer">
 									<span>语种/方言:</span>
 									<select name="language" id="language" readonly="readonly">
 										<option value="中文普通话">中文普通话</option>
-										<!--<option value="英文">英文</option>-->
+										&lt;!&ndash;<option value="英文">英文</option>&ndash;&gt;
 									</select>
-
-								</div>
-								<p class="suggest_record" v-show="recordWord =='开始录音'">点击"开始录音"，即可边说话边识别</p>
+								</div>-->
+								<p class="suggest_record" v-show="recordWord =='开始录音'">语音识别支持中文普通话，先录音再识别</p>
 								<div class="voice_time_outer" v-show="recordWord =='停止录音'">
 									<img src="../assets/image/voice/voice.gif" alt="">
 									<span>00:{{voiceSecond}}/01:00</span>
@@ -92,7 +91,8 @@
 								<textarea class="result_text" readonly="readonly">{{showResult}}</textarea>
 							</div>
 						</div>
-						<p class="begin_record" @click="beginRecord">{{recordWord}}</p>
+						<p class="begin_record_time" v-if="toShort">{{recordWord}}</p>
+						<p class="begin_record" @click="beginRecord" v-else>{{recordWord}}</p>
 					</div>
 
 				</el-col>
@@ -180,7 +180,8 @@
                 intervalId:null,
                 record:null,
                 recordSrc:require("../assets/audio/1.mp3"),
-				showResult:""
+				showResult:"",
+				toShort:false
 
 			}
         },
@@ -192,22 +193,26 @@
 				if(this.recordWord =="停止录音"){
                     this.recordStop();
                     clearInterval(this.intervalId) ;
-                    this.recordWord ="重新录音"
 				}else{
                     this.recordWord ="停止录音";
-                    this.voiceSecond="00";
+                    this.showResult ='';
+					this.voiceSecond="00";
                     this.recordStart();
+                    this.toShort = true;
                     var intervalId =  setInterval(()=>{
                         this.voiceSecond++
                         this.voiceSecond = this.voiceSecond<10?'0'+this.voiceSecond:this.voiceSecond;
                         if(this.voiceSecond==60){
                             this.recordStop();
                             clearInterval(intervalId) ;
-                            this.recordWord ="重新录音";
-
+//                            this.recordWord ="重新录音";
                         }
                     },1000);
 					this.intervalId = intervalId;
+					let timeout = setTimeout(()=>{
+                        this.toShort = false;
+                        clearTimeout(timeout);
+                    },1000)
 				}
 
 			},
@@ -233,16 +238,16 @@
 //                this.recordSrc =wav ;
                 console.log(this.recordSrc);
 				this.record.clear();
+                this.recordWord ="正在识别...";
                 this.submitVoice(files);
 //                document.getElementsByTagName('audio')[0].load();
 
             },
             submitVoice(wav){
                 var loading = this.$loading({fullscreen:false,target:document.querySelector(".voice_content")});
-                if(this.recWord==''){
-                    this.$message.error('请输入要识别的内容！');
-                    return;
-                }
+                this.showResult = '';
+                this.recordWord ="正在识别...";
+                this.toShort = true;
                 this.isCheck = 2;
                 var formData = new FormData();
                 formData.append('speech', wav);
@@ -259,14 +264,18 @@
                         loading.close();
                         console.log(response);
                         if(response.data.text==''){
-                            this.showResult =  "请右键点击扬声器->录音设备->录制->查看扬声器";
+                            this.showResult =  "没有识别到内容，请重新录音...";
 						}else {
                             this.showResult =  response.data.text;
 						}
+                        this.toShort = false;
+                        this.recordWord ="重新录音";
                     },
                     error:()=>{
                         loading.close();
                         this.isCheck = 3;
+                        this.toShort = false;
+                        this.recordWord ="重新录音";
                         this.$message.error('上传失败，请重新上传！');
                     }
                 });
@@ -322,13 +331,14 @@
 		font-size: 14px;text-align: center;margin: -1px auto 0;color: #316dff;}
 	.functional_experience .language_select_outer{width: 170px;margin: 30px auto;}
 	.functional_experience .language_select_outer >span{font-size: 14px;color: #000000;}
-	.suggest_record{text-align: center;font-size: 14px;color: #000;margin-top: 40px;}
+	.suggest_record{text-align: center;font-size: 14px;color: #000;margin-top: 100px;}/*原来是40*/
 	.language_select_outer #language{width:90px;height: 30px ;font-size: 12px;text-align: center;padding-left: 7px;  line-height: 30px;border: 1px solid #b6b6b6;border-radius: 5px;background:url("../assets/image/voice/select_back.png") no-repeat 72px center;}
-	.voice_time_outer{height: 40px;line-height: 0;font-size: 0;text-align: center;margin-top: 75px;}
+	.voice_time_outer{height: 40px;line-height: 0;font-size: 0;text-align: center;margin-top: 115px;}/*原来是75*/
 	.voice_time_outer>span{display:inline-block;height: 40px;line-height: 40px;font-size: 14px;vertical-align: middle;margin-left: 20px;}
 	.voice_time_outer>img{height: 40px;line-height: 40px;vertical-align: middle}
-	.result_text{margin: 10px 0;padding: 0 20px;;width: 100%;height: 80%;box-sizing: border-box;line-height: 25px;font-size: 14px;}
+	.result_text{margin: 10px 0;padding: 0 20px;;width: 100%;height: 80%;box-sizing: border-box;line-height: 25px;font-size: 14px;color: #000;}
 	.begin_record{height: 45px;width: 160px;line-height: 45px;background-color: #316dff;color: #fff;margin: 40px auto;font-size: 16px;text-align: center;cursor: pointer;}
+	.begin_record_time{height: 45px;width: 160px;line-height: 45px;background-color: #f5f5f5;color: #666;margin: 40px auto;font-size: 16px;text-align: center;cursor: pointer;}
 	.begin_record:hover{background-color: #6087F7;}
 
 	.voice_introduce_outer{margin-bottom: 15px;text-align: center;min-width: 800px;}

@@ -9,7 +9,7 @@
 							<!--<img src="../assets/image/write/write_banner.png" alt="">-->
 							<div class="describe_outer_banner">
 								<p class="ell">文本检测</p>
-								<p class="ell-rows-4 ">基于海量样本数据，智能策略定制，高效过滤色情、广告、涉政、暴恐等多类垃圾文字及敏感词、违禁变种</p>
+								<p class="ell-rows-4 ">基于海量样本数据，智能策略定制，高效过滤色情、民谣、涉政、暴恐等多类垃圾文字及敏感词、违禁变种</p>
 								<p class="practice_online" @click="toPractice">在线体验</p>
 							</div>
 						</div>
@@ -35,9 +35,9 @@
 							<div class="clearfix show_scenario_outer">
 								<span class="fl left_image_con_two left_image_con"></span>
 								<div class="right_word_con fl">
-									<span>广告文字识别 </span>
+									<span>民谣类识别 </span>
 									<div class="scenario_describe_outer">
-										<span class="good_describe">海量大数据样本，高效识别变种推广类文本 </span>
+										<span class="good_describe">结合大数据分析，快速识别谣言、诽谤、诋毁等民谣类文本</span>
 									</div>
 								</div>
 							</div>
@@ -46,9 +46,9 @@
 							<div class="clearfix show_scenario_outer">
 								<span class="fl left_image_con_three left_image_con"></span>
 								<div class="right_word_con fl">
-									<span>敏感文字识别 </span>
+									<span>违禁品识别 </span>
 									<div class="scenario_describe_outer">
-										<span class="good_describe">深度定制模型，建立多维度用户画像，高效识别宗教、枪支、血腥等敏感文本</span>
+										<span class="good_describe">深度定制模型，建立多维度用户画像，高效识别宗教、枪支、血腥等违禁品</span>
 									</div>
 								</div>
 							</div>

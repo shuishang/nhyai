@@ -46,8 +46,9 @@
 			<div class="suggest_outer">
 				<div  class="current_width_style_1040 clearfix">
 					<div class="show_input_outer fl">
-						<input type="text" class="init_url_style" placeholder="请输入网络图片URL">
-						<p class="check_style">检测</p>
+						<input type="text" class="init_url_style" readonly placeholder="请输入网络图片URL">
+						<!--<p class="check_style">检测</p>-->
+						<p class="check_style_hidden" @click="urlCheck">检测</p>
 					</div>
 					<div class="local_upload fl" v-if="!isCheck">
 						<!--<p>本地上传</p>-->
@@ -58,7 +59,7 @@
 						<p class="is_check">正在检测</p>
 					</div>
 				</div>
-				<p class="top_suggest current_width_style_1040">图片文件类型支持PNG、JPG、JPEG、BMP，图片大小不超过2M。</p>
+				<p class="top_suggest current_width_style_1040">图片文件类型支持PNG、JPG、JPEG，图片大小不超过20M。</p>
 			</div>
 
 			<div class="choose_image current_width_style" v-show="isImage==1">
@@ -70,6 +71,7 @@
 						:auto-upload="false"
 						:multiple="true"
 						:limit="limit"
+						:show-file-list="false"
 						accept="image/png,image/jpg,image/jpeg"
 						:on-exceed="outSuggest"
 						:on-change="onImageChange">
@@ -226,6 +228,9 @@
         mounted:function () {
         },
         methods: {
+            urlCheck(){
+                this.$message.error('该功能尚未开通！')
+			},
             onImageChange(file, fileList){
                 console.log(file,"走了这里");
                 fileUtil.getOrientation(file.raw).then((orient) => {
@@ -241,7 +246,11 @@
                                 file.url= fileUtil.getObjectURL(newFile);
                                 file.raw = newFile;
                                 if(this.fileList.length<this.limit){
-                                    this.fileList.push(file);
+                                    if(file.size>20971520){
+                                        this.$message.error('图片'+file.name+'大于20M,请选择小于20M的图片！');
+                                    }else {
+                                        this.fileList.push(file);
+                                    }
 								}
                             }
                         };
@@ -252,7 +261,11 @@
                             file.url = URL.createObjectURL(file.raw);
                         }
                         if(this.fileList.length<this.limit){
-                            this.fileList.push(file);
+                            if(file.size>20971520){
+                                this.$message.error('图片'+file.name+'大于20M,请选择小于20M的图片！');
+                            }else {
+                                this.fileList.push(file);
+                            }
                         }
                         this.isImage = 2;
                     }
@@ -265,7 +278,7 @@
 
             },
             onListChange(file, fileList){
-                this.checkDegree(file);
+                this.checkDegree(file,fileList);
                 if(fileList.length===this.limit){
                     this.$message.error('一次最多选择10张图片！');
                     this.hideUpload = true;
@@ -274,6 +287,7 @@
             outSuggest(files, fileList){
                 console.log(files);
                 let x = 0;
+                let that = this;
                 console.log(x);
                 while(x<files.length&&this.fileList.length<this.limit){
                     let file = files[x];
@@ -284,14 +298,19 @@
                     newFile.status = "ready";
                     newFile.url = URL.createObjectURL(file);
                     newFile.raw = file;
-                    this.fileList.push(newFile);
+//                    this.fileList.push(newFile);
+                    if(file.size>20971520){
+                        this.$message.error('图片'+newFile.name+'大于20M,请选择小于20M的图片！');
+                    }else {
+                        that.fileList.push(newFile);
+                    }
                     x++;
                 }
                 this.isImage = 2;
                 this.hideUpload =true;
                 this.$message.error('一次最多选择10张图片！');
 			},
-            checkDegree(file) {
+            checkDegree(file,fileList) {
                 fileUtil.getOrientation(file.raw).then((orient) => {
                     if (orient && orient === 6) {
                         const reader = new FileReader();
@@ -305,14 +324,25 @@
                                 file.url = fileUtil.getObjectURL(newFile);
                                 file.raw = newFile;
                                 if (this.fileList.length < this.limit) {
-                                    this.fileList.push(file);
+                                    if(file.size>20971520){
+                                        this.$message.error('图片'+file.name+'大于20M,请选择小于20M的图片！');
+                                        fileList.splice(fileList.length-1,1)
+                                    }else {
+                                        this.fileList.push(file);
+                                    }
                                 }
                             }
                         };
                         reader.readAsDataURL(file.raw);
                     } else {
                         if (this.fileList.length < this.limit) {
-                            this.fileList.push(file);
+//                            this.fileList.push(file);
+                            if(file.size>20971520){
+                                this.$message.error('图片'+file.name+'大于20M,请选择小于20M的图片！');
+                                fileList.splice(fileList.length-1,1);
+                            }else {
+                                this.fileList.push(file);
+                            }
                         }
                     }
                 });
@@ -330,14 +360,21 @@
                     newFile.status = "ready";
                     newFile.url = URL.createObjectURL(file);
                     newFile.raw = file;
-                    this.fileList.push(newFile);
+//                    this.fileList.push(newFile);
+                    if(file.size>20971520){
+                        this.$message.error('请选择小于20M的图片！');
+                    }else {
+                        this.fileList.push(newFile);
+                    }
                     j++;
                 }
                 if(this.fileList.length>=10){
                     this.hideUpload = true;
                     this.$message.error('一次最多选择10张图片！');
                 }
-                this.isImage = 2;
+                if(this.fileList.length>0){
+                    this.isImage = 2;
+                }
             },
             submitUpload(e){
                 if(this.fileList.length==0){
@@ -490,10 +527,12 @@
 	.suggest_outer{margin: 40px 0 20px;}
 	.top_suggest{color: #999999;font-size: 14px;line-height: 40px;height: 30px;}
 	.init_url_style{flex: 1;height: 35px;line-height: 35px;border: 1px solid #E2ECFC;font-size: 15px;padding-left: 10px;}
-	.init_url_style:hover{border: 1px solid #C0C4CC;border-right: none;}
-	.init_url_style:focus{border: 1px solid #409EFF;border-right: none;}
+	/*.init_url_style:hover{border: 1px solid #C0C4CC;border-right: none;}*/
+	/*.init_url_style:focus{border: 1px solid #409EFF;border-right: none;}*/
 	.check_style{display:inline-block;height: 33px;line-height: 33px;font-size: 16px;color: #316DFF;border: 2px solid #316DFF;background-color: #FAFCFE;
 		width: 100px;text-align: center;cursor:pointer;}
+	.check_style_hidden{display:inline-block;height: 33px;line-height: 33px;font-size: 16px;color: #666666;border: 2px solid #f5f5f5;
+		width: 100px;text-align: center;cursor:pointer;background-color: #f5f5f5}
 	.check_style:hover{background-color: #316DFF;color: white;}
 	.local_upload{height: 33px;line-height: 33px;font-size: 16px;}
 	.local_upload:before{content: "或";margin: 0 25px;}

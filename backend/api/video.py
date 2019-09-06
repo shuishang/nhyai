@@ -162,7 +162,7 @@ def check_video(file_path):
         
         while rval:  # 循环读取视频帧
             #pic_path = temp_path + '/'
-            if (c % timeF == 0):  # 每隔timeF帧进行存储操作
+            if (c % timeF == 0 or c == 1):  # 每隔timeF帧进行存储操作
                 imageName = str(COUNT) + '.jpg'
                 cv2.imwrite(temp_path + '/' + imageName, frame)#存储图像 
                 jsonResultInfo  = settings.VIOLENCE.check_violence(temp_path + '/' +imageName)
