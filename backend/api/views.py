@@ -185,21 +185,31 @@ class WordRecognitionInspectionViewSet(viewsets.ModelViewSet):
         file_type = chardet.detect(f_test.read(100))
 
         if (file_type['encoding'] == 'GB2312'):
-            f = codecs.open(txtfile, 'r', encoding='gbk')
+            f = codecs.open(txtfile, 'r', encoding='gbk', errors='ignore')
         elif (file_type['encoding'] == 'UTF-8-SIG'):
-            f = codecs.open(txtfile, 'r', encoding='utf-8')
+            f = codecs.open(txtfile, 'r', encoding='utf-8', errors='ignore')
         elif (file_type['encoding'] == 'ascii'):
-            f = codecs.open(txtfile, 'r', encoding='gbk')
+            f = codecs.open(txtfile, 'r', encoding='gbk', errors='ignore')
         else:
-            f = codecs.open(txtfile, 'r')
+            f = codecs.open(txtfile, 'r', errors='ignore')
 
-        text_content = f.read()
+        text_content = ""
         sensitive_map = {}
         sensitive_list = []
+        try:
+            for line in f:
+                text_content += line
+        except Exception as e:
+            print ("The content get some error: " + line)
+            print (e)
+            msg = "内容获取异常"
+            ret = 1
+        else:
+            print ("Read content successfully!")
+            msg = "匹配记录"
+            ret = 0
         
         result = sensitiveClass().check_sensitiveWords(text_content)
-        ret = 0
-        msg = "匹配记录"
         sensitive_map["text_content"] = text_content
         sensitive_map["sensitive_info"] = result
         data = sensitive_map
