@@ -7,13 +7,14 @@
 					<el-col :xl={span:24}>
 						<div class="banner_outer ai-common-banner">
 							<!--<img src="../assets/image/force/force_banner.png" alt="">-->
-							<div class="describe_outer_banner">
-								<p class="ell">暴恐检测</p>
-								<p class="ell-rows-4 ">南海云暴恐图片识别基于领先的深度学习引擎，对用户上传的图片进行自动审核，暴恐识别算法会返回“疑似暴恐”的字段，对血腥、暴力等图片进行自动打击，用AI捍卫互联网安全，助力建立安全、健康的互联网环境。</p>
-								<p class="practice_online" @click="toPractice">在线体验</p>
-							</div>
+							<el-col :xs={span:24} :sm={span:22,offset:1} :md={span:20,offset:2} :lg={span:18,offset:3} :xl={span:16,offset:4}>
+								<div class="describe_outer_banner">
+									<p class="ell">暴恐检测</p>
+									<p class="ell-rows-4 ">南海云暴恐图片识别基于领先的深度学习引擎，对用户上传的图片进行自动审核，暴恐识别算法会返回“疑似暴恐”的字段，对血腥、暴力等图片进行自动打击，用AI捍卫互联网安全，助力建立安全、健康的互联网环境。</p>
+									<p class="practice_online" @click="toPractice">在线体验</p>
+								</div>
+							</el-col>
 						</div>
-
 					</el-col>
 				</el-row>
 			</el-row>
@@ -47,8 +48,10 @@
 			<div class="suggest_outer">
 				<div  class="current_width_style_1040 clearfix">
 					<div class="show_input_outer fl">
-						<input type="text" class="init_url_style" readonly placeholder="请输入网络图片URL">
-						<p class="check_style_hidden" @click="urlCheck">检测</p>
+						<!--<input type="text" class="init_url_style" readonly placeholder="请输入网络图片URL">-->
+						<input type="file" id="url_input" class="inputfile" readonly placeholder="请选择本地图片" accept="image/*" @change="changeImage($event)" multiple>
+						<label for="url_input" class="init_url_style">请选择本地图片上传</label>
+						<!--<p class="check_style_hidden" @click="urlCheck">检测</p>-->
 					</div>
 					<div class="local_upload fl" v-if="!isCheck">
 						<!--<p>本地上传</p>-->
@@ -125,7 +128,7 @@
 						</div>
 					</div>
 				</div>
-				<p class="again_check" @click="uploadAgain">重新上传</p>
+				<p class="again_check" @click="uploadAgain">换一批检测</p>
 				<p class="yellow_result_suggest"><span class="">*</span>提示：检测结果百分比越高代表违规越严重</p>
 			</div>
 		</div>
@@ -210,8 +213,7 @@
                     {src:require("../assets/image/force/sample_image4.png"),number:61.78},{src:require("../assets/image/force/sample_image5.png"),number:51.21},{src:require("../assets/image/force/sample_image6.png"),number:22.86}],
 				isCheck:false,
                 hideUpload:false,
-                limit:10
-
+                limit:10,
 			}
         },
         mounted:function () {
@@ -342,30 +344,63 @@
             changeImage(e){
                 var files = e.target.files;
                 console.log(files);
+                let that = this;
                 let j = 0;
-                while(j<files.length&&this.fileList.length<this.limit){
+                let enough = that.limit-that.fileList.length;
+                while(j<files.length&& j<enough){
                     let file = files[j];
-                    var newFile = {};
-                    newFile.name = file.name;
-                    newFile.uid = file.uid;
-                    newFile.size = file.size;
-                    newFile.status = "ready";
-                    newFile.url = URL.createObjectURL(file);
-                    newFile.raw = file;
-                    if(file.size>20971520){
-                        this.$message.error('请选择小于20M的图片！');
-                    }else {
-                        this.fileList.push(newFile);
-					}
+                    if (that.fileList.length < that.limit) {
+                        if(file.size>20971520){
+                            that.$message.error('图片'+file.name+'大于20M,请选择小于20M的图片！');
+                        }else {
+                            fileUtil.getOrientation(file).then((orient) => {
+                                if (orient && orient === 6) {
+                                    const reader = new FileReader();
+                                    reader.onload = ($event) => {
+                                        let img = new Image();
+                                        img.src = $event.target.result;
+                                        img.onload = () => {
+                                            const data = fileUtil.rotateImage(img, img.width, img.height);
+                                            const rightFile = fileUtil.dataURLtoFile(data, file.name);
+                                            let newFile = {};
+                                            newFile.name = file.name;
+                                            newFile.uid = file.uid;
+                                            newFile.size = file.size;
+                                            newFile.status = "ready";
+                                            newFile.url = URL.createObjectURL(rightFile);
+                                            newFile.raw = rightFile;
+                                            console.log('newFile',newFile)
+                                            this.fileList.push(newFile);
+                                            if(that.fileList.length>=10){
+                                                that.hideUpload = true;
+                                                that.$message.error('一次最多选择10张图片！');
+                                            }
+                                            that.isImage = 2;
+                                        }
+                                    };
+                                    reader.readAsDataURL(file);
+                                } else {
+                                    let newFile = {};
+                                    newFile.name = file.name;
+                                    newFile.uid = file.uid;
+                                    newFile.size = file.size;
+                                    newFile.status = "ready";
+                                    newFile.url = URL.createObjectURL(file);
+                                    newFile.raw = file;
+                                    console.log('newFile',newFile)
+                                    that.fileList.push(newFile);
+                                    that.isImage = 2;
+                                    if(that.fileList.length>=10){
+                                        that.hideUpload = true;
+                                        that.$message.error('一次最多选择10张图片！');
+                                    }
+                                }
+                            });
+                        }
+                    }
                     j++;
+                    console.log('这里打印fileList',that.fileList.length>10);
                 }
-                if(this.fileList.length>=10){
-                    this.hideUpload = true;
-                    this.$message.error('一次最多选择10张图片！');
-                }
-                if(this.fileList.length>0){
-                    this.isImage = 2;
-				}
             },
             submitUpload(e){
                 if(this.fileList.length==0){
@@ -453,7 +488,8 @@
                 e.preventDefault();
             },
             uploadAgain(){
-                this.isImage = 2;
+                this.isImage = 1;
+                this.fileList = [];
             },
             handleRemove(file, fileList) {
                 console.log(file, fileList);
@@ -485,7 +521,7 @@
 <style scoped>
 	.force_top_contain{font-size: 0;line-height: 0;}
 	.banner_outer{position: relative;}
-	.describe_outer_banner{position: absolute;top:25%;left: 18%;font-size: 16px;color: white;width: 28%;height: 85%;}
+	.describe_outer_banner{position: absolute;top:25%;font-size: 16px;color: white;width: 28%;height: 85%;}
 	.describe_outer_banner p{}
 	.describe_outer_banner p:nth-of-type(1){font-size: 30px;height: 60px;line-height: 60px;margin-bottom: 15px;min-width: 400px;}
 	.describe_outer_banner p:nth-of-type(2){height: 130px;text-align: justify;overflow: hidden;min-width: 550px;line-height: 30px;}
@@ -516,7 +552,7 @@
 
 	.suggest_outer{margin: 40px 0 20px;}
 	.top_suggest{color: #999999;font-size: 14px;line-height: 40px;height: 30px;}
-	.init_url_style{flex: 1;height: 35px;line-height: 35px;border: 1px solid #E2ECFC;font-size: 15px;padding-left: 10px;}
+	.init_url_style{flex: 1;height: 35px;line-height: 35px;border: 1px solid #E2ECFC;font-size: 15px;padding-left: 10px;color: #666666;cursor: pointer;}
 	/*.init_url_style:hover{border: 1px solid #C0C4CC;border-right: none;}*/
 	/*.init_url_style:focus{border: 1px solid #409EFF;border-right: none;}*/
 	.check_style{display:inline-block;height: 33px;line-height: 33px;font-size: 16px;color: #316DFF;border: 2px solid #316DFF;background-color: #FAFCFE;
@@ -525,7 +561,7 @@
 		width: 100px;text-align: center;cursor:pointer;background-color: #f5f5f5}
 	.check_style:hover{background-color: #316DFF;color: white;}
 	.local_upload{height: 33px;line-height: 33px;font-size: 16px;}
-	.local_upload:before{content: "或";margin: 0 25px;}
+	/*.local_upload:before{content: "或";margin: 0 25px;}*/
 	.inputfile{z-index: -11111;width: 0px;height:1px;opacity: 0;position: absolute;}
 	.is_check{display:inline-block;height: 35px;line-height: 35px;font-size: 16px;background-color: #f5f5f5;color:#666666;border: 1px solid #dddddd;padding: 0 15px;text-align: center;}
 	.local_upload label{display:inline-block;height: 33px;line-height: 33px;font-size: 16px;background-color: #316DFF;color:white;border: 2px solid #316DFF;width: 100px;text-align: center;cursor: pointer;}

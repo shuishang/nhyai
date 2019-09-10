@@ -50,7 +50,7 @@
                 activeIndex: '1',
 				isNavHover:false,
 				imageList:[{title:"暴恐识别",link:"/force"},{title:"色情识别",link:"/yellow"}],
-                OCRList:[{title:"文本识别",link:"/writeRecognition"},{title:"身份证OCR",link:"/wordRecognition/idCard"},/*{title:"驾驶证OCR",link:"/wordRecognition/drivingLicence"},
+                OCRList:[{title:"敏感文字检测",link:"/writeRecognition"},{title:"身份证OCR",link:"/wordRecognition/idCard"},/*{title:"驾驶证OCR",link:"/wordRecognition/drivingLicence"},
 					{title:"行驶证OCR",link:"/wordRecognition/runningLicence"},*/{title:"通用OCR",link:"/wordRecognition/commonUse"}/*,
                     {title:"营业执照OCR",link:"/wordRecognition/businessLicence"},{title:"银行卡OCR",link:"/wordRecognition/bankCard"},
 					{title:"手写体OCR",link:"/wordRecognition/handwriten"},{title:"车牌OCR",link:"/wordRecognition/carNumber"},{title:"名片OCR",link:"/wordRecognition/visitingCard"}*/]

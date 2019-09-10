@@ -7,11 +7,13 @@
 					<el-col :xl={span:24}>
 						<div class="banner_outer ai-common-banner">
 							<!--<img src="../assets/image/word/word_banner.png" alt="">-->
-							<div class="describe_outer_banner">
-								<p class="ell">卡证类识别</p>
-								<p class="ell-rows-4 ">基于南海云网络领先的深度学习算法，利用光学字符识别技术，将图片上的文字内容，直接转换为可编辑文本。不仅能精准快速识别身份证、名片、营业执照、驾驶证等卡证类信息，更有通用OCR和手写体识别技术支持更多场景、任意版面的文字信息获取，大大提高了工作效率和用户体验。</p>
-								<p class="practice_online" @click="toPractice">在线体验</p>
-							</div>
+							<el-col :xs={span:24} :sm={span:22,offset:1} :md={span:20,offset:2} :lg={span:18,offset:3} :xl={span:16,offset:4}>
+								<div class="describe_outer_banner">
+									<p class="ell">卡证类识别</p>
+									<p class="ell-rows-4 ">基于南海云网络领先的深度学习算法，利用光学字符识别技术，将图片上的文字内容，直接转换为可编辑文本。不仅能精准快速识别身份证、名片、营业执照、驾驶证等卡证类信息，更有通用OCR和手写体识别技术支持更多场景、任意版面的文字信息获取，大大提高了工作效率和用户体验。</p>
+									<p class="practice_online" @click="toPractice">在线体验</p>
+								</div>
+							</el-col>
 						</div>
 					</el-col>
 				</el-row>
@@ -259,7 +261,7 @@
 <style scoped>
 	.word_top_contain{font-size: 0;line-height: 0;}
 	.banner_outer{position: relative;}
-	.describe_outer_banner{position: absolute;top:25%;left: 18%;font-size: 16px;color: white;width: 28%;height: 75%;}
+	.describe_outer_banner{position: absolute;top:25%;font-size: 16px;color: white;width: 28%;height: 75%;}
 	.describe_outer_banner p{}
 	.describe_outer_banner p:nth-of-type(1){font-size: 30px;height: 60px;line-height: 60px;margin-bottom: 15px;min-width: 400px;}
 	.describe_outer_banner p:nth-of-type(2){height: 130px;text-align: justify;overflow: hidden;min-width: 600px;line-height: 30px;}

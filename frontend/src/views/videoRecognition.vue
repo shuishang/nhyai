@@ -7,11 +7,13 @@
 					<el-col :xl={span:24}>
 						<div class="banner_outer ai-common-banner">
 							<!--<img src="../assets/image/video/video_banner.png" alt="">-->
-							<div class="describe_outer_banner">
-								<p class="ell">视频检测</p>
-								<p class="ell-rows-4 ">针对视频内容进行多维智能审核，其中包括色情、暴恐、政治敏感、民谣、自定义黑库等，让您的平台免去审核的后顾之忧 </p>
-								<p class="practice_online" @click="toPractice">在线体验</p>
-							</div>
+							<el-col :xs={span:24} :sm={span:22,offset:1} :md={span:20,offset:2} :lg={span:18,offset:3} :xl={span:16,offset:4}>
+								<div class="describe_outer_banner">
+									<p class="ell">视频检测</p>
+									<p class="ell-rows-4 ">针对视频内容进行多维智能审核，其中包括色情、暴恐、政治敏感、民谣、自定义黑库等，让您的平台免去审核的后顾之忧 </p>
+									<p class="practice_online" @click="toPractice">在线体验</p>
+								</div>
+							</el-col>
 						</div>
 					</el-col>
 				</el-row>
@@ -509,7 +511,7 @@
 	@import "../assets/css/video-js.min.css";
 	.video_top_contain{font-size: 0;line-height: 0;}
 	.banner_outer{position: relative;}
-	.describe_outer_banner{position: absolute;top:25%;left: 18%;font-size: 16px;color: white;width: 28%;height: 85%;}
+	.describe_outer_banner{position: absolute;top:25%;font-size: 16px;color: white;width: 28%;height: 85%;}
 	.describe_outer_banner p{}
 	.describe_outer_banner p:nth-of-type(1){font-size: 30px;height: 60px;line-height: 60px;margin-bottom: 15px;min-width: 400px;}
 	.describe_outer_banner p:nth-of-type(2){height: 120px;text-align: justify;overflow: hidden;min-width: 550px;line-height: 30px;}

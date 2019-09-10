@@ -31,9 +31,11 @@
 			<p class="title">功能体验</p>
 			<div class="current_width_style clearfix">
 				<div class="show_input_outer fl">
-					<input type="text" class="init_url_style" id="contentUrl" readonly placeholder="请输入网络图片URL">
+					<!--<input type="text" class="init_url_style" id="contentUrl" readonly placeholder="请输入网络图片URL">-->
 					<!--<p class="check_style" @click="showInputValue">检测</p>-->
-					<p class="check_style_hidden" @click="showInputValue">检测</p>
+					<input type="file" id="url_input" class="inputfile" @change="changeImage($event)" multiple>
+					<label for="url_input" class="init_url_style">请选择本地文件上传</label>
+					<!--<p class="check_style_hidden" @click="showInputValue">检测</p>-->
 				</div>
 				<div class="local_upload fl">
 					<!--<p>本地上传</p>-->
@@ -43,7 +45,7 @@
 				</div>
 			</div>
 
-			<p class="top_suggest current_width_style">支持图片格式：PNG、JPG、JPEG，大小限制<20M。支持视频格式：mp4，大小限制<20M；支持文本格式：txt，大小限制<10M</p>
+			<p class="top_suggest current_width_style">支持图片格式：PNG、JPG、JPEG，大小限制<20M。支持视频格式：mp4，大小限制<20M；支持音频格式：wav；支持文本格式：txt，大小限制<10M</p>
 
 			<!--图片评审-->
 			<ImageCheck v-show="checkType ===1" :file="imageFile" ref="imageCheck"></ImageCheck>
@@ -283,6 +285,14 @@
                         this.submitImageCallback(e,file,e.target.result);
                         this.isUploading = true;
                     }else if(fileType.substr(0, 5) === "audio"){
+                        if(fileType.indexOf("wav") ==-1){
+                            this.$message.error('请选择wav格式的视频！');
+                            return;
+                        }
+                        if(file.size>20971520){
+                            this.$message.error('请选择小于20M的音频文件！');
+                            return;
+                        }
                         that.checkType = 3;
                         that.stopVideo = true;
                         that.stopAudio = false;
@@ -350,14 +360,14 @@
 	.functional_experience .title{text-align: center;color: #333333;margin: 40px 0;font-size: 36px;}
 
 	.top_suggest{color: #999999;font-size: 14px;line-height: 40px;height: 30px;margin-bottom: 25px;}
-	.init_url_style{flex: 1;height: 35px;line-height: 35px;border: 1px solid #E2ECFC;font-size: 15px;padding-left: 10px;background-color: #FAFCFE;width: 685px;}
+	.init_url_style{flex: 1;height: 35px;line-height: 35px;border: 1px solid #E2ECFC;font-size: 15px;padding-left: 10px;background-color: #FAFCFE;width: 685px;color: #666666;}
 	/*.init_url_style:hover{border: 1px solid #C0C4CC;border-right: none;}*/
 	/*.init_url_style:focus{border: 1px solid #409EFF;border-right: none;}*/
 	.check_style{display:inline-block;height: 33px;line-height: 33px;font-size: 16px;color: #316DFF;border: 2px solid #316DFF;width: 100px;text-align: center;cursor:pointer;}
 	.check_style_hidden{display:inline-block;height: 33px;line-height: 33px;font-size: 16px;color: #666666;border: 2px solid #f5f5f5;width: 100px;text-align: center;cursor:pointer;background-color: #f5f5f5}
 	.check_style:hover{background-color: #316DFF;color: white;}
 	.local_upload{height: 33px;line-height: 33px;font-size: 16px;}
-	.local_upload:before{content: "或";margin: 0 25px;}
+	/*.local_upload:before{content: "或";margin: 0 25px;}*/
 	.inputfile{z-index: -11111;width: 0px;height:1px;opacity: 0;position: absolute;}
 	.local_upload .btn_upload{display:inline-block;height: 33px;line-height: 33px;font-size: 16px;background-color: #316DFF;color:white;border: 2px solid #316DFF;width: 100px;text-align: center;cursor: pointer;}
 	.local_upload .btn_uploading{display:inline-block;height: 33px;line-height: 33px;font-size: 16px;background-color: white;color:#666666;border: 2px solid #e1e3e7;width: 100px;text-align: center;cursor: pointer;}

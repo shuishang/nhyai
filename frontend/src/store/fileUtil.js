@@ -1,4 +1,5 @@
 import EXIF from 'exif-js'
+import fileUtil from './fileUtil'
 
 export default {
     getOrientation: (file) => {
@@ -8,6 +9,46 @@ export default {
                 resolve(orient)
             })
         })
+    },
+    changeFile:(file)=>{
+        var newFile = {};
+        newFile.name = file.name;
+        newFile.uid = file.uid;
+        newFile.size = file.size;
+        newFile.status = "ready";
+        newFile.url = URL.createObjectURL(file);
+        newFile.raw = file;
+        return newFile;
+    },
+
+    getFile:(file,success,error)=>{
+        fileUtil.getOrientation(file).then((orient) => {
+            if (orient && orient === 6) {
+                const reader = new FileReader();
+                reader.onload = ($event) => {
+                    let img = new Image();
+                    img.src = $event.target.result;
+                    img.onload = () => {
+                        const data = fileUtil.rotateImage(img, img.width, img.height);
+                        const newFile = fileUtil.dataURLtoFile(data, file.name);
+                        newFile.url = URL.createObjectURL(newFile);
+                        console.log(newFile);
+                        if(file.size>20971520){
+                            error(file)
+                        }else {
+                            success(newFile)
+                        }
+                    }
+                };
+                reader.readAsDataURL(file);
+            } else {
+                if(file.size>20971520){
+                    error(file);
+                }else {
+                    success(file);
+                }
+            }
+        });
     },
 
     dataURLtoFile: (dataurl, filename) => {

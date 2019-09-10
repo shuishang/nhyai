@@ -7,11 +7,14 @@
 					<el-col :xl={span:24}>
 						<div class="banner_outer ai-common-banner">
 							<!--<img src="../assets/image/write/write_banner.png" alt="">-->
-							<div class="describe_outer_banner">
-								<p class="ell">文本检测</p>
-								<p class="ell-rows-4 ">基于海量样本数据，智能策略定制，高效过滤色情、民谣、涉政、暴恐等多类垃圾文字及敏感词、违禁变种</p>
-								<p class="practice_online" @click="toPractice">在线体验</p>
-							</div>
+							<el-col :xs={span:24} :sm={span:22,offset:1} :md={span:20,offset:2} :lg={span:18,offset:3} :xl={span:16,offset:4}>
+								<div class="describe_outer_banner">
+									<p class="ell">敏感文字检测</p>
+									<p class="ell-rows-4 ">基于海量样本数据，智能策略定制，高效过滤色情、民谣、涉政、暴恐等多类垃圾文字及敏感词、违禁变种</p>
+									<p class="practice_online" @click="toPractice">在线体验</p>
+								</div>
+							</el-col>
+
 						</div>
 					</el-col>
 				</el-row>
@@ -273,7 +276,7 @@
 <style scoped>
 	.write_top_contain{font-size: 0;line-height: 0;}
 	.banner_outer{position: relative;}
-	.describe_outer_banner{position: absolute;top:25%;left: 18%;font-size: 16px;color: white;width: 28%;height: 75%;}
+	.describe_outer_banner{position: absolute;top:25%;font-size: 16px;color: white;width: 28%;height: 75%;}
 	.describe_outer_banner p{}
 	.describe_outer_banner p:nth-of-type(1){font-size: 30px;height: 60px;line-height: 60px;margin-bottom: 15px;min-width: 400px;}
 	.describe_outer_banner p:nth-of-type(2){height: 105px;text-align: justify;overflow: hidden;min-width: 550px;line-height: 30px;}

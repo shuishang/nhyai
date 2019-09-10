@@ -4,9 +4,8 @@
 			<el-col :xs={span:24} :sm={span:11,offset:1} :md={span:10,offset:2} :lg={span:9,offset:3} :xl={span:8,offset:4}>
 				<div class="image_outer">
 					<div class="outer_add">
-						<span class="original_style">原始图片</span>
+						<span class="original_style original_title_style">原始图片</span>
 						<img class="show_add_image" :src="dialogImageUrl">
-
 					</div>
 					<div class="upload_outer">
 						<div class="local_upload" v-if="!isCheck">
@@ -17,10 +16,10 @@
 						<div class="local_upload" v-else>
 							<p class="is_check">正在检测</p>
 						</div>
-						<div class="show_input_outer">
+						<!--<div class="show_input_outer">
 							<input type="text" class="init_url_style" readonly  placeholder="请输入网络图片URL">
 							<p class="check_style_hidden" @click="urlCheck">检测</p>
-						</div>
+						</div>-->
 					</div>
 					<p class="top_suggest">提示：图片大小不超过1M，请保证需要识别部分为图片主体部分</p>
 				</div>
@@ -134,10 +133,11 @@
 
 <style scoped>
 	.show_json_outer{height: 350px;overflow-y:scroll;border: 1px solid #e2ecfc;}
-	.show_add_image{height: 100%;margin: 0 auto;display: block;}
+	.show_add_image{max-width: 100%;max-height:100%;vertical-align: middle;}
 	.original_style{position: absolute;font-size: 14px;color: #316dff;height: 30px;line-height: 30px;background-color: #e3ecfb;display: inline-block;padding: 0 35px 0 25px;-webkit-clip-path: polygon(0% 0%, 100% 0%, 90% 100%, 0% 100%);}
+	.original_title_style{top: 0;left: 0;}
 	.image_outer{margin-right: 10px;}
-	.outer_add{height:350px;position: relative;overflow: hidden;border: 1px solid #e2ecfc;}
+	.outer_add{height:350px;line-height:350px;position: relative;overflow: hidden;border: 1px solid #e2ecfc;vertical-align: middle;text-align: center;}
 	.upload_outer{display: flex;margin-top: 20px;}
 	.top_suggest{color: #999999;font-size: 14px;line-height: 40px;height: 30px;}
 	.init_url_style{flex: 1;height: 43px;line-height: 43px;border: 1px solid #E2ECFC;font-size: 15px;padding-left: 10px;background-color: #fafcfe;}
@@ -148,11 +148,11 @@
 		width: 100px;text-align: center;cursor:pointer;background-color: #f5f5f5}
 	.check_style:hover{background-color: #316DFF;color: white;}
 	.local_upload{height: 45px;line-height: 45px;font-size: 16px;}
-	.local_upload:after{content: "或";margin: 0 15px;}
+	/*.local_upload:after{content: "或";margin: 0 15px;}*/
 	.inputfile{z-index: -11111;width: 0px;height:1px;opacity: 0;position: absolute;}
-	.local_upload label{display:inline-block;height: 43px;line-height: 43px;font-size: 16px;background-color: #316DFF;color:white;border: 1px solid #316DFF;padding: 0 15px;text-align: center;cursor: pointer;}
+	.local_upload label{display:inline-block;height: 43px;line-height: 43px;font-size: 16px;background-color: #316DFF;color:white;border: 1px solid #316DFF;padding: 0 30px;text-align: center;cursor: pointer;}
 	.local_upload label:hover{background-color: #6087F7;color: white}
-	.is_check{display:inline-block;height: 43px;line-height: 43px;font-size: 16px;background-color: #f5f5f5;color:#666666;border: 1px solid #dddddd;padding: 0 15px;text-align: center;}
+	.is_check{display:inline-block;height: 43px;line-height: 43px;font-size: 16px;background-color: #f5f5f5;color:#666666;border: 1px solid #dddddd;padding: 0 30px;text-align: center;}
 	.show_input_outer{display: flex;flex: 1;}
 	#show_common_json{margin: 50px auto;padding: 10px 30px;word-break:break-all;line-height: 30px;}
 	#show_common_json p{height: 30px;line-height: 30px;}
