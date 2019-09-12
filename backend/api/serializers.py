@@ -48,7 +48,7 @@ class WordRecognitionInspectionSerializer(serializers.HyperlinkedModelSerializer
 
     class Meta:
         model = WordRecognitionInspection
-        fields = ('text','ret','msg','data')
+        fields = ('text','text_url','ret','msg','data')
 
     def clean_json(self, obj):
         return obj.ret,obj.msg,obj.data        
@@ -62,7 +62,7 @@ class OcrGeneralSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = OcrGeneral
-        fields = ('image','ret','msg','data')
+        fields = ('image','image_url','ret','msg','data')
 
     def clean_json(self, obj):
         return obj.ret,obj.msg,obj.data
@@ -75,7 +75,7 @@ class OcrIDCardSerializer(serializers.HyperlinkedModelSerializer):
     data = serializers.JSONField(True)
     class Meta:
         model = OcrIDCard
-        fields = ('image','ret','msg','data')
+        fields = ('image','image_url','ret','msg','data')
 
     def clean_json(self, obj):
         return obj.ret,obj.msg,obj.data
@@ -88,7 +88,7 @@ class FileImageTerrorismUploadSerializer(serializers.HyperlinkedModelSerializer)
     data = serializers.JSONField(True)
     class Meta:
         model = FileImageTerrorismUpload
-        fields = ('image','ret','msg','data')
+        fields = ('image','image_url','ret','msg','data')
 
     def clean_json(self, obj):
         return obj.ret,obj.msg,obj.data
@@ -102,7 +102,7 @@ class FileVisionPornUploadSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = FileVisionPornUpload
         #fields = ('datafile', 'result')
-        fields = ('image','ret','msg','data')
+        fields = ('image','image_url','ret','msg','data')
 
     def clean_json(self, obj):
         return obj.ret,obj.msg,obj.data
@@ -115,7 +115,7 @@ class VideoFileUploadSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = VideoFileUpload
-        fields = ('video','data','ret','msg')
+        fields = ('video','video_url','data','ret','msg')
 
     def clean_json(self, obj):
         return obj.ret,obj.msg,obj.data
@@ -128,7 +128,7 @@ class AudioFileUploadSerializer(serializers.HyperlinkedModelSerializer):
     data = serializers.JSONField(True)
     class Meta:
         model = AudioFileUpload
-        fields = ('speech','data','ret','msg')
+        fields = ('speech','speech_url','data','ret','msg')
 
     def clean_json(self, obj):
         return obj.ret,obj.msg,obj.data
@@ -141,10 +141,11 @@ class AudioFileInspectionSerializer(serializers.HyperlinkedModelSerializer):
     data = serializers.JSONField(True)
     class Meta:
         model = AudioFileInspection
-        fields = ('speech','data','ret','msg')
+        fields = ('speech','speech_url','data','ret','msg')
 
     def clean_json(self, obj):
         return obj.ret,obj.msg,obj.data
+
 class ImageFileUploadSerializer(serializers.HyperlinkedModelSerializer):
     #result = serializers.JSONField(True)
     ret = serializers.JSONField(True)
@@ -153,7 +154,7 @@ class ImageFileUploadSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = ImageFileUpload
         #fields = ('datafile', 'result')
-        fields = ('image','ret','msg','data')
+        fields = ('image','image_url','ret','msg','data')
 
     def clean_json(self, obj):
         return obj.ret,obj.msg,obj.data        

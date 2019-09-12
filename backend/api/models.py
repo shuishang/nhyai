@@ -67,6 +67,7 @@ class FileImageTerrorismUpload(models.Model):
     # datafile = models.ImageField(upload_to=path_and_rename, max_length=255, null=True, blank=True)
     # result1 = models.TextField(max_length=256,default='')
     image = models.FileField(upload_to=path_and_rename, max_length=255, null=True, blank=True)
+    image_url = models.URLField(_('image_url'), null=True, blank=True)
     ret = models.IntegerField(_('ret'), null=True, blank=True)
     msg = models.TextField(max_length=255, default='')
     data = models.TextField(max_length=2048, default='')
@@ -74,7 +75,7 @@ class FileImageTerrorismUpload(models.Model):
 class FileVisionPornUpload(models.Model):
     # datafile = models.ImageField(upload_to='photos')
     image = models.ImageField(upload_to=path_and_rename, max_length=255, null=True, blank=True)
-    #result = models.TextField(max_length=256,default='')
+    image_url = models.URLField(_('image_url'), null=True, blank=True)
     ret = models.IntegerField(_('ret'), null=True, blank=True)
     msg = models.TextField(max_length=255, default='')
     data = models.TextField(max_length=256, default='')
@@ -87,21 +88,24 @@ class WordRecognition(models.Model):
     ret = models.IntegerField(_('ret'), null=True, blank=True)
     msg = models.TextField(max_length=255, default='')
     data = models.TextField(max_length=2048, default='')
+
 class WordRecognitionInspection(models.Model):
     text = models.FileField(upload_to=text_and_rename, max_length=1530, null=True, blank=True)
+    text_url = models.URLField(_('text_url'), null=True, blank=True)
     ret = models.IntegerField(_('ret'), null=True, blank=True)
     msg = models.TextField(max_length=255, default='')
     data = models.TextField(max_length=2048, default='')    
 
 class OcrGeneral(models.Model):
     image = models.ImageField(upload_to=path_and_rename, max_length=255, null=True, blank=True)
+    image_url = models.URLField(_('image_url'), null=True, blank=True)
     ret = models.IntegerField(_('ret'), null=True, blank=True)
     msg = models.TextField(max_length=255, default='')
     data = models.TextField(max_length=255,default='')
 
 class OcrIDCard(models.Model):
     image = models.ImageField(upload_to=path_and_rename, max_length=255, null=True, blank=True)
-    #result = models.TextField(max_length=255,default='')
+    image_url = models.URLField(_('image_url'), null=True, blank=True)
     ret = models.IntegerField(_('ret'), null=True, blank=True)
     msg = models.TextField(max_length=255, default='')
     data = models.TextField(max_length=2048, default='')
@@ -109,6 +113,7 @@ class OcrIDCard(models.Model):
 class VideoFileUpload(models.Model):
     # datafile = models.ImageField(upload_to='photos')
     video = models.FileField(upload_to=video_and_rename, max_length=255, null=True, blank=True)
+    video_url = models.URLField(_('video_url'), null=True, blank=True)
     ret = models.IntegerField(_('ret'), null=True, blank=True)
     msg = models.TextField(max_length=255, default='')
     data = models.TextField(max_length=2048, default='')
@@ -116,7 +121,7 @@ class VideoFileUpload(models.Model):
 class AudioFileUpload(models.Model):
     # datafile = models.ImageField(upload_to='photos')
     speech = models.FileField(upload_to=audiopath_and_rename, max_length=255, null=True, blank=True)
-    #result = models.TextField(max_length=256,default='')
+    speech_url = models.URLField(_('speech_url'), null=True, blank=True)
     ret = models.IntegerField(_('ret'), null=True, blank=True)
     msg = models.TextField(max_length=255, default='')
     data = models.TextField(max_length=2048, default='')
@@ -124,7 +129,7 @@ class AudioFileUpload(models.Model):
 class AudioFileInspection(models.Model):
     # datafile = models.ImageField(upload_to='photos')
     speech = models.FileField(upload_to=audiopath_and_rename, max_length=255, null=True, blank=True)
-    #result = models.TextField(max_length=256,default='')
+    speech_url = models.URLField(_('speech_url'), null=True, blank=True)
     ret = models.IntegerField(_('ret'), null=True, blank=True)
     msg = models.TextField(max_length=255, default='')
     data = models.TextField(max_length=2048, default='')
@@ -132,7 +137,7 @@ class AudioFileInspection(models.Model):
 class ImageFileUpload(models.Model):
     # datafile = models.ImageField(upload_to='photos')
     image = models.ImageField(upload_to=path_and_rename, max_length=255, null=True, blank=True)
-    #result = models.TextField(max_length=256,default='')
+    image_url = models.URLField(_('image_url'), null=True, blank=True)
     ret = models.IntegerField(_('ret'), null=True, blank=True)
     msg = models.TextField(max_length=255, default='')
     data = models.TextField(max_length=256, default='')

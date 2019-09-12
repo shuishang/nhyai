@@ -29,6 +29,9 @@ import wave
 import contextlib
 import codecs
 import chardet
+from django.core.files import File
+from urllib.request import urlopen
+from tempfile import NamedTemporaryFile
 
 def get_two_float(f_str, n):
     f_str = str(f_str)      # f_str = '{}'.format(f_str) 也可以转换为字符串
@@ -173,6 +176,13 @@ class WordRecognitionInspectionViewSet(viewsets.ModelViewSet):
 
         iserializer = serializer.save()
         
+        # 增加网络URL文件上传
+        if iserializer.text_url and not iserializer.text:
+            txt_temp = NamedTemporaryFile(delete=True)
+            txt_temp.write(urlopen(iserializer.text_url).read())
+            txt_temp.flush()
+            iserializer.text.save(os.path.basename(iserializer.text_url), File(txt_temp))
+
         txtfile = iserializer.text.path
         # print(txtfile)
         # 增加gbk编码格式转换
@@ -224,6 +234,14 @@ class OcrGeneralViewSet(viewsets.ModelViewSet):
         ret = 0
         msg = "成功"
         bill_model = "通用OCR"
+
+        # 增加网络URL文件上传
+        if iserializer.image_url and not iserializer.image:
+            img_temp = NamedTemporaryFile(delete=True)
+            img_temp.write(urlopen(iserializer.image_url).read())
+            img_temp.flush()
+            iserializer.image.save(os.path.basename(iserializer.image_url), File(img_temp))
+
         file_path = iserializer.image.path
         # print (file_path)
         check_result = OCR().getWordRecognition(file_path, bill_model)
@@ -248,6 +266,14 @@ class OcrIDCardViewSet(viewsets.ModelViewSet):
         ret = 0
         msg = "成功"
         bill_model = "身份证"
+
+        # 增加网络URL文件上传
+        if iserializer.image_url and not iserializer.image:
+            img_temp = NamedTemporaryFile(delete=True)
+            img_temp.write(urlopen(iserializer.image_url).read())
+            img_temp.flush()
+            iserializer.image.save(os.path.basename(iserializer.image_url), File(img_temp))
+
         file_path = iserializer.image.path
         # print (file_path)
         check_result = OCR().getWordRecognition(file_path, bill_model)
@@ -294,6 +320,14 @@ class FileImageTerrorismUploadViewSet(viewsets.ModelViewSet):
         iserializer = serializer.save()
         ret = 0
         msg = "成功"
+        
+        # 增加网络URL文件上传
+        if iserializer.image_url and not iserializer.image:
+            img_temp = NamedTemporaryFile(delete=True)
+            img_temp.write(urlopen(iserializer.image_url).read())
+            img_temp.flush()
+            iserializer.image.save(os.path.basename(iserializer.image_url), File(img_temp))
+
         file_path = iserializer.image.path
         check_result = settings.VIOLENCE.check_violence(file_path)
         violence = check_result['violence']
@@ -312,6 +346,14 @@ class FileVisionPornUploadViewSet(viewsets.ModelViewSet):
             iserializer = serializer.save()
             ret = 0
             msg = "成功"
+
+            # 增加网络URL文件上传
+            if iserializer.image_url and not iserializer.image:
+                img_temp = NamedTemporaryFile(delete=True)
+                img_temp.write(urlopen(iserializer.image_url).read())
+                img_temp.flush()
+                iserializer.image.save(os.path.basename(iserializer.image_url), File(img_temp))
+
             file_path = iserializer.image.path
             # check_result = vision_porn(file_path)
             scores = settings.NSFW.caffe_preprocess_and_compute_api(file_path)
@@ -328,6 +370,14 @@ class VideoFileUploadViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         iserializer = serializer.save()
+
+        # 增加网络URL文件上传
+        if iserializer.video_url and not iserializer.video:
+            video_temp = NamedTemporaryFile(delete=True)
+            video_temp.write(urlopen(iserializer.video_url).read())
+            video_temp.flush()
+            iserializer.video.save(os.path.basename(iserializer.video_url), File(video_temp))
+
         file_path = iserializer.video.path
         resultMap = check_video(file_path)
         ret = 0
@@ -344,6 +394,14 @@ class AudioFileUploadViewSet(viewsets.ModelViewSet):
         iserializer = serializer.save()
         ret = 0
         msg = "成功"
+
+        # 增加网络URL文件上传
+        if iserializer.speech_url and not iserializer.speech:
+            speech_temp = NamedTemporaryFile(delete=True)
+            speech_temp.write(urlopen(iserializer.speech_url).read())
+            speech_temp.flush()
+            iserializer.image.save(os.path.basename(iserializer.speech_url), File(speech_temp))
+
         file_path = iserializer.speech.path
         size = os.path.getsize(file_path)
         if size <= 44:
@@ -365,6 +423,14 @@ class AudioFileInspectionViewSet(viewsets.ModelViewSet):
         iserializer = serializer.save()
         ret = 0
         msg = "成功"
+
+        # 增加网络URL文件上传
+        if iserializer.speech_url and not iserializer.speech:
+            speech_temp = NamedTemporaryFile(delete=True)
+            speech_temp.write(urlopen(iserializer.speech_url).read())
+            speech_temp.flush()
+            iserializer.image.save(os.path.basename(iserializer.speech_url), File(speech_temp))
+
         file_path = iserializer.speech.path
         duration = 0
         with contextlib.closing(wave.open(file_path,'r')) as f:
@@ -388,6 +454,14 @@ class ImageFileUploadViewSet(viewsets.ModelViewSet):
         iserializer = serializer.save()
         ret = 0
         msg = "成功"
+
+        # 增加网络URL文件上传
+        if iserializer.image_url and not iserializer.image:
+            img_temp = NamedTemporaryFile(delete=True)
+            img_temp.write(urlopen(iserializer.image_url).read())
+            img_temp.flush()
+            iserializer.image.save(os.path.basename(iserializer.image_url), File(img_temp))
+
         file_path = iserializer.image.path
         scores = settings.NSFW.caffe_preprocess_and_compute_api(file_path)
         resultMap = {}
