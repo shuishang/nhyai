@@ -32,6 +32,8 @@ import chardet
 from django.core.files import File
 from urllib.request import urlopen
 from tempfile import NamedTemporaryFile
+from pydub import AudioSegment
+import filetype
 
 def get_two_float(f_str, n):
     f_str = str(f_str)      # f_str = '{}'.format(f_str) 也可以转换为字符串
@@ -400,7 +402,7 @@ class AudioFileUploadViewSet(viewsets.ModelViewSet):
             speech_temp = NamedTemporaryFile(delete=True)
             speech_temp.write(urlopen(iserializer.speech_url).read())
             speech_temp.flush()
-            iserializer.image.save(os.path.basename(iserializer.speech_url), File(speech_temp))
+            iserializer.speech.save(os.path.basename(iserializer.speech_url), File(speech_temp))
 
         file_path = iserializer.speech.path
         size = os.path.getsize(file_path)
@@ -429,21 +431,44 @@ class AudioFileInspectionViewSet(viewsets.ModelViewSet):
             speech_temp = NamedTemporaryFile(delete=True)
             speech_temp.write(urlopen(iserializer.speech_url).read())
             speech_temp.flush()
-            iserializer.image.save(os.path.basename(iserializer.speech_url), File(speech_temp))
-
-        file_path = iserializer.speech.path
-        duration = 0
-        with contextlib.closing(wave.open(file_path,'r')) as f:
-            frames = f.getnframes()
-            rate = f.getframerate()
-            duration = frames / float(rate)
-        audio_content = audio().getOneAudioContent(file_path)
-        check_result = sensitiveClass().check_sensitiveWords(audio_content)
-        resultMap = {}
-        resultMap["speech_time"]=duration
-        resultMap["speech_contents"]=check_result
-        serializer.save(data=resultMap,ret=ret,msg=msg,speech=iserializer.speech)
-        return Response(status=status.HTTP_201_CREATED)
+            iserializer.speech.save(os.path.basename(iserializer.speech_url), File(speech_temp))
+        
+        # 转换mp3-wav
+        kind = filetype.guess(iserializer.speech.path)
+        if kind is None:
+            print('Cannot guess file type!')
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        
+        print(kind.extension)
+        file_path = ''
+        if kind.extension == 'mp3':
+            sound = AudioSegment.from_mp3(iserializer.speech.path)
+            destin_path = iserializer.speech.path.split(".mp3")[0] + '.wav'
+            sound.export(destin_path,format ='wav')
+            file_path = destin_path
+        elif kind.extension == 'ogg':
+            sound = AudioSegment.from_ogg(iserializer.speech.path)
+            destin_path = iserializer.speech.path.split(".ogg")[0] + '.wav'
+            sound.export(destin_path,format ='wav')
+            file_path = destin_path
+        else:
+            file_path = iserializer.speech.path
+        
+        if len(file_path) > 0:
+            duration = 0
+            with contextlib.closing(wave.open(file_path,'r')) as f:
+                frames = f.getnframes()
+                rate = f.getframerate()
+                duration = frames / float(rate)
+            audio_content = audio().getOneAudioContent(file_path)
+            check_result = sensitiveClass().check_sensitiveWords(audio_content)
+            resultMap = {}
+            resultMap["speech_time"]=duration
+            resultMap["speech_contents"]=check_result
+            serializer.save(data=resultMap,ret=ret,msg=msg,speech=iserializer.speech)
+            return Response(status=status.HTTP_201_CREATED)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
 class ImageFileUploadViewSet(viewsets.ModelViewSet):
     queryset = ImageFileUpload.objects.all()

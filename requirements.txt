@@ -6,3 +6,5 @@ numpy==1.16.2
 pandas==0.24.2
 tqdm==4.31.1
 scikit-image==0.15.0
+filetype==1.0.5
+pydub==0.23.1
