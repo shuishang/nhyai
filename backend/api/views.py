@@ -34,6 +34,11 @@ from urllib.request import urlopen
 from tempfile import NamedTemporaryFile
 from pydub import AudioSegment
 import filetype
+import docx
+from .filetype import FileType
+import win32com.client as wc
+import pythoncom
+from .pdfreader import PdfReader
 
 def get_two_float(f_str, n):
     f_str = str(f_str)      # f_str = '{}'.format(f_str) 也可以转换为字符串
@@ -185,44 +190,74 @@ class WordRecognitionInspectionViewSet(viewsets.ModelViewSet):
             txt_temp.flush()
             iserializer.text.save(os.path.basename(iserializer.text_url), File(txt_temp))
 
-        txtfile = iserializer.text.path
-        # print(txtfile)
-        # 增加gbk编码格式转换
-        f_test = open(txtfile, 'rb')
-        file_type = chardet.detect(f_test.read(100))
-
-        if (file_type['encoding'] == 'GB2312'):
-            f = codecs.open(txtfile, 'r', encoding='gbk', errors='ignore')
-        elif (file_type['encoding'] == 'UTF-8-SIG'):
-            f = codecs.open(txtfile, 'r', encoding='utf-8', errors='ignore')
-        elif (file_type['encoding'] == 'ascii'):
-            f = codecs.open(txtfile, 'r', encoding='gbk', errors='ignore')
-        else:
-            f = codecs.open(txtfile, 'r', errors='ignore')
-
+        # word格式文件读取
+        filetype = FileType().filescanner(iserializer.text.path)
+        if filetype is None:
+            print('Cannot guess file type!')
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        
         text_content = ""
         sensitive_map = {}
-        sensitive_list = []
-        try:
-            for line in f:
-                text_content += line
-        except Exception as e:
-            print ("The content get some error: " + line)
-            print (e)
-            msg = "内容获取异常"
-            ret = 1
-        else:
-            print ("Read content successfully!")
+        if filetype == 'zip':
+            doc = docx.Document(iserializer.text.path)
+            docText = '\n'.join([paragraph.text for paragraph in doc.paragraphs])
             msg = "匹配记录"
             ret = 0
-        
+            text_content = docText
+        elif filetype == 'wps':
+            pythoncom.CoInitialize()
+            word = wc.Dispatch("Word.Application")
+            doc = word.Documents.Open(iserializer.text.path)
+            docx_path = iserializer.text.path.split(".doc")[0] + '.docx'
+            doc.SaveAs(docx_path, 12)
+            doc.Close
+            word.Quit
+            doc = docx.Document(docx_path)
+            docText = '\n'.join([paragraph.text for paragraph in doc.paragraphs])
+            msg = "匹配记录"
+            ret = 0
+            text_content = docText
+        elif filetype == 'pdf':
+            pdfText = PdfReader().parse(iserializer.text.path)
+            msg = "匹配记录"
+            ret = 0
+            text_content = pdfText
+        else:
+            txtfile = iserializer.text.path
+            # print(txtfile)
+            # 增加gbk编码格式转换
+            f_test = open(txtfile, 'rb')
+            file_type = chardet.detect(f_test.read(100))
+
+            if (file_type['encoding'] == 'GB2312'):
+                f = codecs.open(txtfile, 'r', encoding='gbk', errors='ignore')
+            elif (file_type['encoding'] == 'UTF-8-SIG'):
+                f = codecs.open(txtfile, 'r', encoding='utf-8', errors='ignore')
+            elif (file_type['encoding'] == 'ascii'):
+                f = codecs.open(txtfile, 'r', encoding='gbk', errors='ignore')
+            else:
+                f = codecs.open(txtfile, 'r', errors='ignore')
+            
+            try:
+                for line in f:
+                    text_content += line
+            except Exception as e:
+                print ("The content get some error: " + line)
+                print (e)
+                msg = "内容获取异常"
+                ret = 1
+            else:
+                print ("Read content successfully!")
+                msg = "匹配记录"
+                ret = 0
+            
         result = sensitiveClass().check_sensitiveWords(text_content)
         sensitive_map["text_content"] = text_content
         sensitive_map["sensitive_info"] = result
         data = sensitive_map
         serializer.save(ret=ret,msg=msg,data=result,text=iserializer.text)
 
-        return Response(status=status.HTTP_201_CREATED)        
+        return Response(status=status.HTTP_201_CREATED)
 
 class OcrGeneralViewSet(viewsets.ModelViewSet):
 
