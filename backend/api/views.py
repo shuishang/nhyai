@@ -36,15 +36,36 @@ from pydub import AudioSegment
 import filetype
 import docx
 from .filetype import FileType
-import win32com.client as wc
-import pythoncom
+import platform
+if(platform.system() =="Windows"):
+    import win32com.client as wc
+    import pythoncom
 from .pdfreader import PdfReader
+import subprocess
 
 def get_two_float(f_str, n):
     f_str = str(f_str)      # f_str = '{}'.format(f_str) 也可以转换为字符串
     a, b, c = f_str.partition('.')
     c = (c+"0"*n)[:n]       # 如论传入的函数有几位小数，在字符串后面都添加n为小数0
     return ".".join([a, c])
+
+def RunShellWithReturnCode(command):
+        p = subprocess.Popen(command,stdout=subprocess.PIPE,stderr=subprocess.PIPE,shell=True)
+        p.wait()
+        output = ""
+        error = ""
+        while True:
+            line = p.stdout.read()
+            if not line:
+                break
+            output += line.decode("utf-8")
+        
+        while True:
+            err = p.stderr.read()
+            if not err:
+                break
+            error += err.decode("utf-8")
+        return output,error
 
 class UserViewSet(viewsets.ModelViewSet):
     """
@@ -205,18 +226,30 @@ class WordRecognitionInspectionViewSet(viewsets.ModelViewSet):
             ret = 0
             text_content = docText
         elif filetype == 'wps':
-            pythoncom.CoInitialize()
-            word = wc.Dispatch("Word.Application")
-            doc = word.Documents.Open(iserializer.text.path)
-            docx_path = iserializer.text.path.split(".doc")[0] + '.docx'
-            doc.SaveAs(docx_path, 12)
-            doc.Close
-            word.Quit
-            doc = docx.Document(docx_path)
-            docText = '\n'.join([paragraph.text for paragraph in doc.paragraphs])
-            msg = "匹配记录"
-            ret = 0
-            text_content = docText
+            # 仅支持windows
+            if(platform.system() =="Windows"):
+                pythoncom.CoInitialize()
+                word = wc.Dispatch("Word.Application")
+                doc = word.Documents.Open(iserializer.text.path)
+                docx_path = iserializer.text.path.split(".doc")[0] + '.docx'
+                doc.SaveAs(docx_path, 12)
+                doc.Close
+                word.Quit
+                doc = docx.Document(docx_path)
+                docText = '\n'.join([paragraph.text for paragraph in doc.paragraphs])
+                msg = "匹配记录"
+                ret = 0
+                text_content = docText
+            else:
+                # 仅支持ubuntu
+                cmd = 'antiword -m UTF-8 ' + iserializer.text.path
+                docText,errText = RunShellWithReturnCode(cmd)
+                msg = "匹配记录"
+                ret = 0
+                if len(errText) > 0:
+                    text_content = 'doc文档内容过短，请重新上传'
+                else:
+                    text_content = docText
         elif filetype == 'pdf':
             pdfText = PdfReader().parse(iserializer.text.path)
             msg = "匹配记录"
