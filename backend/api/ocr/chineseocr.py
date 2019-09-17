@@ -92,6 +92,20 @@ class OCR:
                 res = res.res
                 res =[ {'text':res[key],'name':key,'box':{}} for key in res]
 
+            elif billModel=='手写体':
+                result = union_rbox(result,0.2)
+                res = [{'text':x['text'],
+                        'name':str(i),
+                        'box':{'cx':x['cx'],
+                               'cy':x['cy'],
+                               'w':x['w'],
+                               'h':x['h'],
+                               'angle':x['degree']
+
+                              }
+                       } for i,x in enumerate(result)]
+                res = adjust_box_to_origin(img,angle, res)##修正box
+
             elif billModel=='车牌':
                 res = vehicleplate.vehicleplate(result)
                 res = res.res

@@ -165,6 +165,13 @@ class OcrBankcard(models.Model):
     msg = models.TextField(max_length=255, default='')
     data = models.TextField(max_length=2048, default='')
 
+class OcrHandWritten(models.Model):
+    image = models.ImageField(upload_to=path_and_rename, max_length=255, null=True, blank=True)
+    image_url = models.URLField(_('image_url'), null=True, blank=True)
+    ret = models.IntegerField(_('ret'), null=True, blank=True)
+    msg = models.TextField(max_length=255, default='')
+    data = models.TextField(max_length=2048, default='')
+
 class OcrVehicleplate(models.Model):
     image = models.ImageField(upload_to=path_and_rename, max_length=255, null=True, blank=True)
     image_url = models.URLField(_('image_url'), null=True, blank=True)

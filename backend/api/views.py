@@ -1,13 +1,15 @@
+import subprocess
+from .pdfreader import PdfReader
 from django.contrib.auth.models import User, Group
-from rest_framework import viewsets,views
+from rest_framework import viewsets, views
 from api.serializers import UserSerializer, GroupSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.exceptions import ParseError
 # uload package
-from rest_framework.parsers import MultiPartParser,FormParser
-from .serializers import FileUploadSerializer,WordRecognitionSerializer,FileImageTerrorismUploadSerializer, FileVisionPornUploadSerializer,AudioFileUploadSerializer
-from .models import FileUpload,WordRecognition,FileImageTerrorismUpload, FileVisionPornUpload
+from rest_framework.parsers import MultiPartParser, FormParser
+from .serializers import FileUploadSerializer, WordRecognitionSerializer, FileImageTerrorismUploadSerializer, FileVisionPornUploadSerializer, AudioFileUploadSerializer
+from .models import FileUpload, WordRecognition, FileImageTerrorismUpload, FileVisionPornUpload
 # Handle Image
 from PIL import Image
 from io import BytesIO
@@ -17,8 +19,8 @@ from .ocr.chineseocr import OCR
 from violentsurveillance.image_terrorism import image_terrorism
 from violentsurveillance.vision_porn import vision_porn
 from django.conf import settings
-from .serializers import VideoFileUploadSerializer,OcrGeneralSerializer,OcrIDCardSerializer,AudioFileInspectionSerializer,ImageFileUploadSerializer,WordRecognitionInspectionSerializer,OcrDrivinglicenseSerializer,OcrVehiclelicenseSerializer,OcrBankcardSerializer,OcrVehicleplateSerializer
-from .models import VideoFileUpload,AudioFileUpload,OcrGeneral,OcrIDCard,AudioFileInspection,ImageFileUpload,WordRecognitionInspection,OcrDrivinglicense,OcrVehiclelicense,OcrBankcard,OcrVehicleplate
+from .serializers import VideoFileUploadSerializer, OcrGeneralSerializer, OcrIDCardSerializer, AudioFileInspectionSerializer, ImageFileUploadSerializer, WordRecognitionInspectionSerializer, OcrDrivinglicenseSerializer, OcrVehiclelicenseSerializer, OcrBankcardSerializer, OcrHandWrittenSerializer, OcrVehicleplateSerializer
+from .models import VideoFileUpload, AudioFileUpload, OcrGeneral, OcrIDCard, AudioFileInspection, ImageFileUpload, WordRecognitionInspection, OcrDrivinglicense, OcrVehiclelicense, OcrBankcard, OcrHandWritten, OcrVehicleplate
 import os
 import shutil
 import uuid
@@ -37,11 +39,12 @@ import filetype
 import docx
 from .filetype import FileType
 import platform
-if(platform.system() =="Windows"):
+if(platform.system() == "Windows"):
     import win32com.client as wc
     import pythoncom
 from .pdfreader import PdfReader
 import subprocess
+
 
 def get_two_float(f_str, n):
     f_str = str(f_str)      # f_str = '{}'.format(f_str) 也可以转换为字符串
@@ -49,23 +52,26 @@ def get_two_float(f_str, n):
     c = (c+"0"*n)[:n]       # 如论传入的函数有几位小数，在字符串后面都添加n为小数0
     return ".".join([a, c])
 
+
 def RunShellWithReturnCode(command):
-        p = subprocess.Popen(command,stdout=subprocess.PIPE,stderr=subprocess.PIPE,shell=True)
-        p.wait()
-        output = ""
-        error = ""
-        while True:
-            line = p.stdout.read()
-            if not line:
-                break
-            output += line.decode("utf-8")
-        
-        while True:
-            err = p.stderr.read()
-            if not err:
-                break
-            error += err.decode("utf-8")
-        return output,error
+    p = subprocess.Popen(command, stdout=subprocess.PIPE,
+                         stderr=subprocess.PIPE, shell=True)
+    p.wait()
+    output = ""
+    error = ""
+    while True:
+        line = p.stdout.read()
+        if not line:
+            break
+        output += line.decode("utf-8")
+
+    while True:
+        err = p.stderr.read()
+        if not err:
+            break
+        error += err.decode("utf-8")
+    return output, error
+
 
 class UserViewSet(viewsets.ModelViewSet):
     """
@@ -84,13 +90,13 @@ class GroupViewSet(viewsets.ModelViewSet):
 
 
 class FileUploadViewSet(viewsets.ModelViewSet):
-    
+
     queryset = FileUpload.objects.all()
     serializer_class = FileUploadSerializer
     parser_classes = (MultiPartParser, FormParser,)
 
     def perform_create(self, serializer):
-        
+
         iserializer = serializer.save()
         # file_obj = self.request.data.get('datafile')
         # print (file_obj)
@@ -111,10 +117,10 @@ class FileUploadViewSet(viewsets.ModelViewSet):
         # print (check_result)
 
         result = {
-                "ret": 0,
-                "msg": "ok",
-                "data": {
-                    "tag_list": [
+            "ret": 0,
+            "msg": "ok",
+            "data": {
+                "tag_list": [
                     {
                         "tag_name": "protest",
                         "probability": check_result['protest']
@@ -163,11 +169,12 @@ class FileUploadViewSet(viewsets.ModelViewSet):
                         "tag_name": "shouting",
                         "probability": check_result['shouting']
                     }]
-                }
             }
+        }
         serializer.save(result=result)
 
         return Response(status=status.HTTP_201_CREATED)
+
 
 class WordRecognitionViewSet(viewsets.ModelViewSet):
 
@@ -178,7 +185,7 @@ class WordRecognitionViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
 
         iserializer = serializer.save()
-        
+
         text = iserializer.text
         sensitive_list = sensitiveClass().check_sensitiveWords(text)
 
@@ -190,9 +197,10 @@ class WordRecognitionViewSet(viewsets.ModelViewSet):
             msg = "匹配到记录"
 
         data = sensitive_list
-        serializer.save(ret=ret,msg=msg,data=data,text=iserializer.text)
+        serializer.save(ret=ret, msg=msg, data=data, text=iserializer.text)
 
         return Response(status=status.HTTP_201_CREATED)
+
 
 class WordRecognitionInspectionViewSet(viewsets.ModelViewSet):
 
@@ -203,31 +211,33 @@ class WordRecognitionInspectionViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
 
         iserializer = serializer.save()
-        
+
         # 增加网络URL文件上传
         if iserializer.text_url and not iserializer.text:
             txt_temp = NamedTemporaryFile(delete=True)
             txt_temp.write(urlopen(iserializer.text_url).read())
             txt_temp.flush()
-            iserializer.text.save(os.path.basename(iserializer.text_url), File(txt_temp))
+            iserializer.text.save(os.path.basename(
+                iserializer.text_url), File(txt_temp))
 
         # word格式文件读取
         filetype = FileType().filescanner(iserializer.text.path)
         if filetype is None:
             print('Cannot guess file type!')
             return Response(status=status.HTTP_400_BAD_REQUEST)
-        
+
         text_content = ""
         sensitive_map = {}
         if filetype == 'zip':
             doc = docx.Document(iserializer.text.path)
-            docText = '\n'.join([paragraph.text for paragraph in doc.paragraphs])
+            docText = '\n'.join(
+                [paragraph.text for paragraph in doc.paragraphs])
             msg = "匹配记录"
             ret = 0
             text_content = docText
         elif filetype == 'wps':
             # 仅支持windows
-            if(platform.system() =="Windows"):
+            if(platform.system() == "Windows"):
                 pythoncom.CoInitialize()
                 word = wc.Dispatch("Word.Application")
                 doc = word.Documents.Open(iserializer.text.path)
@@ -236,14 +246,15 @@ class WordRecognitionInspectionViewSet(viewsets.ModelViewSet):
                 doc.Close
                 word.Quit
                 doc = docx.Document(docx_path)
-                docText = '\n'.join([paragraph.text for paragraph in doc.paragraphs])
+                docText = '\n'.join(
+                    [paragraph.text for paragraph in doc.paragraphs])
                 msg = "匹配记录"
                 ret = 0
                 text_content = docText
             else:
                 # 仅支持ubuntu
                 cmd = 'antiword -m UTF-8 ' + iserializer.text.path
-                docText,errText = RunShellWithReturnCode(cmd)
+                docText, errText = RunShellWithReturnCode(cmd)
                 msg = "匹配记录"
                 ret = 0
                 if len(errText) > 0:
@@ -265,32 +276,34 @@ class WordRecognitionInspectionViewSet(viewsets.ModelViewSet):
             if (file_type['encoding'] == 'GB2312'):
                 f = codecs.open(txtfile, 'r', encoding='gbk', errors='ignore')
             elif (file_type['encoding'] == 'UTF-8-SIG'):
-                f = codecs.open(txtfile, 'r', encoding='utf-8', errors='ignore')
+                f = codecs.open(txtfile, 'r', encoding='utf-8',
+                                errors='ignore')
             elif (file_type['encoding'] == 'ascii'):
                 f = codecs.open(txtfile, 'r', encoding='gbk', errors='ignore')
             else:
                 f = codecs.open(txtfile, 'r', errors='ignore')
-            
+
             try:
                 for line in f:
                     text_content += line
             except Exception as e:
-                print ("The content get some error: " + line)
-                print (e)
+                print("The content get some error: " + line)
+                print(e)
                 msg = "内容获取异常"
                 ret = 1
             else:
-                print ("Read content successfully!")
+                print("Read content successfully!")
                 msg = "匹配记录"
                 ret = 0
-            
+
         result = sensitiveClass().check_sensitiveWords(text_content)
         sensitive_map["text_content"] = text_content
         sensitive_map["sensitive_info"] = result
         data = sensitive_map
-        serializer.save(ret=ret,msg=msg,data=result,text=iserializer.text)
+        serializer.save(ret=ret, msg=msg, data=result, text=iserializer.text)
 
         return Response(status=status.HTTP_201_CREATED)
+
 
 class OcrGeneralViewSet(viewsets.ModelViewSet):
 
@@ -310,7 +323,8 @@ class OcrGeneralViewSet(viewsets.ModelViewSet):
             img_temp = NamedTemporaryFile(delete=True)
             img_temp.write(urlopen(iserializer.image_url).read())
             img_temp.flush()
-            iserializer.image.save(os.path.basename(iserializer.image_url), File(img_temp))
+            iserializer.image.save(os.path.basename(
+                iserializer.image_url), File(img_temp))
 
         file_path = iserializer.image.path
         # print (file_path)
@@ -320,9 +334,11 @@ class OcrGeneralViewSet(viewsets.ModelViewSet):
         for each in arr:
             dataArr.append(each["text"])
         #result = check_result
-        serializer.save(data=dataArr,ret=ret,msg=msg,image=iserializer.image)
+        serializer.save(data=dataArr, ret=ret, msg=msg,
+                        image=iserializer.image)
 
         return Response(status=status.HTTP_201_CREATED)
+
 
 class OcrIDCardViewSet(viewsets.ModelViewSet):
 
@@ -342,44 +358,45 @@ class OcrIDCardViewSet(viewsets.ModelViewSet):
             img_temp = NamedTemporaryFile(delete=True)
             img_temp.write(urlopen(iserializer.image_url).read())
             img_temp.flush()
-            iserializer.image.save(os.path.basename(iserializer.image_url), File(img_temp))
+            iserializer.image.save(os.path.basename(
+                iserializer.image_url), File(img_temp))
 
         file_path = iserializer.image.path
         # print (file_path)
         check_result = OCR().getWordRecognition(file_path, bill_model)
         arr = check_result['res']
-        dataMap= {}
+        dataMap = {}
         count = 0
         for each in arr:
             name = ""
-            if(each['name']=='姓名'):
+            if(each['name'] == '姓名'):
                 name = "name"
                 count = count + 1
-            if(each['name']=='性别'):
+            if(each['name'] == '性别'):
                 name = "sex"
                 count = count + 1
-            if(each['name']=='民族'):
+            if(each['name'] == '民族'):
                 name = "nation"
                 count = count + 1
-            if(each['name']=='出生年月'):
+            if(each['name'] == '出生年月'):
                 name = "birth"
                 count = count + 1
-            if(each['name']=='身份证号码'):
+            if(each['name'] == '身份证号码'):
                 name = "id"
                 count = count + 1
-            if(each['name']=='身份证地址'):
+            if(each['name'] == '身份证地址'):
                 name = "address"
                 count = count + 1
             dataMap[name] = each['text']
             #dataMap[each['name']] = each['text']
         #result = check_result
-        if (len(arr) == 0 or count<3):
+        if (len(arr) == 0 or count < 3):
             ret = 1
             msg = "请上传身份证图片"
-        serializer.save(data=dataMap,ret=ret,msg=msg,image=iserializer.image)
+        serializer.save(data=dataMap, ret=ret, msg=msg,
+                        image=iserializer.image)
 
         return Response(status=status.HTTP_201_CREATED)
-
 
 
 class FileImageTerrorismUploadViewSet(viewsets.ModelViewSet):
@@ -391,48 +408,53 @@ class FileImageTerrorismUploadViewSet(viewsets.ModelViewSet):
         iserializer = serializer.save()
         ret = 0
         msg = "成功"
-        
+
         # 增加网络URL文件上传
         if iserializer.image_url and not iserializer.image:
             img_temp = NamedTemporaryFile(delete=True)
             img_temp.write(urlopen(iserializer.image_url).read())
             img_temp.flush()
-            iserializer.image.save(os.path.basename(iserializer.image_url), File(img_temp))
+            iserializer.image.save(os.path.basename(
+                iserializer.image_url), File(img_temp))
 
         file_path = iserializer.image.path
         check_result = settings.VIOLENCE.check_violence(file_path)
         violence = check_result['violence']
         resultMap = {}
-        resultMap['violence'] = get_two_float(float(violence) * 100,2)
-        serializer.save(data=resultMap,ret=ret,msg=msg,image=iserializer.image)
+        resultMap['violence'] = get_two_float(float(violence) * 100, 2)
+        serializer.save(data=resultMap, ret=ret,
+                        msg=msg, image=iserializer.image)
         return Response(status=status.HTTP_201_CREATED)
 
 
 class FileVisionPornUploadViewSet(viewsets.ModelViewSet):
-        queryset = FileVisionPornUpload.objects.all()
-        serializer_class = FileVisionPornUploadSerializer
-        parser_classes = (MultiPartParser, FormParser,)
-        
-        def perform_create(self, serializer):
-            iserializer = serializer.save()
-            ret = 0
-            msg = "成功"
+    queryset = FileVisionPornUpload.objects.all()
+    serializer_class = FileVisionPornUploadSerializer
+    parser_classes = (MultiPartParser, FormParser,)
 
-            # 增加网络URL文件上传
-            if iserializer.image_url and not iserializer.image:
-                img_temp = NamedTemporaryFile(delete=True)
-                img_temp.write(urlopen(iserializer.image_url).read())
-                img_temp.flush()
-                iserializer.image.save(os.path.basename(iserializer.image_url), File(img_temp))
+    def perform_create(self, serializer):
+        iserializer = serializer.save()
+        ret = 0
+        msg = "成功"
 
-            file_path = iserializer.image.path
-            # check_result = vision_porn(file_path)
-            scores = settings.NSFW.caffe_preprocess_and_compute_api(file_path)
-            resultMap = {}
-            resultMap['normal_hot_porn'] = get_two_float(float(scores[1]) * 100,2)
-            # print (check_result)
-            serializer.save(data=resultMap,ret=ret,msg=msg,image=iserializer.image)
-            return Response(status=status.HTTP_201_CREATED)
+        # 增加网络URL文件上传
+        if iserializer.image_url and not iserializer.image:
+            img_temp = NamedTemporaryFile(delete=True)
+            img_temp.write(urlopen(iserializer.image_url).read())
+            img_temp.flush()
+            iserializer.image.save(os.path.basename(
+                iserializer.image_url), File(img_temp))
+
+        file_path = iserializer.image.path
+        # check_result = vision_porn(file_path)
+        scores = settings.NSFW.caffe_preprocess_and_compute_api(file_path)
+        resultMap = {}
+        resultMap['normal_hot_porn'] = get_two_float(float(scores[1]) * 100, 2)
+        # print (check_result)
+        serializer.save(data=resultMap, ret=ret,
+                        msg=msg, image=iserializer.image)
+        return Response(status=status.HTTP_201_CREATED)
+
 
 class VideoFileUploadViewSet(viewsets.ModelViewSet):
     queryset = VideoFileUpload.objects.all()
@@ -447,14 +469,17 @@ class VideoFileUploadViewSet(viewsets.ModelViewSet):
             video_temp = NamedTemporaryFile(delete=True)
             video_temp.write(urlopen(iserializer.video_url).read())
             video_temp.flush()
-            iserializer.video.save(os.path.basename(iserializer.video_url), File(video_temp))
+            iserializer.video.save(os.path.basename(
+                iserializer.video_url), File(video_temp))
 
         file_path = iserializer.video.path
         resultMap = check_video(file_path)
         ret = 0
         msg = "成功"
-        serializer.save(data=resultMap,ret=ret,msg=msg,video=iserializer.video)
+        serializer.save(data=resultMap, ret=ret,
+                        msg=msg, video=iserializer.video)
         return Response(status=status.HTTP_201_CREATED)
+
 
 class AudioFileUploadViewSet(viewsets.ModelViewSet):
     queryset = AudioFileUpload.objects.all()
@@ -471,7 +496,8 @@ class AudioFileUploadViewSet(viewsets.ModelViewSet):
             speech_temp = NamedTemporaryFile(delete=True)
             speech_temp.write(urlopen(iserializer.speech_url).read())
             speech_temp.flush()
-            iserializer.speech.save(os.path.basename(iserializer.speech_url), File(speech_temp))
+            iserializer.speech.save(os.path.basename(
+                iserializer.speech_url), File(speech_temp))
 
         file_path = iserializer.speech.path
         size = os.path.getsize(file_path)
@@ -480,10 +506,12 @@ class AudioFileUploadViewSet(viewsets.ModelViewSet):
         else:
             check_result = audio().getOneAudioContent(file_path)
         # print (check_result)
-        resultMap ={}
+        resultMap = {}
         resultMap['text'] = check_result
-        serializer.save(data=resultMap,ret=ret,msg=msg,speech=iserializer.speech)
+        serializer.save(data=resultMap, ret=ret, msg=msg,
+                        speech=iserializer.speech)
         return Response(status=status.HTTP_201_CREATED)
+
 
 class AudioFileInspectionViewSet(viewsets.ModelViewSet):
     queryset = AudioFileInspection.objects.all()
@@ -500,50 +528,53 @@ class AudioFileInspectionViewSet(viewsets.ModelViewSet):
             speech_temp = NamedTemporaryFile(delete=True)
             speech_temp.write(urlopen(iserializer.speech_url).read())
             speech_temp.flush()
-            iserializer.speech.save(os.path.basename(iserializer.speech_url), File(speech_temp))
-        
+            iserializer.speech.save(os.path.basename(
+                iserializer.speech_url), File(speech_temp))
+
         # 转换mp3-wav
         kind = filetype.guess(iserializer.speech.path)
         if kind is None:
             print('Cannot guess file type!')
             return Response(status=status.HTTP_400_BAD_REQUEST)
-        
+
         print(kind.extension)
         file_path = ''
         if kind.extension == 'mp3':
             sound = AudioSegment.from_mp3(iserializer.speech.path)
             destin_path = iserializer.speech.path.split(".mp3")[0] + '.wav'
-            sound.export(destin_path,format ='wav')
+            sound.export(destin_path, format='wav')
             file_path = destin_path
         elif kind.extension == 'ogg':
             sound = AudioSegment.from_ogg(iserializer.speech.path)
             destin_path = iserializer.speech.path.split(".ogg")[0] + '.wav'
-            sound.export(destin_path,format ='wav')
+            sound.export(destin_path, format='wav')
             file_path = destin_path
         else:
             file_path = iserializer.speech.path
-        
+
         if len(file_path) > 0:
             duration = 0
-            with contextlib.closing(wave.open(file_path,'r')) as f:
+            with contextlib.closing(wave.open(file_path, 'r')) as f:
                 frames = f.getnframes()
                 rate = f.getframerate()
                 duration = frames / float(rate)
             audio_content = audio().getOneAudioContent(file_path)
             check_result = sensitiveClass().check_sensitiveWords(audio_content)
             resultMap = {}
-            resultMap["speech_time"]=duration
-            resultMap["speech_contents"]=check_result
-            serializer.save(data=resultMap,ret=ret,msg=msg,speech=iserializer.speech)
+            resultMap["speech_time"] = duration
+            resultMap["speech_contents"] = check_result
+            serializer.save(data=resultMap, ret=ret, msg=msg,
+                            speech=iserializer.speech)
             return Response(status=status.HTTP_201_CREATED)
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST)
+
 
 class ImageFileUploadViewSet(viewsets.ModelViewSet):
     queryset = ImageFileUpload.objects.all()
     serializer_class = ImageFileUploadSerializer
     parser_classes = (MultiPartParser, FormParser,)
-    
+
     def perform_create(self, serializer):
         iserializer = serializer.save()
         ret = 0
@@ -554,7 +585,8 @@ class ImageFileUploadViewSet(viewsets.ModelViewSet):
             img_temp = NamedTemporaryFile(delete=True)
             img_temp.write(urlopen(iserializer.image_url).read())
             img_temp.flush()
-            iserializer.image.save(os.path.basename(iserializer.image_url), File(img_temp))
+            iserializer.image.save(os.path.basename(
+                iserializer.image_url), File(img_temp))
 
         file_path = iserializer.image.path
         scores = settings.NSFW.caffe_preprocess_and_compute_api(file_path)
@@ -562,33 +594,34 @@ class ImageFileUploadViewSet(viewsets.ModelViewSet):
         porn_sensitivity_level = "0"
         if (float(scores[1]) < 0.5):
             porn_sensitivity_level = "0"
-        if (float(scores[1]) >= 0.5 and float(scores[1])<=0.9):
+        if (float(scores[1]) >= 0.5 and float(scores[1]) <= 0.9):
             porn_sensitivity_level = "1"
         if (float(scores[1]) > 0.9):
             porn_sensitivity_level = "2"
         resultMap['porn_sensitivity_level'] = porn_sensitivity_level
-        resultMap['porn_percent'] = get_two_float(float(scores[1]) * 100,2)
+        resultMap['porn_percent'] = get_two_float(float(scores[1]) * 100, 2)
 
-        check_result = settings.VIOLENCE.check_violence(file_path)        
+        check_result = settings.VIOLENCE.check_violence(file_path)
         violence = check_result['violence']
         violence_sensitivity_level = "0"
         if (float(violence) < 0.5):
             violence_sensitivity_level = "0"
-        if (float(violence) >= 0.5 and float(violence)<=0.9):
+        if (float(violence) >= 0.5 and float(violence) <= 0.9):
             violence_sensitivity_level = "1"
         if (float(violence) > 0.9):
             violence_sensitivity_level = "2"
         resultMap['violence_sensitivity_level'] = violence_sensitivity_level
-        resultMap['violence_percent'] = get_two_float(float(violence) * 100,2)
+        resultMap['violence_percent'] = get_two_float(float(violence) * 100, 2)
 
         resultMap['politics_sensitivity_level'] = ""
         resultMap['politics_percent'] = ""
         resultMap['public_character_level'] = ""
         resultMap['public_percent'] = ""
-        
-        
-        serializer.save(data=resultMap,ret=ret,msg=msg,image=iserializer.image)
-        return Response(status=status.HTTP_201_CREATED)        
+
+        serializer.save(data=resultMap, ret=ret,
+                        msg=msg, image=iserializer.image)
+        return Response(status=status.HTTP_201_CREATED)
+
 
 class OcrDrivinglicenseViewSet(viewsets.ModelViewSet):
 
@@ -608,53 +641,55 @@ class OcrDrivinglicenseViewSet(viewsets.ModelViewSet):
             img_temp = NamedTemporaryFile(delete=True)
             img_temp.write(urlopen(iserializer.image_url).read())
             img_temp.flush()
-            iserializer.image.save(os.path.basename(iserializer.image_url), File(img_temp))
+            iserializer.image.save(os.path.basename(
+                iserializer.image_url), File(img_temp))
 
         file_path = iserializer.image.path
         # print (file_path)
         check_result = OCR().getWordRecognition(file_path, bill_model)
         arr = check_result['res']
-        dataMap= {}
+        dataMap = {}
         count = 0
         for each in arr:
             name = ""
-            if(each['name']=='中华人民共和国机动车驾驶证'):
+            if(each['name'] == '中华人民共和国机动车驾驶证'):
                 name = "license_type"
                 count = count + 1
-            if(each['name']=='证号'):
+            if(each['name'] == '证号'):
                 name = "license_no"
                 count = count + 1
-            if(each['name']=='姓名'):
+            if(each['name'] == '姓名'):
                 name = "name"
                 count = count + 1
-            if(each['name']=='性别'):
+            if(each['name'] == '性别'):
                 name = "sex"
                 count = count + 1
-            if(each['name']=='国籍'):
+            if(each['name'] == '国籍'):
                 name = "nationality"
                 count = count + 1
-            if(each['name']=='住址'):
+            if(each['name'] == '住址'):
                 name = "address"
                 count = count + 1
-            if(each['name']=='出生日期'):
+            if(each['name'] == '出生日期'):
                 name = "birthday"
                 count = count + 1
-            if(each['name']=='初次领证日期'):
+            if(each['name'] == '初次领证日期'):
                 name = "first_issue"
                 count = count + 1
-            if(each['name']=='准驾车型'):
+            if(each['name'] == '准驾车型'):
                 name = "be_class"
                 count = count + 1
-            if(each['name']=='有效期限'):
+            if(each['name'] == '有效期限'):
                 name = "valid_period"
                 count = count + 1
             dataMap[name] = each['text']
             #dataMap[each['name']] = each['text']
         #result = check_result
-        if (len(arr) == 0 or count<1):
+        if (len(arr) == 0 or count < 1):
             ret = 1
             msg = "请上传驾驶证图片"
-        serializer.save(data=dataMap,ret=ret,msg=msg,image=iserializer.image)
+        serializer.save(data=dataMap, ret=ret, msg=msg,
+                        image=iserializer.image)
 
         return Response(status=status.HTTP_201_CREATED)
 
@@ -677,31 +712,34 @@ class OcrVehiclelicenseViewSet(viewsets.ModelViewSet):
             img_temp = NamedTemporaryFile(delete=True)
             img_temp.write(urlopen(iserializer.image_url).read())
             img_temp.flush()
-            iserializer.image.save(os.path.basename(iserializer.image_url), File(img_temp))
+            iserializer.image.save(os.path.basename(
+                iserializer.image_url), File(img_temp))
 
         file_path = iserializer.image.path
         # print (file_path)
         check_result = OCR().getWordRecognition(file_path, bill_model)
         arr = check_result['res']
-        dataMap= {}
+        dataMap = {}
         count = 0
         for each in arr:
             name = ""
-            if(each['name']=='中华人民共和国机动车行驶证'):
+            if(each['name'] == '中华人民共和国机动车行驶证'):
                 name = "license_type"
                 count = count + 1
-            if(each['name']=='证号'):
+            if(each['name'] == '证号'):
                 name = "license_no"
                 count = count + 1
             dataMap[name] = each['text']
             #dataMap[each['name']] = each['text']
         #result = check_result
-        if (len(arr) == 0 or count<1):
+        if (len(arr) == 0 or count < 1):
             ret = 1
             msg = "请上传行驶证图片"
-        serializer.save(data=dataMap,ret=ret,msg=msg,image=iserializer.image)
+        serializer.save(data=dataMap, ret=ret, msg=msg,
+                        image=iserializer.image)
 
         return Response(status=status.HTTP_201_CREATED)
+
 
 class OcrBankcardViewSet(viewsets.ModelViewSet):
 
@@ -721,28 +759,66 @@ class OcrBankcardViewSet(viewsets.ModelViewSet):
             img_temp = NamedTemporaryFile(delete=True)
             img_temp.write(urlopen(iserializer.image_url).read())
             img_temp.flush()
-            iserializer.image.save(os.path.basename(iserializer.image_url), File(img_temp))
+            iserializer.image.save(os.path.basename(
+                iserializer.image_url), File(img_temp))
 
         file_path = iserializer.image.path
         # print (file_path)
         check_result = OCR().getWordRecognition(file_path, bill_model)
         arr = check_result['res']
-        dataMap= {}
+        dataMap = {}
         count = 0
         for each in arr:
             name = ""
-            if(each['name']=='卡号'):
+            if(each['name'] == '卡号'):
                 name = "card_no"
                 count = count + 1
             dataMap[name] = each['text']
             #dataMap[each['name']] = each['text']
         #result = check_result
-        if (len(arr) == 0 or count<1):
+        if (len(arr) == 0 or count < 1):
             ret = 1
             msg = "请上传银行卡图片"
-        serializer.save(data=dataMap,ret=ret,msg=msg,image=iserializer.image)
+        serializer.save(data=dataMap, ret=ret, msg=msg,
+                        image=iserializer.image)
 
         return Response(status=status.HTTP_201_CREATED)
+
+
+class OcrHandWrittenViewSet(viewsets.ModelViewSet):
+
+    queryset = OcrHandWritten.objects.all()
+    serializer_class = OcrHandWrittenSerializer
+    parser_classes = (MultiPartParser, FormParser,)
+
+    def perform_create(self, serializer):
+
+        iserializer = serializer.save()
+        ret = 0
+        msg = "成功"
+        bill_model = "手写体"
+
+        # 增加网络URL文件上传
+        if iserializer.image_url and not iserializer.image:
+            img_temp = NamedTemporaryFile(delete=True)
+            img_temp.write(urlopen(iserializer.image_url).read())
+            img_temp.flush()
+            iserializer.image.save(os.path.basename(
+                iserializer.image_url), File(img_temp))
+
+        file_path = iserializer.image.path
+        # print (file_path)
+        check_result = OCR().getWordRecognition(file_path, bill_model)
+        arr = check_result['res']
+        dataArr = []
+        for each in arr:
+            dataArr.append(each["text"])
+        #result = check_result
+        serializer.save(data=dataArr, ret=ret, msg=msg,
+                        image=iserializer.image)
+
+        return Response(status=status.HTTP_201_CREATED)
+
 
 class OcrVehicleplateViewSet(viewsets.ModelViewSet):
 
@@ -762,25 +838,27 @@ class OcrVehicleplateViewSet(viewsets.ModelViewSet):
             img_temp = NamedTemporaryFile(delete=True)
             img_temp.write(urlopen(iserializer.image_url).read())
             img_temp.flush()
-            iserializer.image.save(os.path.basename(iserializer.image_url), File(img_temp))
+            iserializer.image.save(os.path.basename(
+                iserializer.image_url), File(img_temp))
 
         file_path = iserializer.image.path
         # print (file_path)
         check_result = OCR().getWordRecognition(file_path, bill_model)
         arr = check_result['res']
-        dataMap= {}
+        dataMap = {}
         count = 0
         for each in arr:
             name = ""
-            if(each['name']=='车牌'):
+            if(each['name'] == '车牌'):
                 name = "plate_no"
                 count = count + 1
             dataMap[name] = each['text']
             #dataMap[each['name']] = each['text']
         #result = check_result
-        if (len(arr) == 0 or count<1):
+        if (len(arr) == 0 or count < 1):
             ret = 1
             msg = "请上传车牌图片"
-        serializer.save(data=dataMap,ret=ret,msg=msg,image=iserializer.image)
+        serializer.save(data=dataMap, ret=ret, msg=msg,
+                        image=iserializer.image)
 
         return Response(status=status.HTTP_201_CREATED)

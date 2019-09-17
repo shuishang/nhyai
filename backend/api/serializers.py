@@ -200,6 +200,19 @@ class OcrBankcardSerializer(serializers.HyperlinkedModelSerializer):
     def clean_json(self, obj):
         return obj.ret,obj.msg,obj.data
 
+class OcrHandWrittenSerializer(serializers.HyperlinkedModelSerializer):
+
+    #result = serializers.JSONField(True)
+    ret = serializers.JSONField(True)
+    msg = serializers.JSONField(True)
+    data = serializers.JSONField(True)
+    class Meta:
+        model = OcrBankcard
+        fields = ('image','image_url','ret','msg','data')
+
+    def clean_json(self, obj):
+        return obj.ret,obj.msg,obj.data
+
 class OcrVehicleplateSerializer(serializers.HyperlinkedModelSerializer):
 
     #result = serializers.JSONField(True)
