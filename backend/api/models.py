@@ -110,6 +110,8 @@ class OcrIDCard(models.Model):
     msg = models.TextField(max_length=255, default='')
     data = models.TextField(max_length=2048, default='')
 
+
+
 class VideoFileUpload(models.Model):
     # datafile = models.ImageField(upload_to='photos')
     video = models.FileField(upload_to=video_and_rename, max_length=255, null=True, blank=True)
@@ -141,3 +143,31 @@ class ImageFileUpload(models.Model):
     ret = models.IntegerField(_('ret'), null=True, blank=True)
     msg = models.TextField(max_length=255, default='')
     data = models.TextField(max_length=256, default='')
+
+class OcrDrivinglicense(models.Model):
+    image = models.ImageField(upload_to=path_and_rename, max_length=255, null=True, blank=True)
+    image_url = models.URLField(_('image_url'), null=True, blank=True)
+    ret = models.IntegerField(_('ret'), null=True, blank=True)
+    msg = models.TextField(max_length=255, default='')
+    data = models.TextField(max_length=2048, default='')
+
+class OcrVehiclelicense(models.Model):
+    image = models.ImageField(upload_to=path_and_rename, max_length=255, null=True, blank=True)
+    image_url = models.URLField(_('image_url'), null=True, blank=True)
+    ret = models.IntegerField(_('ret'), null=True, blank=True)
+    msg = models.TextField(max_length=255, default='')
+    data = models.TextField(max_length=2048, default='')
+
+class OcrBankcard(models.Model):
+    image = models.ImageField(upload_to=path_and_rename, max_length=255, null=True, blank=True)
+    image_url = models.URLField(_('image_url'), null=True, blank=True)
+    ret = models.IntegerField(_('ret'), null=True, blank=True)
+    msg = models.TextField(max_length=255, default='')
+    data = models.TextField(max_length=2048, default='')
+
+class OcrVehicleplate(models.Model):
+    image = models.ImageField(upload_to=path_and_rename, max_length=255, null=True, blank=True)
+    image_url = models.URLField(_('image_url'), null=True, blank=True)
+    ret = models.IntegerField(_('ret'), null=True, blank=True)
+    msg = models.TextField(max_length=255, default='')
+    data = models.TextField(max_length=2048, default='')

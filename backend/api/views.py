@@ -17,8 +17,8 @@ from .ocr.chineseocr import OCR
 from violentsurveillance.image_terrorism import image_terrorism
 from violentsurveillance.vision_porn import vision_porn
 from django.conf import settings
-from .serializers import VideoFileUploadSerializer,OcrGeneralSerializer,OcrIDCardSerializer,AudioFileInspectionSerializer,ImageFileUploadSerializer,WordRecognitionInspectionSerializer
-from .models import VideoFileUpload,AudioFileUpload,OcrGeneral,OcrIDCard,AudioFileInspection,ImageFileUpload,WordRecognitionInspection
+from .serializers import VideoFileUploadSerializer,OcrGeneralSerializer,OcrIDCardSerializer,AudioFileInspectionSerializer,ImageFileUploadSerializer,WordRecognitionInspectionSerializer,OcrDrivinglicenseSerializer,OcrVehiclelicenseSerializer,OcrBankcardSerializer,OcrVehicleplateSerializer
+from .models import VideoFileUpload,AudioFileUpload,OcrGeneral,OcrIDCard,AudioFileInspection,ImageFileUpload,WordRecognitionInspection,OcrDrivinglicense,OcrVehiclelicense,OcrBankcard,OcrVehicleplate
 import os
 import shutil
 import uuid
@@ -381,6 +381,7 @@ class OcrIDCardViewSet(viewsets.ModelViewSet):
         return Response(status=status.HTTP_201_CREATED)
 
 
+
 class FileImageTerrorismUploadViewSet(viewsets.ModelViewSet):
     queryset = FileImageTerrorismUpload.objects.all()
     serializer_class = FileImageTerrorismUploadSerializer
@@ -588,3 +589,198 @@ class ImageFileUploadViewSet(viewsets.ModelViewSet):
         
         serializer.save(data=resultMap,ret=ret,msg=msg,image=iserializer.image)
         return Response(status=status.HTTP_201_CREATED)        
+
+class OcrDrivinglicenseViewSet(viewsets.ModelViewSet):
+
+    queryset = OcrDrivinglicense.objects.all()
+    serializer_class = OcrDrivinglicenseSerializer
+    parser_classes = (MultiPartParser, FormParser,)
+
+    def perform_create(self, serializer):
+
+        iserializer = serializer.save()
+        ret = 0
+        msg = "成功"
+        bill_model = "驾驶证"
+
+        # 增加网络URL文件上传
+        if iserializer.image_url and not iserializer.image:
+            img_temp = NamedTemporaryFile(delete=True)
+            img_temp.write(urlopen(iserializer.image_url).read())
+            img_temp.flush()
+            iserializer.image.save(os.path.basename(iserializer.image_url), File(img_temp))
+
+        file_path = iserializer.image.path
+        # print (file_path)
+        check_result = OCR().getWordRecognition(file_path, bill_model)
+        arr = check_result['res']
+        dataMap= {}
+        count = 0
+        for each in arr:
+            name = ""
+            if(each['name']=='中华人民共和国机动车驾驶证'):
+                name = "license_type"
+                count = count + 1
+            if(each['name']=='证号'):
+                name = "license_no"
+                count = count + 1
+            if(each['name']=='姓名'):
+                name = "name"
+                count = count + 1
+            if(each['name']=='性别'):
+                name = "sex"
+                count = count + 1
+            if(each['name']=='国籍'):
+                name = "nationality"
+                count = count + 1
+            if(each['name']=='住址'):
+                name = "address"
+                count = count + 1
+            if(each['name']=='出生日期'):
+                name = "birthday"
+                count = count + 1
+            if(each['name']=='初次领证日期'):
+                name = "first_issue"
+                count = count + 1
+            if(each['name']=='准驾车型'):
+                name = "be_class"
+                count = count + 1
+            if(each['name']=='有效期限'):
+                name = "valid_period"
+                count = count + 1
+            dataMap[name] = each['text']
+            #dataMap[each['name']] = each['text']
+        #result = check_result
+        if (len(arr) == 0 or count<1):
+            ret = 1
+            msg = "请上传驾驶证图片"
+        serializer.save(data=dataMap,ret=ret,msg=msg,image=iserializer.image)
+
+        return Response(status=status.HTTP_201_CREATED)
+
+
+class OcrVehiclelicenseViewSet(viewsets.ModelViewSet):
+
+    queryset = OcrVehiclelicense.objects.all()
+    serializer_class = OcrVehiclelicenseSerializer
+    parser_classes = (MultiPartParser, FormParser,)
+
+    def perform_create(self, serializer):
+
+        iserializer = serializer.save()
+        ret = 0
+        msg = "成功"
+        bill_model = "驾驶证"
+
+        # 增加网络URL文件上传
+        if iserializer.image_url and not iserializer.image:
+            img_temp = NamedTemporaryFile(delete=True)
+            img_temp.write(urlopen(iserializer.image_url).read())
+            img_temp.flush()
+            iserializer.image.save(os.path.basename(iserializer.image_url), File(img_temp))
+
+        file_path = iserializer.image.path
+        # print (file_path)
+        check_result = OCR().getWordRecognition(file_path, bill_model)
+        arr = check_result['res']
+        dataMap= {}
+        count = 0
+        for each in arr:
+            name = ""
+            if(each['name']=='中华人民共和国机动车行驶证'):
+                name = "license_type"
+                count = count + 1
+            if(each['name']=='证号'):
+                name = "license_no"
+                count = count + 1
+            dataMap[name] = each['text']
+            #dataMap[each['name']] = each['text']
+        #result = check_result
+        if (len(arr) == 0 or count<1):
+            ret = 1
+            msg = "请上传行驶证图片"
+        serializer.save(data=dataMap,ret=ret,msg=msg,image=iserializer.image)
+
+        return Response(status=status.HTTP_201_CREATED)
+
+class OcrBankcardViewSet(viewsets.ModelViewSet):
+
+    queryset = OcrBankcard.objects.all()
+    serializer_class = OcrBankcardSerializer
+    parser_classes = (MultiPartParser, FormParser,)
+
+    def perform_create(self, serializer):
+
+        iserializer = serializer.save()
+        ret = 0
+        msg = "成功"
+        bill_model = "银行卡"
+
+        # 增加网络URL文件上传
+        if iserializer.image_url and not iserializer.image:
+            img_temp = NamedTemporaryFile(delete=True)
+            img_temp.write(urlopen(iserializer.image_url).read())
+            img_temp.flush()
+            iserializer.image.save(os.path.basename(iserializer.image_url), File(img_temp))
+
+        file_path = iserializer.image.path
+        # print (file_path)
+        check_result = OCR().getWordRecognition(file_path, bill_model)
+        arr = check_result['res']
+        dataMap= {}
+        count = 0
+        for each in arr:
+            name = ""
+            if(each['name']=='卡号'):
+                name = "card_no"
+                count = count + 1
+            dataMap[name] = each['text']
+            #dataMap[each['name']] = each['text']
+        #result = check_result
+        if (len(arr) == 0 or count<1):
+            ret = 1
+            msg = "请上传银行卡图片"
+        serializer.save(data=dataMap,ret=ret,msg=msg,image=iserializer.image)
+
+        return Response(status=status.HTTP_201_CREATED)
+
+class OcrVehicleplateViewSet(viewsets.ModelViewSet):
+
+    queryset = OcrVehicleplate.objects.all()
+    serializer_class = OcrVehicleplateSerializer
+    parser_classes = (MultiPartParser, FormParser,)
+
+    def perform_create(self, serializer):
+
+        iserializer = serializer.save()
+        ret = 0
+        msg = "成功"
+        bill_model = "车牌"
+
+        # 增加网络URL文件上传
+        if iserializer.image_url and not iserializer.image:
+            img_temp = NamedTemporaryFile(delete=True)
+            img_temp.write(urlopen(iserializer.image_url).read())
+            img_temp.flush()
+            iserializer.image.save(os.path.basename(iserializer.image_url), File(img_temp))
+
+        file_path = iserializer.image.path
+        # print (file_path)
+        check_result = OCR().getWordRecognition(file_path, bill_model)
+        arr = check_result['res']
+        dataMap= {}
+        count = 0
+        for each in arr:
+            name = ""
+            if(each['name']=='车牌'):
+                name = "plate_no"
+                count = count + 1
+            dataMap[name] = each['text']
+            #dataMap[each['name']] = each['text']
+        #result = check_result
+        if (len(arr) == 0 or count<1):
+            ret = 1
+            msg = "请上传车牌图片"
+        serializer.save(data=dataMap,ret=ret,msg=msg,image=iserializer.image)
+
+        return Response(status=status.HTTP_201_CREATED)

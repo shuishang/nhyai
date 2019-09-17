@@ -2,7 +2,7 @@ from django.contrib.auth.models import User, Group
 from rest_framework import serializers
 from .models import FileUpload, FileImageTerrorismUpload, FileVisionPornUpload
 from .models import VideoFileUpload,AudioFileUpload,AudioFileInspection,ImageFileUpload,WordRecognitionInspection
-from .models import WordRecognition,OcrGeneral,OcrIDCard
+from .models import WordRecognition,OcrGeneral,OcrIDCard,OcrDrivinglicense,OcrVehiclelicense,OcrBankcard
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -79,6 +79,8 @@ class OcrIDCardSerializer(serializers.HyperlinkedModelSerializer):
 
     def clean_json(self, obj):
         return obj.ret,obj.msg,obj.data
+
+
 
 
 class FileImageTerrorismUploadSerializer(serializers.HyperlinkedModelSerializer):
@@ -158,3 +160,55 @@ class ImageFileUploadSerializer(serializers.HyperlinkedModelSerializer):
 
     def clean_json(self, obj):
         return obj.ret,obj.msg,obj.data        
+
+class OcrDrivinglicenseSerializer(serializers.HyperlinkedModelSerializer):
+
+    #result = serializers.JSONField(True)
+    ret = serializers.JSONField(True)
+    msg = serializers.JSONField(True)
+    data = serializers.JSONField(True)
+    class Meta:
+        model = OcrDrivinglicense
+        fields = ('image','image_url','ret','msg','data')
+
+    def clean_json(self, obj):
+        return obj.ret,obj.msg,obj.data
+
+class OcrVehiclelicenseSerializer(serializers.HyperlinkedModelSerializer):
+
+    #result = serializers.JSONField(True)
+    ret = serializers.JSONField(True)
+    msg = serializers.JSONField(True)
+    data = serializers.JSONField(True)
+    class Meta:
+        model = OcrVehiclelicense
+        fields = ('image','image_url','ret','msg','data')
+
+    def clean_json(self, obj):
+        return obj.ret,obj.msg,obj.data
+
+class OcrBankcardSerializer(serializers.HyperlinkedModelSerializer):
+
+    #result = serializers.JSONField(True)
+    ret = serializers.JSONField(True)
+    msg = serializers.JSONField(True)
+    data = serializers.JSONField(True)
+    class Meta:
+        model = OcrBankcard
+        fields = ('image','image_url','ret','msg','data')
+
+    def clean_json(self, obj):
+        return obj.ret,obj.msg,obj.data
+
+class OcrVehicleplateSerializer(serializers.HyperlinkedModelSerializer):
+
+    #result = serializers.JSONField(True)
+    ret = serializers.JSONField(True)
+    msg = serializers.JSONField(True)
+    data = serializers.JSONField(True)
+    class Meta:
+        model = OcrBankcard
+        fields = ('image','image_url','ret','msg','data')
+
+    def clean_json(self, obj):
+        return obj.ret,obj.msg,obj.data
