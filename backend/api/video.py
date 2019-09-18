@@ -143,6 +143,7 @@ def check_video(file_path):
         resultMap['violence_evidence_information'] = violenceList
         resultMap['porn_evidence_information'] = pornList
         resultMap['interval'] = get_two_float(float(get_two_float((COUNT+1) / fps,2)) - float(get_two_float((COUNT) / fps,2)),3)
+        resultMap['duration'] = int(totalFrameNumber / fps)
         t = time.time()
         endTime = int(round(t * 1000))
         print(endTime - startTime)
@@ -229,6 +230,7 @@ def check_video(file_path):
         resultMap['violence_evidence_information'] = violenceList
         resultMap['porn_evidence_information'] = pornList
         resultMap['interval'] = get_two_float(float(get_two_float((COUNT+1) / fps,2)) - float(get_two_float((COUNT) / fps,2)),3)
+        resultMap['duration'] = int(totalFrameNumber / fps)
         t = time.time()
         endTime = int(round(t * 1000))
         print(endTime - startTime)
