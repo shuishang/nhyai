@@ -24,6 +24,7 @@ from .util import ProtestDatasetEvalFile, modified_resnet50
 from django.conf import settings
 from decimal import Decimal
 from decimal import getcontext
+from moviepy.editor import VideoFileClip
 def get_two_float(f_str, n):
     f_str = str(f_str)      # f_str = '{}'.format(f_str) 也可以转换为字符串
     a, b, c = f_str.partition('.')
@@ -37,6 +38,8 @@ def check_video(file_path):
     totalCount = 0
     pornTotalCount = 0
     cap = cv2.VideoCapture(file_path)
+
+    clip = VideoFileClip(file_path)
     # 获取FPS(每秒传输帧数(Frames Per Second))
     fps = cap.get(cv2.CAP_PROP_FPS)
     # 获取总帧数
@@ -143,7 +146,7 @@ def check_video(file_path):
         resultMap['violence_evidence_information'] = violenceList
         resultMap['porn_evidence_information'] = pornList
         resultMap['interval'] = get_two_float(float(get_two_float((COUNT+1) / fps,2)) - float(get_two_float((COUNT) / fps,2)),3)
-        resultMap['duration'] = int(totalFrameNumber / fps)
+        resultMap['duration'] = int(clip.duration)
         t = time.time()
         endTime = int(round(t * 1000))
         print(endTime - startTime)
@@ -231,7 +234,7 @@ def check_video(file_path):
         resultMap['violence_evidence_information'] = violenceList
         resultMap['porn_evidence_information'] = pornList
         resultMap['interval'] = get_two_float(float(get_two_float((COUNT+1) / fps,2)) - float(get_two_float((COUNT) / fps,2)),3)
-        resultMap['duration'] = int(totalFrameNumber / fps)
+        resultMap['duration'] = int(clip.duration)
         t = time.time()
         endTime = int(round(t * 1000))
         print(endTime - startTime)
