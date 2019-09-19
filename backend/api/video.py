@@ -121,17 +121,17 @@ def check_video(file_path):
         violence_sensitivity_level = 0
         if (violenceScoreArr[int(totalFrameNumber)-1] < VIOLENCESCORE_MIN):
             violence_sensitivity_level = 0
-        if (violenceScoreArr[int(totalFrameNumber)-1] >= VIOLENCESCORE_MIN and violenceScoreArr[int(totalFrameNumber)-1]<=VIOLENCESCORE_MAX):
+        elif (violenceScoreArr[int(totalFrameNumber)-1] >= VIOLENCESCORE_MIN and violenceScoreArr[int(totalFrameNumber)-1]<=VIOLENCESCORE_MAX):
             violence_sensitivity_level = 1
-        if (violenceScoreArr[int(totalFrameNumber)-1] > VIOLENCESCORE_MAX):
+        elif (violenceScoreArr[int(totalFrameNumber)-1] > VIOLENCESCORE_MAX):
             violence_sensitivity_level = 2
         
         porn_sensitivity_level = 0
         if (pornScoreArr[int(totalFrameNumber)-1] < PORNSCORE_MIN):
             porn_sensitivity_level = 0
-        if (pornScoreArr[int(totalFrameNumber)-1] >= PORNSCORE_MIN and pornScoreArr[int(totalFrameNumber)-1]<=PORNSCORE_MAX):
+        elif (pornScoreArr[int(totalFrameNumber)-1] >= PORNSCORE_MIN and pornScoreArr[int(totalFrameNumber)-1]<=PORNSCORE_MAX):
             porn_sensitivity_level = 1
-        if (pornScoreArr[int(totalFrameNumber)-1] > PORNSCORE_MAX):
+        elif (pornScoreArr[int(totalFrameNumber)-1] > PORNSCORE_MAX):
             porn_sensitivity_level = 2
         resultMap = {}
 
@@ -208,9 +208,9 @@ def check_video(file_path):
         violence_sensitivity_level = 0
         if (violenceScoreArr[int(COUNT)-1] < VIOLENCESCORE_MIN):
             violence_sensitivity_level = 0
-        if (violenceScoreArr[int(COUNT)-1] >= VIOLENCESCORE_MIN and violenceScoreArr[int(totalFrameNumber)-1]<=VIOLENCESCORE_MAX):
+        elif (violenceScoreArr[int(COUNT)-1] >= VIOLENCESCORE_MIN and violenceScoreArr[int(COUNT)-1]<=VIOLENCESCORE_MAX):
             violence_sensitivity_level = 1
-        if (violenceScoreArr[int(COUNT)-1] > VIOLENCESCORE_MAX):
+        elif (violenceScoreArr[int(COUNT)-1] > VIOLENCESCORE_MAX):
             violence_sensitivity_level = 2
         
 
@@ -218,9 +218,9 @@ def check_video(file_path):
         porn_sensitivity_level = 0
         if (pornScoreArr[int(COUNT)-1] < PORNSCORE_MIN):
             porn_sensitivity_level = 0
-        if (pornScoreArr[int(COUNT)-1] >= PORNSCORE_MIN and pornScoreArr[int(totalFrameNumber)-1]<=PORNSCORE_MAX):
+        elif (pornScoreArr[int(COUNT)-1] >= PORNSCORE_MIN and pornScoreArr[int(COUNT)-1]<=PORNSCORE_MAX):
             porn_sensitivity_level = 1
-        if (pornScoreArr[int(COUNT)-1] > PORNSCORE_MAX):
+        elif (pornScoreArr[int(COUNT)-1] > PORNSCORE_MAX):
             porn_sensitivity_level = 2
         resultMap = {}
         resultMap['video_url'] = settings.VIDEO_URL + f
