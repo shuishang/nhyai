@@ -5,7 +5,7 @@ from django.utils.timezone import datetime
 from uuid import uuid4
 import os
 from django.utils.translation import gettext_lazy as _
-
+from sortedm2m.fields import SortedManyToManyField
 # Create your models here.
 
 
@@ -272,3 +272,46 @@ class OcrVehicleplate(models.Model):
     ret = models.IntegerField(_('ret'), null=True, blank=True)
     msg = models.TextField(max_length=255, default='')
     data = models.TextField(max_length=2048, default='')
+
+class SensitivityType(models.Model):
+    sensitivity_type = models.CharField(
+        _('sensitivity_type'), max_length=32, null=True, blank=True)
+
+
+class SensitivityLevel(models.Model):
+    sensitivity_level = models.IntegerField(_('sensitivity_level'), null=True, blank=True)
+
+
+class HistoryRecord(models.Model):
+    file_id = models.CharField(
+        _('file_id'), max_length=32, null=True, blank=True)
+    file_name = models.CharField(
+        _('file_name'), max_length=128, null=True, blank=True)
+    file_url = models.URLField(_('image_url'), null=True, blank=True)
+    file_type = models.IntegerField(_('file_type'), null=True, blank=True)
+    inspection_result = models.CharField(
+        _('inspection_result'), max_length=32, null=True, blank=True)
+    max_sensitivity_type = models.CharField(
+        _('max_sensitivity_type'), max_length=32, null=True, blank=True)
+    max_sensitivity_level = models.IntegerField(_('max_sensitivity_level'), null=True, blank=True)
+    sensitivity_types = SortedManyToManyField(SensitivityType, blank=True)
+    sensitivity_levels = SortedManyToManyField(SensitivityLevel, blank=True)
+    violence_percent = models.CharField(
+        _('violence_percent'), max_length=16, null=True, blank=True)
+    violence_sensitivity_level = models.IntegerField(_('violence_sensitivity_level'), null=True, blank=True)
+    porn_percent = models.CharField(
+        _('porn_percent'), max_length=32, null=True, blank=True)
+    porn_sensitivity_level = models.IntegerField(_('porn_sensitivity_level'), null=True, blank=True)
+    politics_percent = models.CharField(
+        _('politics_percent'), max_length=32, null=True, blank=True)
+    politics_sensitivity_level = models.IntegerField(_('politics_sensitivity_level'), null=True, blank=True)
+    public_percent = models.CharField(
+        _('public_percent'), max_length=16, null=True, blank=True)
+    public_character_level = models.IntegerField(_('public_character_level'), null=True, blank=True)
+    content = models.CharField(_('content'), max_length=1530, null=True, blank=True)
+    upload_time = models.DateTimeField()
+    status = models.IntegerField(_('status'), null=True, blank=True)
+    system_id = models.IntegerField(_('system_id'), null=True, blank=True)
+    channel_id = models.IntegerField(_('channel_id'), null=True, blank=True)
+    user_id = models.CharField(
+        _('user_id'), max_length=64, null=True, blank=True)
