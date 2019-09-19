@@ -770,8 +770,11 @@ class OcrBankcardViewSet(viewsets.ModelViewSet):
         count = 0
         for each in arr:
             name = ""
+            if(each['name'] == '银行名称'):
+                name = "bank_name"
+                count = count + 1
             if(each['name'] == '卡号'):
-                name = "card_no"
+                name = "bank_cardno"
                 count = count + 1
             dataMap[name] = each['text']
             #dataMap[each['name']] = each['text']
