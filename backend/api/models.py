@@ -309,9 +309,29 @@ class HistoryRecord(models.Model):
         _('public_percent'), max_length=16, null=True, blank=True)
     public_character_level = models.IntegerField(_('public_character_level'), null=True, blank=True)
     content = models.CharField(_('content'), max_length=1530, null=True, blank=True)
-    upload_time = models.DateTimeField()
+    upload_time = models.DateTimeField(auto_now=True, blank=True)
     status = models.IntegerField(_('status'), null=True, blank=True)
     system_id = models.IntegerField(_('system_id'), null=True, blank=True)
     channel_id = models.IntegerField(_('channel_id'), null=True, blank=True)
     user_id = models.CharField(
         _('user_id'), max_length=64, null=True, blank=True)
+    ret = models.IntegerField(_('ret'), null=True, blank=True)
+    msg = models.TextField(max_length=255, default='')
+    data = models.TextField(max_length=2048, default='')
+
+class HistoryRecordList(models.Model):
+    system_id = models.IntegerField(_('system_id'), null=True, blank=True)
+    channel_id = models.IntegerField(_('channel_id'), null=True, blank=True)
+    user_id = models.CharField(
+        _('user_id'), max_length=64, null=True, blank=True)
+    begin_time = models.DateTimeField(auto_now=True, blank=True)
+    end_time = models.DateTimeField(auto_now=True, blank=True)
+    file_name = models.CharField(
+        _('file_name'), max_length=128, null=True, blank=True)
+    file_type = models.IntegerField(_('file_type'), null=True, blank=True)
+    current_page = models.IntegerField(_('current_page'), null=True, blank=True)
+    page_size = models.IntegerField(_('page_size'), null=True, blank=True)
+    history_records = SortedManyToManyField(HistoryRecord, blank=True)
+    ret = models.IntegerField(_('ret'), null=True, blank=True)
+    msg = models.TextField(max_length=255, default='')
+    data = models.TextField(max_length=2048, default='')

@@ -19,8 +19,8 @@ from .ocr.chineseocr import OCR
 from violentsurveillance.image_terrorism import image_terrorism
 from violentsurveillance.vision_porn import vision_porn
 from django.conf import settings
-from .serializers import VideoFileUploadSerializer, OcrGeneralSerializer, OcrIDCardSerializer, AudioFileInspectionSerializer, ImageFileUploadSerializer, WordRecognitionInspectionSerializer, OcrDrivinglicenseSerializer, OcrVehiclelicenseSerializer, OcrBankcardSerializer, OcrHandWrittenSerializer, OcrVehicleplateSerializer
-from .models import VideoFileUpload, AudioFileUpload, OcrGeneral, OcrIDCard, AudioFileInspection, ImageFileUpload, WordRecognitionInspection, OcrDrivinglicense, OcrVehiclelicense, OcrBankcard, OcrHandWritten, OcrVehicleplate
+from .serializers import VideoFileUploadSerializer, OcrGeneralSerializer, OcrIDCardSerializer, AudioFileInspectionSerializer, ImageFileUploadSerializer, WordRecognitionInspectionSerializer, OcrDrivinglicenseSerializer, OcrVehiclelicenseSerializer, OcrBankcardSerializer, OcrHandWrittenSerializer, OcrVehicleplateSerializer, HistoryRecordListSerializer, HistoryRecordDetailSerializer
+from .models import VideoFileUpload, AudioFileUpload, OcrGeneral, OcrIDCard, AudioFileInspection, ImageFileUpload, WordRecognitionInspection, OcrDrivinglicense, OcrVehiclelicense, OcrBankcard, OcrHandWritten, OcrVehicleplate, HistoryRecord, HistoryRecordList
 import os
 import shutil
 import uuid
@@ -863,5 +863,41 @@ class OcrVehicleplateViewSet(viewsets.ModelViewSet):
             msg = "请上传车牌图片"
         serializer.save(data=dataMap, ret=ret, msg=msg,
                         image=iserializer.image)
+
+        return Response(status=status.HTTP_201_CREATED)
+
+
+class HistoryRecordListViewSet(viewsets.ModelViewSet):
+
+    queryset = HistoryRecordList.objects.all()
+    serializer_class = HistoryRecordListSerializer
+    parser_classes = (MultiPartParser, FormParser,)
+
+    def perform_create(self, serializer):
+
+        iserializer = serializer.save()
+        dataMap = {}
+        ret = 0
+        msg = "成功"
+
+        serializer.save(data=dataMap, ret=ret, msg=msg)
+
+        return Response(status=status.HTTP_201_CREATED)
+
+
+class HistoryRecordDetailViewSet(viewsets.ModelViewSet):
+
+    queryset = HistoryRecord.objects.all()
+    serializer_class = HistoryRecordDetailSerializer
+    parser_classes = (MultiPartParser, FormParser,)
+
+    def perform_create(self, serializer):
+
+        iserializer = serializer.save()
+        dataMap = {}
+        ret = 0
+        msg = "成功"
+
+        serializer.save(data=dataMap, ret=ret, msg=msg)
 
         return Response(status=status.HTTP_201_CREATED)

@@ -2,7 +2,7 @@ from django.contrib.auth.models import User, Group
 from rest_framework import serializers
 from .models import FileUpload, FileImageTerrorismUpload, FileVisionPornUpload
 from .models import VideoFileUpload, AudioFileUpload, AudioFileInspection, ImageFileUpload, WordRecognitionInspection
-from .models import WordRecognition, OcrGeneral, OcrIDCard, OcrDrivinglicense, OcrVehiclelicense, OcrBankcard
+from .models import WordRecognition, OcrGeneral, OcrIDCard, OcrDrivinglicense, OcrVehiclelicense, OcrBankcard, HistoryRecord, HistoryRecordList
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -37,7 +37,8 @@ class WordRecognitionSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = WordRecognition
-        fields = ('text', 'system_id', 'channel_id', 'user_id', 'ret', 'msg', 'data')
+        fields = ('text', 'system_id', 'channel_id',
+                  'user_id', 'ret', 'msg', 'data')
 
     def clean_json(self, obj):
         return obj.ret, obj.msg, obj.data
@@ -51,7 +52,8 @@ class WordRecognitionInspectionSerializer(serializers.HyperlinkedModelSerializer
 
     class Meta:
         model = WordRecognitionInspection
-        fields = ('text', 'system_id', 'channel_id', 'user_id', 'text_url', 'ret', 'msg', 'data')
+        fields = ('text', 'system_id', 'channel_id',
+                  'user_id', 'text_url', 'ret', 'msg', 'data')
 
     def clean_json(self, obj):
         return obj.ret, obj.msg, obj.data
@@ -66,7 +68,8 @@ class OcrGeneralSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = OcrGeneral
-        fields = ('image', 'image_url', 'system_id', 'channel_id', 'user_id', 'ret', 'msg', 'data')
+        fields = ('image', 'image_url', 'system_id',
+                  'channel_id', 'user_id', 'ret', 'msg', 'data')
 
     def clean_json(self, obj):
         return obj.ret, obj.msg, obj.data
@@ -81,7 +84,8 @@ class OcrIDCardSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = OcrIDCard
-        fields = ('image', 'image_url', 'system_id', 'channel_id', 'user_id', 'ret', 'msg', 'data')
+        fields = ('image', 'image_url', 'system_id',
+                  'channel_id', 'user_id', 'ret', 'msg', 'data')
 
     def clean_json(self, obj):
         return obj.ret, obj.msg, obj.data
@@ -95,7 +99,8 @@ class FileImageTerrorismUploadSerializer(serializers.HyperlinkedModelSerializer)
 
     class Meta:
         model = FileImageTerrorismUpload
-        fields = ('image', 'image_url', 'system_id', 'channel_id', 'user_id', 'ret', 'msg', 'data')
+        fields = ('image', 'image_url', 'system_id',
+                  'channel_id', 'user_id', 'ret', 'msg', 'data')
 
     def clean_json(self, obj):
         return obj.ret, obj.msg, obj.data
@@ -110,7 +115,8 @@ class FileVisionPornUploadSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = FileVisionPornUpload
         #fields = ('datafile', 'result')
-        fields = ('image', 'image_url', 'system_id', 'channel_id', 'user_id', 'ret', 'msg', 'data')
+        fields = ('image', 'image_url', 'system_id',
+                  'channel_id', 'user_id', 'ret', 'msg', 'data')
 
     def clean_json(self, obj):
         return obj.ret, obj.msg, obj.data
@@ -124,7 +130,8 @@ class VideoFileUploadSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = VideoFileUpload
-        fields = ('video', 'video_url', 'system_id', 'channel_id', 'user_id', 'data', 'ret', 'msg')
+        fields = ('video', 'video_url', 'system_id',
+                  'channel_id', 'user_id', 'data', 'ret', 'msg')
 
     def clean_json(self, obj):
         return obj.ret, obj.msg, obj.data
@@ -139,7 +146,8 @@ class AudioFileUploadSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = AudioFileUpload
-        fields = ('speech', 'speech_url', 'system_id', 'channel_id', 'user_id', 'data', 'ret', 'msg')
+        fields = ('speech', 'speech_url', 'system_id',
+                  'channel_id', 'user_id', 'data', 'ret', 'msg')
 
     def clean_json(self, obj):
         return obj.ret, obj.msg, obj.data
@@ -154,7 +162,8 @@ class AudioFileInspectionSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = AudioFileInspection
-        fields = ('speech', 'speech_url', 'system_id', 'channel_id', 'user_id', 'data', 'ret', 'msg')
+        fields = ('speech', 'speech_url', 'system_id',
+                  'channel_id', 'user_id', 'data', 'ret', 'msg')
 
     def clean_json(self, obj):
         return obj.ret, obj.msg, obj.data
@@ -169,7 +178,8 @@ class ImageFileUploadSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = ImageFileUpload
         #fields = ('datafile', 'result')
-        fields = ('image', 'image_url', 'system_id', 'channel_id', 'user_id', 'ret', 'msg', 'data')
+        fields = ('image', 'image_url', 'system_id',
+                  'channel_id', 'user_id', 'ret', 'msg', 'data')
 
     def clean_json(self, obj):
         return obj.ret, obj.msg, obj.data
@@ -184,7 +194,8 @@ class OcrDrivinglicenseSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = OcrDrivinglicense
-        fields = ('image', 'image_url', 'system_id', 'channel_id', 'user_id', 'ret', 'msg', 'data')
+        fields = ('image', 'image_url', 'system_id',
+                  'channel_id', 'user_id', 'ret', 'msg', 'data')
 
     def clean_json(self, obj):
         return obj.ret, obj.msg, obj.data
@@ -199,7 +210,8 @@ class OcrVehiclelicenseSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = OcrVehiclelicense
-        fields = ('image', 'image_url', 'system_id', 'channel_id', 'user_id', 'ret', 'msg', 'data')
+        fields = ('image', 'image_url', 'system_id',
+                  'channel_id', 'user_id', 'ret', 'msg', 'data')
 
     def clean_json(self, obj):
         return obj.ret, obj.msg, obj.data
@@ -214,7 +226,8 @@ class OcrBankcardSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = OcrBankcard
-        fields = ('image', 'image_url', 'system_id', 'channel_id', 'user_id', 'ret', 'msg', 'data')
+        fields = ('image', 'image_url', 'system_id',
+                  'channel_id', 'user_id', 'ret', 'msg', 'data')
 
     def clean_json(self, obj):
         return obj.ret, obj.msg, obj.data
@@ -229,7 +242,8 @@ class OcrHandWrittenSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = OcrBankcard
-        fields = ('image', 'image_url', 'system_id', 'channel_id', 'user_id', 'ret', 'msg', 'data')
+        fields = ('image', 'image_url', 'system_id',
+                  'channel_id', 'user_id', 'ret', 'msg', 'data')
 
     def clean_json(self, obj):
         return obj.ret, obj.msg, obj.data
@@ -244,7 +258,39 @@ class OcrVehicleplateSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = OcrBankcard
-        fields = ('image', 'image_url', 'system_id', 'channel_id', 'user_id', 'ret', 'msg', 'data')
+        fields = ('image', 'image_url', 'system_id',
+                  'channel_id', 'user_id', 'ret', 'msg', 'data')
+
+    def clean_json(self, obj):
+        return obj.ret, obj.msg, obj.data
+
+
+class HistoryRecordListSerializer(serializers.HyperlinkedModelSerializer):
+
+    ret = serializers.JSONField(True)
+    msg = serializers.JSONField(True)
+    data = serializers.JSONField(True)
+
+    class Meta:
+        model = HistoryRecordList
+        fields = ('system_id', 'channel_id', 'user_id',
+                  'begin_time', 'end_time', 'file_name',
+                  'file_type', 'current_page', 'page_size',
+                  'ret', 'msg', 'data')
+
+    def clean_json(self, obj):
+        return obj.ret, obj.msg, obj.data
+
+
+class HistoryRecordDetailSerializer(serializers.HyperlinkedModelSerializer):
+
+    ret = serializers.JSONField(True)
+    msg = serializers.JSONField(True)
+    data = serializers.JSONField(True)
+
+    class Meta:
+        model = HistoryRecord
+        fields = ('file_id', 'ret', 'msg', 'data')
 
     def clean_json(self, obj):
         return obj.ret, obj.msg, obj.data
