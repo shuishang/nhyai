@@ -8,7 +8,9 @@ export default {
         // Vue.prototype.api = "http://220.174.232.142:9016";	//测试环境
 
 		// Vue.prototype.api = "http://www.ischoolhn.com";	//试运行环境
-		Vue.prototype.api = "http://172.31.4.33:8000";	//卫俊
+		// Vue.prototype.api = "http://172.31.4.33:8000";	//卫俊
+		// Vue.prototype.api = "http://172.31.20.59:8000";	//卫俊
+		Vue.prototype.api = "https://ai.hn-ssc.com";	//卫俊
 
 		//Vue.prototype.api = "http://www.hn-ssc.com";	//正式环境
         // Vue.prototype.api = "";	//打包环境
@@ -22,8 +24,6 @@ export default {
 				alert(data.msg);
 			}
 		};
-
-
 	},
 }
 
@@ -42,7 +42,7 @@ Vue.filter('formatDate', function(time, dateType) {
 		return formatDate(date, dateType);
 	}
 
-})
+});
 
 
 
@@ -74,6 +74,11 @@ export function scrollBy(offsetTop){
     // window.scrollBy(0,offsetTop);
     $('html,body').animate({ scrollTop: offsetTop}, 200)
 }
+//过滤器
+Vue.filter('secondToTime', function(second) {
+    // 返回处理后的值
+    return secondToTime(second);
+});
 export function secondToTime(second) {
 	const hour = second>3600?Math.floor(second/3600)+":":"00:";
 	const minute = second>60?Math.floor(second/60)>10?Math.floor(second/60):"0"+Math.floor(second/60)+":":"00:";
