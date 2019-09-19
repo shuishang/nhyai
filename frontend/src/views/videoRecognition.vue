@@ -349,7 +349,7 @@
                 this.isLoading= true;
                 var formData = new FormData();
                 formData.append('video', file);
-                formData.append('video_url', url);
+                // formData.append('video_url', url);
                 console.log(file,url);
                 this.percentage= 0;
                 var timer = window.setInterval(()=>{
