@@ -143,6 +143,7 @@ def check_video(file_path):
         resultMap['violence_evidence_information'] = violenceList
         resultMap['porn_evidence_information'] = pornList
         resultMap['interval'] = get_two_float(float(get_two_float((COUNT+1) / fps,2)) - float(get_two_float((COUNT) / fps,2)),3)
+        resultMap['duration'] = int(totalFrameNumber / fps)
         t = time.time()
         endTime = int(round(t * 1000))
         print(endTime - startTime)
@@ -205,21 +206,21 @@ def check_video(file_path):
         cap.release()
         #判断暴恐图片
         violence_sensitivity_level = 0
-        if (violenceScoreArr[int(totalFrameNumber)-1] < VIOLENCESCORE_MIN):
+        if (violenceScoreArr[int(COUNT)-1] < VIOLENCESCORE_MIN):
             violence_sensitivity_level = 0
-        if (violenceScoreArr[int(totalFrameNumber)-1] >= VIOLENCESCORE_MIN and violenceScoreArr[int(totalFrameNumber)-1]<=VIOLENCESCORE_MAX):
+        if (violenceScoreArr[int(COUNT)-1] >= VIOLENCESCORE_MIN and violenceScoreArr[int(totalFrameNumber)-1]<=VIOLENCESCORE_MAX):
             violence_sensitivity_level = 1
-        if (violenceScoreArr[int(totalFrameNumber)-1] > VIOLENCESCORE_MAX):
+        if (violenceScoreArr[int(COUNT)-1] > VIOLENCESCORE_MAX):
             violence_sensitivity_level = 2
         
 
         #判断色情图片
         porn_sensitivity_level = 0
-        if (pornScoreArr[int(totalFrameNumber)-1] < PORNSCORE_MIN):
+        if (pornScoreArr[int(COUNT)-1] < PORNSCORE_MIN):
             porn_sensitivity_level = 0
-        if (pornScoreArr[int(totalFrameNumber)-1] >= PORNSCORE_MIN and pornScoreArr[int(totalFrameNumber)-1]<=PORNSCORE_MAX):
+        if (pornScoreArr[int(COUNT)-1] >= PORNSCORE_MIN and pornScoreArr[int(totalFrameNumber)-1]<=PORNSCORE_MAX):
             porn_sensitivity_level = 1
-        if (pornScoreArr[int(totalFrameNumber)-1] > PORNSCORE_MAX):
+        if (pornScoreArr[int(COUNT)-1] > PORNSCORE_MAX):
             porn_sensitivity_level = 2
         resultMap = {}
         resultMap['video_url'] = settings.VIDEO_URL + f
@@ -229,6 +230,7 @@ def check_video(file_path):
         resultMap['violence_evidence_information'] = violenceList
         resultMap['porn_evidence_information'] = pornList
         resultMap['interval'] = get_two_float(float(get_two_float((COUNT+1) / fps,2)) - float(get_two_float((COUNT) / fps,2)),3)
+        resultMap['duration'] = int(totalFrameNumber / fps)
         t = time.time()
         endTime = int(round(t * 1000))
         print(endTime - startTime)
