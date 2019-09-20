@@ -622,7 +622,6 @@ class ImageFileUploadViewSet(viewsets.ModelViewSet):
                         msg=msg, image=iserializer.image)
         return Response(status=status.HTTP_201_CREATED)
 
-
 class OcrDrivinglicenseViewSet(viewsets.ModelViewSet):
 
     queryset = OcrDrivinglicense.objects.all()
@@ -652,20 +651,20 @@ class OcrDrivinglicenseViewSet(viewsets.ModelViewSet):
         count = 0
         for each in arr:
             name = ""
-            if(each['name'] == '中华人民共和国机动车驾驶证'):
+            if(each['name'] == '类型'):
                 name = "license_type"
                 count = count + 1
             if(each['name'] == '证号'):
-                name = "license_no"
+                name = "card_id"
                 count = count + 1
             if(each['name'] == '姓名'):
-                name = "name"
+                name = "driver"
                 count = count + 1
             if(each['name'] == '性别'):
                 name = "sex"
                 count = count + 1
             if(each['name'] == '国籍'):
-                name = "nationality"
+                name = "nationnality"
                 count = count + 1
             if(each['name'] == '住址'):
                 name = "address"
@@ -674,18 +673,23 @@ class OcrDrivinglicenseViewSet(viewsets.ModelViewSet):
                 name = "birthday"
                 count = count + 1
             if(each['name'] == '初次领证日期'):
-                name = "first_issue"
+                name = "issue_date"
                 count = count + 1
             if(each['name'] == '准驾车型'):
-                name = "be_class"
+                name = "class"
                 count = count + 1
-            if(each['name'] == '有效期限'):
-                name = "valid_period"
+            if(each['name'] == '有效起始日期'):
+                name = "valid_start"
                 count = count + 1
+            if(each['name'] == '有效截止日期'):
+                name = "valid_end"
+                count = count + 1
+            
             dataMap[name] = each['text']
             #dataMap[each['name']] = each['text']
         #result = check_result
-        if (len(arr) == 0 or count < 1):
+        #if (len(arr) == 0 or count < 1):
+        if(dataMap["license_type"] != "中华人民共和国机动车驾驶证"):
             ret = 1
             msg = "请上传驾驶证图片"
         serializer.save(data=dataMap, ret=ret, msg=msg,
