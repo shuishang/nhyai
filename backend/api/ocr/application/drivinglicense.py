@@ -16,10 +16,9 @@ class drivinglicense:
         self.full_name()
         self.address()
         self.birthday()
-        self.first_issue()
+        self.issue_date()
         self.be_class()
         self.valid_period()
-        print("999999999999999999999999   result====",result)
 
     def license_type(self):
         """
@@ -29,10 +28,9 @@ class drivinglicense:
         for i in range(self.N):
             txt = self.result[i]['text'].replace(' ','')
             txt = txt.replace(' ','')
-            res = re.findall("中华人民共和国机动车驾驶证[\u4e00-\u9fa5]+",txt)
+            res = re.findall("中华人民共和国机动车驾驶证",txt)
             if len(res)>0:
-                print("111111111111111111  =",txt)
-                license_type['中华人民共和国机动车驾驶证']  =res[0].replace('中华人民共和国机动车驾驶证','')
+                license_type['类型']  = '中华人民共和国机动车驾驶证'
                 self.res.update(license_type) 
                 break  
 
@@ -44,15 +42,18 @@ class drivinglicense:
         for i in range(self.N):
             txt = self.result[i]['text'].replace(' ','')
             txt = txt.replace(' ','')
-            res = re.findall("证号[\u4e00-\u9fa5]{1,4}",txt)
+            res = re.findall(r'证号\d*[X|x]',txt)
+            res += re.findall(r'证号\d*',txt)
+            res += re.findall(r'\d{16,18}',txt)
             if len(res)>0:
-                print("111111111111111111  =",txt)
+                # license_no["证号"] = res[0].split('证号')[-1]
                 license_no['证号']  =res[0].replace('证号','')
                 self.res.update(license_no) 
                 break    
-            res = re.findall("远号[\u4e00-\u9fa5]{1,4}",txt)
+            res = re.findall(r'远号\d*[X|x]',txt)
+            res += re.findall(r'远号\d*',txt)
+            res += re.findall(r'\d{16,18}',txt)
             if len(res)>0:
-                print("111111111111111111  =",txt)
                 license_no['证号']  =res[0].replace('远号','')
                 self.res.update(license_no) 
                 break    
@@ -67,18 +68,16 @@ class drivinglicense:
             txt = self.result[i]['text'].replace(' ','')
             txt = txt.replace(' ','')
             ##匹配姓名
-            res = re.findall("姓名[\u4e00-\u9fa5]+",txt)
+            res = re.findall("姓名[\u4e00-\u9fa5]{1,4}",txt)
             if len(res)>0:
                 name['姓名']  =res[0].replace('姓名','')
-            res = re.findall("始名[\u4e00-\u9fa5]+",txt)
+                self.res.update(name) 
+            res = re.findall("始名[\u4e00-\u9fa5]{1,4}",txt)
             if len(res)>0:
                 name['姓名']  =res[0].replace('始名','')
-                # self.res.update(name) 
-                # break
+                self.res.update(name) 
             if '男'  in txt:
                     name["性别"] = '男'
-                    # self.res.update(sex) 
-                    # break
             elif '女'  in txt:
                     name["性别"] = '女'
 
@@ -108,6 +107,7 @@ class drivinglicense:
             
             if len(res)>0:
                 addString.append(txt.replace('住址',''))
+                
             
         if len(addString)>0:
             add['住址']  =''.join(addString)
@@ -117,34 +117,39 @@ class drivinglicense:
         """
         出生日期
         """
-        birth={}
+        birthday={}
         for i in range(self.N):
             txt = self.result[i]['text'].replace(' ','')
             txt = txt.replace(' ','')
-            ##出生日期
-            res = re.findall(r'出生日期\d*-\d*-\d*-',txt)
-            res = re.findall(r'\d*-\d*-\d*-',txt)
-            
+            res = re.findall("出生日期[0-9\-]{1,10}",txt)
             if len(res)>0:
-                birth['出生日期']  =res[0].replace('出生日期','')
-                self.res.update(birth) 
+                birthday['出生日期']  =res[0].replace('出生日期','')
+                self.res.update(birthday) 
                 break
-             
+            res = re.findall("出生日加[0-9\-]{1,10}",txt)
+            if len(res)>0:
+                birthday['出生日期']  =res[0].replace('出生日加','')
+                self.res.update(birthday) 
+                break
     
-    def first_issue(self):
+    def issue_date(self):
         """
         初次领证日期
         """
-        first_issue={}
+        issue_date={}
         for i in range(self.N):
             txt = self.result[i]['text'].replace(' ','')
             txt = txt.replace(' ','')
-            res = re.findall("初次领证日期[\u4e00-\u9fa5]+",txt)
+            res = re.findall("初次领证日期[0-9\-]{1,10}",txt)
             if len(res)>0:
-                print("111111111111111111  =",txt)
-                first_issue['初次领证日期']  =res[0].replace('初次领证日期','')
-                self.res.update(first_issue) 
-                break    
+                issue_date['初次领证日期']  =res[0].replace('初次领证日期','')
+                self.res.update(issue_date) 
+                break
+            res = re.findall("问次领证日期[0-9\-]{1,10}",txt)
+            if len(res)>0:
+                issue_date['初次领证日期']  =res[0].replace('问次领证日期','')
+                self.res.update(issue_date) 
+                break 
     
     def be_class(self):
         """
@@ -156,23 +161,28 @@ class drivinglicense:
             txt = txt.replace(' ','')
             res = re.findall("准驾车型[\u4e00-\u9fa5]+",txt)
             if len(res)>0:
-                print("111111111111111111  =",txt)
                 be_class['准驾车型']  =res[0].replace('准驾车型','')
                 self.res.update(be_class) 
                 break    
     
     def valid_period(self):
         """
-        有效期限
+        有效起始日期
+        有效截止日期
         """
         valid_period={}
+        
         for i in range(self.N):
             txt = self.result[i]['text'].replace(' ','')
             txt = txt.replace(' ','')
-            res = re.findall("有效期限[\u4e00-\u9fa5]+",txt)
+            res = re.findall("[0-9\-]{1,10}至",txt)
             if len(res)>0:
-                print("111111111111111111  =",txt)
-                valid_period['有效期限']  =res[0].replace('有效期限','')
+                valid_period['有效起始日期']  =res[0].replace('有效起始日期','')
+                self.res.update(valid_period) 
+                # break    
+            res = re.findall("至[0-9\-]{1,10}",txt)
+            if len(res)>0:
+                valid_period['有效截止日期']  =res[0].replace('至','')
                 self.res.update(valid_period) 
                 break    
-        
+                    
