@@ -279,7 +279,8 @@ class SensitivityType(models.Model):
 
 
 class SensitivityLevel(models.Model):
-    sensitivity_level = models.IntegerField(_('sensitivity_level'), null=True, blank=True)
+    sensitivity_level = models.CharField(
+        _('sensitivity_level'), max_length=4, null=True, blank=True)
 
 
 class HistoryRecord(models.Model):
@@ -293,31 +294,36 @@ class HistoryRecord(models.Model):
         _('inspection_result'), max_length=32, null=True, blank=True)
     max_sensitivity_type = models.CharField(
         _('max_sensitivity_type'), max_length=32, null=True, blank=True)
-    max_sensitivity_level = models.IntegerField(_('max_sensitivity_level'), null=True, blank=True)
+    max_sensitivity_level = models.CharField(
+        _('max_sensitivity_level'), max_length=4, null=True, blank=True)
     sensitivity_types = SortedManyToManyField(SensitivityType, blank=True)
     sensitivity_levels = SortedManyToManyField(SensitivityLevel, blank=True)
     violence_percent = models.CharField(
         _('violence_percent'), max_length=16, null=True, blank=True)
-    violence_sensitivity_level = models.IntegerField(_('violence_sensitivity_level'), null=True, blank=True)
+    violence_sensitivity_level = models.CharField(
+        _('violence_sensitivity_level'), max_length=4, null=True, blank=True)
     porn_percent = models.CharField(
-        _('porn_percent'), max_length=32, null=True, blank=True)
-    porn_sensitivity_level = models.IntegerField(_('porn_sensitivity_level'), null=True, blank=True)
+        _('porn_percent'), max_length=16, null=True, blank=True)
+    porn_sensitivity_level = models.CharField(
+        _('porn_sensitivity_level'), max_length=4, null=True, blank=True)
     politics_percent = models.CharField(
-        _('politics_percent'), max_length=32, null=True, blank=True)
-    politics_sensitivity_level = models.IntegerField(_('politics_sensitivity_level'), null=True, blank=True)
+        _('politics_percent'), max_length=16, null=True, blank=True)
+    politics_sensitivity_level = models.CharField(
+        _('politics_sensitivity_level'), max_length=4, null=True, blank=True)
     public_percent = models.CharField(
         _('public_percent'), max_length=16, null=True, blank=True)
-    public_character_level = models.IntegerField(_('public_character_level'), null=True, blank=True)
+    public_character_level = models.CharField(
+        _('public_character_level'), max_length=4, null=True, blank=True)
     content = models.CharField(_('content'), max_length=1530, null=True, blank=True)
-    upload_time = models.DateTimeField(auto_now=True, blank=True)
-    status = models.IntegerField(_('status'), null=True, blank=True)
+    upload_time = models.DateTimeField(auto_now=True, null=True, blank=True)
+    process_status = models.IntegerField(_('process_status'), null=True, blank=True)
     system_id = models.IntegerField(_('system_id'), null=True, blank=True)
     channel_id = models.IntegerField(_('channel_id'), null=True, blank=True)
     user_id = models.CharField(
         _('user_id'), max_length=64, null=True, blank=True)
     ret = models.IntegerField(_('ret'), null=True, blank=True)
-    msg = models.TextField(max_length=255, default='')
-    data = models.TextField(max_length=2048, default='')
+    msg = models.TextField(max_length=255, null=True, default='')
+    data = models.TextField(max_length=2048, null=True, default='')
 
 class HistoryRecordList(models.Model):
     system_id = models.IntegerField(_('system_id'), null=True, blank=True)
@@ -333,5 +339,5 @@ class HistoryRecordList(models.Model):
     page_size = models.IntegerField(_('page_size'), null=True, blank=True)
     history_records = SortedManyToManyField(HistoryRecord, blank=True)
     ret = models.IntegerField(_('ret'), null=True, blank=True)
-    msg = models.TextField(max_length=255, default='')
-    data = models.TextField(max_length=2048, default='')
+    msg = models.TextField(max_length=255, null=True, default='')
+    data = models.TextField(max_length=2048, null=True, default='')

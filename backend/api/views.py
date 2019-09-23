@@ -1,3 +1,4 @@
+from .ienum import FILETYPE
 import subprocess
 from .pdfreader import PdfReader
 from django.contrib.auth.models import User, Group
@@ -42,8 +43,6 @@ import platform
 if(platform.system() == "Windows"):
     import win32com.client as wc
     import pythoncom
-from .pdfreader import PdfReader
-import subprocess
 
 
 def get_two_float(f_str, n):
@@ -424,6 +423,38 @@ class FileImageTerrorismUploadViewSet(viewsets.ModelViewSet):
         resultMap['violence'] = get_two_float(float(violence) * 100, 2)
         serializer.save(data=resultMap, ret=ret,
                         msg=msg, image=iserializer.image)
+
+        # 更新历史记录
+        file_id = iserializer.id
+        file_name = iserializer.image.name.split('/')[1]
+        file_url = settings.FILE_URL + iserializer.image.url
+        file_type = FILETYPE.Image.value
+        inspection_result = resultMap
+        
+        violence_percent = get_two_float(float(violence) * 100, 2)
+        violence_sensitivity_level = "0"
+        if (float(violence) < 0.5):
+            violence_sensitivity_level = "0"
+        if (float(violence) >= 0.5 and float(violence) <= 0.9):
+            violence_sensitivity_level = "1"
+        if (float(violence) > 0.9):
+            violence_sensitivity_level = "2"
+        max_sensitivity_type = 'violence'
+        max_sensitivity_level = violence_sensitivity_level
+        process_status = 2
+        system_id = iserializer.system_id
+        channel_id = iserializer.channel_id
+        user_id = iserializer.user_id
+
+        HistoryRecord.objects.create(
+            file_id=file_id, file_name=file_name,
+            file_url=file_url, file_type=file_type,
+            inspection_result=inspection_result, max_sensitivity_type=max_sensitivity_type,
+            max_sensitivity_level=max_sensitivity_level, violence_percent=violence_percent,
+            violence_sensitivity_level=violence_sensitivity_level, process_status=process_status,
+            system_id=system_id, channel_id=channel_id, user_id=user_id
+        )
+
         return Response(status=status.HTTP_201_CREATED)
 
 
@@ -622,6 +653,7 @@ class ImageFileUploadViewSet(viewsets.ModelViewSet):
                         msg=msg, image=iserializer.image)
         return Response(status=status.HTTP_201_CREATED)
 
+
 class OcrDrivinglicenseViewSet(viewsets.ModelViewSet):
 
     queryset = OcrDrivinglicense.objects.all()
@@ -684,11 +716,11 @@ class OcrDrivinglicenseViewSet(viewsets.ModelViewSet):
             if(each['name'] == '有效截止日期'):
                 name = "valid_end"
                 count = count + 1
-            
+
             dataMap[name] = each['text']
             #dataMap[each['name']] = each['text']
         #result = check_result
-        #if (len(arr) == 0 or count < 1):
+        # if (len(arr) == 0 or count < 1):
         if(dataMap["license_type"] != "中华人民共和国机动车驾驶证"):
             ret = 1
             msg = "请上传驾驶证图片"
