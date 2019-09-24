@@ -927,13 +927,13 @@ class HistoryRecordDetailViewSet(viewsets.ModelViewSet):
     serializer_class = HistoryRecordDetailSerializer
     parser_classes = (MultiPartParser, FormParser,)
 
-    def perform_create(self, serializer):
-
-        iserializer = serializer.save()
+    def retrieve(self, request, pk=None):
+        # 获取实例
+        historyRecord = self.get_object()
+        # 序列化
+        serializer = self.get_serializer(historyRecord)
         dataMap = {}
-        ret = 0
-        msg = "成功"
-
-        serializer.save(data=dataMap, ret=ret, msg=msg)
-
-        return Response(status=status.HTTP_201_CREATED)
+        dataMap['ret'] = 0
+        dataMap['msg'] = "成功"
+        dataMap['data'] = serializer.data
+        return Response(data=dataMap, status=status.HTTP_200_OK)
